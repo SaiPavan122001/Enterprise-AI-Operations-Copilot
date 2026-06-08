@@ -1,0 +1,24 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+backend/.env
+
+# Vector DB
+backend/qdrant_data/
+
+# Frontend
+frontend/node_modules/
+
+#Generated ones
+backend/storage/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

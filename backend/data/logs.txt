@@ -1,0 +1,550 @@
+2026-05-02 10:07:13 auth-service INFO Request processed successfully
+2026-05-03 10:14:26 leave-service INFO Request processed successfully
+2026-05-04 10:21:39 notification-service INFO Request processed successfully
+2026-05-05 10:28:52 gateway-service INFO Request processed successfully
+2026-05-06 10:35:05 employee-service INFO Request processed successfully
+2026-05-07 10:42:18 reporting-service INFO Request processed successfully
+2026-05-08 10:49:31 payroll-service INFO Request processed successfully
+2026-05-09 10:56:44 auth-service INFO Request processed successfully
+2026-05-10 10:03:57 leave-service INFO Request processed successfully
+2026-05-11 10:10:10 notification-service INFO Request processed successfully
+2026-05-12 10:17:23 gateway-service INFO Request processed successfully
+2026-05-13 10:24:36 employee-service INFO Request processed successfully
+2026-05-14 10:31:49 reporting-service INFO Request processed successfully
+2026-05-15 10:38:02 payroll-service INFO Request processed successfully
+2026-05-16 10:45:15 auth-service INFO Request processed successfully
+2026-05-17 10:52:28 leave-service INFO Request processed successfully
+2026-05-18 10:59:41 notification-service INFO Request processed successfully
+2026-05-19 10:06:54 gateway-service INFO Request processed successfully
+2026-05-20 10:13:07 employee-service INFO Request processed successfully
+2026-05-21 10:20:20 reporting-service INFO Request processed successfully
+2026-05-22 10:27:33 payroll-service INFO Request processed successfully
+2026-05-23 10:34:46 auth-service INFO Request processed successfully
+2026-05-24 10:41:59 leave-service WARN SMTP quota exceeded, retry scheduled
+2026-05-25 10:48:12 notification-service INFO Request processed successfully
+2026-05-26 10:55:25 gateway-service INFO Request processed successfully
+2026-05-27 10:02:38 employee-service INFO Request processed successfully
+2026-05-28 10:09:51 reporting-service INFO Request processed successfully
+2026-05-01 10:16:04 payroll-service INFO Request processed successfully
+2026-05-02 10:23:17 auth-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-03 10:30:30 leave-service INFO Request processed successfully
+2026-05-04 10:37:43 notification-service INFO Request processed successfully
+2026-05-05 10:44:56 gateway-service INFO Request processed successfully
+2026-05-06 10:51:09 employee-service INFO Request processed successfully
+2026-05-07 10:58:22 reporting-service INFO Request processed successfully
+2026-05-08 10:05:35 payroll-service INFO Request processed successfully
+2026-05-09 10:12:48 auth-service INFO Request processed successfully
+2026-05-10 10:19:01 leave-service WARN JWT signature verification failed
+2026-05-11 10:26:14 notification-service INFO Request processed successfully
+2026-05-12 10:33:27 gateway-service INFO Request processed successfully
+2026-05-13 10:40:40 employee-service INFO Request processed successfully
+2026-05-14 10:47:53 reporting-service INFO Request processed successfully
+2026-05-15 10:54:06 payroll-service INFO Request processed successfully
+2026-05-16 10:01:19 auth-service INFO Request processed successfully
+2026-05-17 10:08:32 leave-service INFO Request processed successfully
+2026-05-18 10:15:45 notification-service INFO Request processed successfully
+2026-05-19 10:22:58 gateway-service WARN SMTP quota exceeded, retry scheduled
+2026-05-20 10:29:11 employee-service INFO Request processed successfully
+2026-05-21 10:36:24 reporting-service INFO Request processed successfully
+2026-05-22 10:43:37 payroll-service INFO Request processed successfully
+2026-05-23 10:50:50 auth-service ERROR Database migration failed: column salary_amount not found
+2026-05-24 10:57:03 leave-service INFO Request processed successfully
+2026-05-25 10:04:16 notification-service INFO Request processed successfully
+2026-05-26 10:11:29 gateway-service INFO Request processed successfully
+2026-05-27 10:18:42 employee-service INFO Request processed successfully
+2026-05-28 10:25:55 reporting-service INFO Request processed successfully
+2026-05-01 10:32:08 payroll-service INFO Request processed successfully
+2026-05-02 10:39:21 auth-service INFO Request processed successfully
+2026-05-03 10:46:34 leave-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-04 10:53:47 notification-service INFO Request processed successfully
+2026-05-05 10:00:00 gateway-service INFO Request processed successfully
+2026-05-06 10:07:13 employee-service INFO Request processed successfully
+2026-05-07 10:14:26 reporting-service INFO Request processed successfully
+2026-05-08 10:21:39 payroll-service INFO Request processed successfully
+2026-05-09 10:28:52 auth-service INFO Request processed successfully
+2026-05-10 10:35:05 leave-service INFO Request processed successfully
+2026-05-11 10:42:18 notification-service INFO Request processed successfully
+2026-05-12 10:49:31 gateway-service INFO Request processed successfully
+2026-05-13 10:56:44 employee-service INFO Request processed successfully
+2026-05-14 10:03:57 reporting-service WARN SMTP quota exceeded, retry scheduled
+2026-05-15 10:10:10 payroll-service INFO Request processed successfully
+2026-05-16 10:17:23 auth-service INFO Request processed successfully
+2026-05-17 10:24:36 leave-service INFO Request processed successfully
+2026-05-18 10:31:49 notification-service INFO Request processed successfully
+2026-05-19 10:38:02 gateway-service WARN JWT signature verification failed
+2026-05-20 10:45:15 employee-service INFO Request processed successfully
+2026-05-21 10:52:28 reporting-service INFO Request processed successfully
+2026-05-22 10:59:41 payroll-service INFO Request processed successfully
+2026-05-23 10:06:54 auth-service INFO Request processed successfully
+2026-05-24 10:13:07 leave-service INFO Request processed successfully
+2026-05-25 10:20:20 notification-service INFO Request processed successfully
+2026-05-26 10:27:33 gateway-service INFO Request processed successfully
+2026-05-27 10:34:46 employee-service INFO Request processed successfully
+2026-05-28 10:41:59 reporting-service INFO Request processed successfully
+2026-05-01 10:48:12 payroll-service INFO Request processed successfully
+2026-05-02 10:55:25 auth-service INFO Request processed successfully
+2026-05-03 10:02:38 leave-service INFO Request processed successfully
+2026-05-04 10:09:51 notification-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-05 10:16:04 gateway-service INFO Request processed successfully
+2026-05-06 10:23:17 employee-service INFO Request processed successfully
+2026-05-07 10:30:30 reporting-service INFO Request processed successfully
+2026-05-08 10:37:43 payroll-service INFO Request processed successfully
+2026-05-09 10:44:56 auth-service WARN SMTP quota exceeded, retry scheduled
+2026-05-10 10:51:09 leave-service INFO Request processed successfully
+2026-05-11 10:58:22 notification-service INFO Request processed successfully
+2026-05-12 10:05:35 gateway-service INFO Request processed successfully
+2026-05-13 10:12:48 employee-service INFO Request processed successfully
+2026-05-14 10:19:01 reporting-service INFO Request processed successfully
+2026-05-15 10:26:14 payroll-service INFO Request processed successfully
+2026-05-16 10:33:27 auth-service INFO Request processed successfully
+2026-05-17 10:40:40 leave-service ERROR Database migration failed: column salary_amount not found
+2026-05-18 10:47:53 notification-service INFO Request processed successfully
+2026-05-19 10:54:06 gateway-service INFO Request processed successfully
+2026-05-20 10:01:19 employee-service INFO Request processed successfully
+2026-05-21 10:08:32 reporting-service INFO Request processed successfully
+2026-05-22 10:15:45 payroll-service INFO Request processed successfully
+2026-05-23 10:22:58 auth-service INFO Request processed successfully
+2026-05-24 10:29:11 leave-service INFO Request processed successfully
+2026-05-25 10:36:24 notification-service INFO Request processed successfully
+2026-05-26 10:43:37 gateway-service INFO Request processed successfully
+2026-05-27 10:50:50 employee-service INFO Request processed successfully
+2026-05-28 10:57:03 reporting-service WARN JWT signature verification failed
+2026-05-01 10:04:16 payroll-service INFO Request processed successfully
+2026-05-02 10:11:29 auth-service INFO Request processed successfully
+2026-05-03 10:18:42 leave-service INFO Request processed successfully
+2026-05-04 10:25:55 notification-service WARN SMTP quota exceeded, retry scheduled
+2026-05-05 10:32:08 gateway-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-06 10:39:21 employee-service INFO Request processed successfully
+2026-05-07 10:46:34 reporting-service INFO Request processed successfully
+2026-05-08 10:53:47 payroll-service INFO Request processed successfully
+2026-05-09 10:00:00 auth-service INFO Request processed successfully
+2026-05-10 10:07:13 leave-service INFO Request processed successfully
+2026-05-11 10:14:26 notification-service INFO Request processed successfully
+2026-05-12 10:21:39 gateway-service INFO Request processed successfully
+2026-05-13 10:28:52 employee-service INFO Request processed successfully
+2026-05-14 10:35:05 reporting-service INFO Request processed successfully
+2026-05-15 10:42:18 payroll-service INFO Request processed successfully
+2026-05-16 10:49:31 auth-service INFO Request processed successfully
+2026-05-17 10:56:44 leave-service INFO Request processed successfully
+2026-05-18 10:03:57 notification-service INFO Request processed successfully
+2026-05-19 10:10:10 gateway-service INFO Request processed successfully
+2026-05-20 10:17:23 employee-service INFO Request processed successfully
+2026-05-21 10:24:36 reporting-service INFO Request processed successfully
+2026-05-22 10:31:49 payroll-service INFO Request processed successfully
+2026-05-23 10:38:02 auth-service INFO Request processed successfully
+2026-05-24 10:45:15 leave-service INFO Request processed successfully
+2026-05-25 10:52:28 notification-service INFO Request processed successfully
+2026-05-26 10:59:41 gateway-service INFO Request processed successfully
+2026-05-27 10:06:54 employee-service WARN SMTP quota exceeded, retry scheduled
+2026-05-28 10:13:07 reporting-service INFO Request processed successfully
+2026-05-01 10:20:20 payroll-service INFO Request processed successfully
+2026-05-02 10:27:33 auth-service INFO Request processed successfully
+2026-05-03 10:34:46 leave-service INFO Request processed successfully
+2026-05-04 10:41:59 notification-service INFO Request processed successfully
+2026-05-05 10:48:12 gateway-service INFO Request processed successfully
+2026-05-06 10:55:25 employee-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-07 10:02:38 reporting-service INFO Request processed successfully
+2026-05-08 10:09:51 payroll-service INFO Request processed successfully
+2026-05-09 10:16:04 auth-service WARN JWT signature verification failed
+2026-05-10 10:23:17 leave-service INFO Request processed successfully
+2026-05-11 10:30:30 notification-service ERROR Database migration failed: column salary_amount not found
+2026-05-12 10:37:43 gateway-service INFO Request processed successfully
+2026-05-13 10:44:56 employee-service INFO Request processed successfully
+2026-05-14 10:51:09 reporting-service INFO Request processed successfully
+2026-05-15 10:58:22 payroll-service INFO Request processed successfully
+2026-05-16 10:05:35 auth-service INFO Request processed successfully
+2026-05-17 10:12:48 leave-service INFO Request processed successfully
+2026-05-18 10:19:01 notification-service INFO Request processed successfully
+2026-05-19 10:26:14 gateway-service INFO Request processed successfully
+2026-05-20 10:33:27 employee-service INFO Request processed successfully
+2026-05-21 10:40:40 reporting-service INFO Request processed successfully
+2026-05-22 10:47:53 payroll-service WARN SMTP quota exceeded, retry scheduled
+2026-05-23 10:54:06 auth-service INFO Request processed successfully
+2026-05-24 10:01:19 leave-service INFO Request processed successfully
+2026-05-25 10:08:32 notification-service INFO Request processed successfully
+2026-05-26 10:15:45 gateway-service INFO Request processed successfully
+2026-05-27 10:22:58 employee-service INFO Request processed successfully
+2026-05-28 10:29:11 reporting-service INFO Request processed successfully
+2026-05-01 10:36:24 payroll-service INFO Request processed successfully
+2026-05-02 10:43:37 auth-service INFO Request processed successfully
+2026-05-03 10:50:50 leave-service INFO Request processed successfully
+2026-05-04 10:57:03 notification-service INFO Request processed successfully
+2026-05-05 10:04:16 gateway-service INFO Request processed successfully
+2026-05-06 10:11:29 employee-service INFO Request processed successfully
+2026-05-07 10:18:42 reporting-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-08 10:25:55 payroll-service INFO Request processed successfully
+2026-05-09 10:32:08 auth-service INFO Request processed successfully
+2026-05-10 10:39:21 leave-service INFO Request processed successfully
+2026-05-11 10:46:34 notification-service INFO Request processed successfully
+2026-05-12 10:53:47 gateway-service INFO Request processed successfully
+2026-05-13 10:00:00 employee-service INFO Request processed successfully
+2026-05-14 10:07:13 reporting-service INFO Request processed successfully
+2026-05-15 10:14:26 payroll-service INFO Request processed successfully
+2026-05-16 10:21:39 auth-service INFO Request processed successfully
+2026-05-17 10:28:52 leave-service WARN SMTP quota exceeded, retry scheduled
+2026-05-18 10:35:05 notification-service WARN JWT signature verification failed
+2026-05-19 10:42:18 gateway-service INFO Request processed successfully
+2026-05-20 10:49:31 employee-service INFO Request processed successfully
+2026-05-21 10:56:44 reporting-service INFO Request processed successfully
+2026-05-22 10:03:57 payroll-service INFO Request processed successfully
+2026-05-23 10:10:10 auth-service INFO Request processed successfully
+2026-05-24 10:17:23 leave-service INFO Request processed successfully
+2026-05-25 10:24:36 notification-service INFO Request processed successfully
+2026-05-26 10:31:49 gateway-service INFO Request processed successfully
+2026-05-27 10:38:02 employee-service INFO Request processed successfully
+2026-05-28 10:45:15 reporting-service INFO Request processed successfully
+2026-05-01 10:52:28 payroll-service INFO Request processed successfully
+2026-05-02 10:59:41 auth-service INFO Request processed successfully
+2026-05-03 10:06:54 leave-service INFO Request processed successfully
+2026-05-04 10:13:07 notification-service INFO Request processed successfully
+2026-05-05 10:20:20 gateway-service ERROR Database migration failed: column salary_amount not found
+2026-05-06 10:27:33 employee-service INFO Request processed successfully
+2026-05-07 10:34:46 reporting-service INFO Request processed successfully
+2026-05-08 10:41:59 payroll-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-09 10:48:12 auth-service INFO Request processed successfully
+2026-05-10 10:55:25 leave-service INFO Request processed successfully
+2026-05-11 10:02:38 notification-service INFO Request processed successfully
+2026-05-12 10:09:51 gateway-service WARN SMTP quota exceeded, retry scheduled
+2026-05-13 10:16:04 employee-service INFO Request processed successfully
+2026-05-14 10:23:17 reporting-service INFO Request processed successfully
+2026-05-15 10:30:30 payroll-service INFO Request processed successfully
+2026-05-16 10:37:43 auth-service INFO Request processed successfully
+2026-05-17 10:44:56 leave-service INFO Request processed successfully
+2026-05-18 10:51:09 notification-service INFO Request processed successfully
+2026-05-19 10:58:22 gateway-service INFO Request processed successfully
+2026-05-20 10:05:35 employee-service INFO Request processed successfully
+2026-05-21 10:12:48 reporting-service INFO Request processed successfully
+2026-05-22 10:19:01 payroll-service INFO Request processed successfully
+2026-05-23 10:26:14 auth-service INFO Request processed successfully
+2026-05-24 10:33:27 leave-service INFO Request processed successfully
+2026-05-25 10:40:40 notification-service INFO Request processed successfully
+2026-05-26 10:47:53 gateway-service INFO Request processed successfully
+2026-05-27 10:54:06 employee-service WARN JWT signature verification failed
+2026-05-28 10:01:19 reporting-service INFO Request processed successfully
+2026-05-01 10:08:32 payroll-service INFO Request processed successfully
+2026-05-02 10:15:45 auth-service INFO Request processed successfully
+2026-05-03 10:22:58 leave-service INFO Request processed successfully
+2026-05-04 10:29:11 notification-service INFO Request processed successfully
+2026-05-05 10:36:24 gateway-service INFO Request processed successfully
+2026-05-06 10:43:37 employee-service INFO Request processed successfully
+2026-05-07 10:50:50 reporting-service WARN SMTP quota exceeded, retry scheduled
+2026-05-08 10:57:03 payroll-service INFO Request processed successfully
+2026-05-09 10:04:16 auth-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-10 10:11:29 leave-service INFO Request processed successfully
+2026-05-11 10:18:42 notification-service INFO Request processed successfully
+2026-05-12 10:25:55 gateway-service INFO Request processed successfully
+2026-05-13 10:32:08 employee-service INFO Request processed successfully
+2026-05-14 10:39:21 reporting-service INFO Request processed successfully
+2026-05-15 10:46:34 payroll-service INFO Request processed successfully
+2026-05-16 10:53:47 auth-service INFO Request processed successfully
+2026-05-17 10:00:00 leave-service INFO Request processed successfully
+2026-05-18 10:07:13 notification-service INFO Request processed successfully
+2026-05-19 10:14:26 gateway-service INFO Request processed successfully
+2026-05-20 10:21:39 employee-service INFO Request processed successfully
+2026-05-21 10:28:52 reporting-service INFO Request processed successfully
+2026-05-22 10:35:05 payroll-service INFO Request processed successfully
+2026-05-23 10:42:18 auth-service INFO Request processed successfully
+2026-05-24 10:49:31 leave-service INFO Request processed successfully
+2026-05-25 10:56:44 notification-service INFO Request processed successfully
+2026-05-26 10:03:57 gateway-service INFO Request processed successfully
+2026-05-27 10:10:10 employee-service ERROR Database migration failed: column salary_amount not found
+2026-05-28 10:17:23 reporting-service INFO Request processed successfully
+2026-05-01 10:24:36 payroll-service INFO Request processed successfully
+2026-05-02 10:31:49 auth-service WARN SMTP quota exceeded, retry scheduled
+2026-05-03 10:38:02 leave-service INFO Request processed successfully
+2026-05-04 10:45:15 notification-service INFO Request processed successfully
+2026-05-05 10:52:28 gateway-service INFO Request processed successfully
+2026-05-06 10:59:41 employee-service INFO Request processed successfully
+2026-05-07 10:06:54 reporting-service INFO Request processed successfully
+2026-05-08 10:13:07 payroll-service WARN JWT signature verification failed
+2026-05-09 10:20:20 auth-service INFO Request processed successfully
+2026-05-10 10:27:33 leave-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-11 10:34:46 notification-service INFO Request processed successfully
+2026-05-12 10:41:59 gateway-service INFO Request processed successfully
+2026-05-13 10:48:12 employee-service INFO Request processed successfully
+2026-05-14 10:55:25 reporting-service INFO Request processed successfully
+2026-05-15 10:02:38 payroll-service INFO Request processed successfully
+2026-05-16 10:09:51 auth-service INFO Request processed successfully
+2026-05-17 10:16:04 leave-service INFO Request processed successfully
+2026-05-18 10:23:17 notification-service INFO Request processed successfully
+2026-05-19 10:30:30 gateway-service INFO Request processed successfully
+2026-05-20 10:37:43 employee-service INFO Request processed successfully
+2026-05-21 10:44:56 reporting-service INFO Request processed successfully
+2026-05-22 10:51:09 payroll-service INFO Request processed successfully
+2026-05-23 10:58:22 auth-service INFO Request processed successfully
+2026-05-24 10:05:35 leave-service INFO Request processed successfully
+2026-05-25 10:12:48 notification-service WARN SMTP quota exceeded, retry scheduled
+2026-05-26 10:19:01 gateway-service INFO Request processed successfully
+2026-05-27 10:26:14 employee-service INFO Request processed successfully
+2026-05-28 10:33:27 reporting-service INFO Request processed successfully
+2026-05-01 10:40:40 payroll-service INFO Request processed successfully
+2026-05-02 10:47:53 auth-service INFO Request processed successfully
+2026-05-03 10:54:06 leave-service INFO Request processed successfully
+2026-05-04 10:01:19 notification-service INFO Request processed successfully
+2026-05-05 10:08:32 gateway-service INFO Request processed successfully
+2026-05-06 10:15:45 employee-service INFO Request processed successfully
+2026-05-07 10:22:58 reporting-service INFO Request processed successfully
+2026-05-08 10:29:11 payroll-service INFO Request processed successfully
+2026-05-09 10:36:24 auth-service INFO Request processed successfully
+2026-05-10 10:43:37 leave-service INFO Request processed successfully
+2026-05-11 10:50:50 notification-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-12 10:57:03 gateway-service INFO Request processed successfully
+2026-05-13 10:04:16 employee-service INFO Request processed successfully
+2026-05-14 10:11:29 reporting-service INFO Request processed successfully
+2026-05-15 10:18:42 payroll-service INFO Request processed successfully
+2026-05-16 10:25:55 auth-service INFO Request processed successfully
+2026-05-17 10:32:08 leave-service WARN JWT signature verification failed
+2026-05-18 10:39:21 notification-service INFO Request processed successfully
+2026-05-19 10:46:34 gateway-service INFO Request processed successfully
+2026-05-20 10:53:47 employee-service WARN SMTP quota exceeded, retry scheduled
+2026-05-21 10:00:00 reporting-service ERROR Database migration failed: column salary_amount not found
+2026-05-22 10:07:13 payroll-service INFO Request processed successfully
+2026-05-23 10:14:26 auth-service INFO Request processed successfully
+2026-05-24 10:21:39 leave-service INFO Request processed successfully
+2026-05-25 10:28:52 notification-service INFO Request processed successfully
+2026-05-26 10:35:05 gateway-service INFO Request processed successfully
+2026-05-27 10:42:18 employee-service INFO Request processed successfully
+2026-05-28 10:49:31 reporting-service INFO Request processed successfully
+2026-05-01 10:56:44 payroll-service INFO Request processed successfully
+2026-05-02 10:03:57 auth-service INFO Request processed successfully
+2026-05-03 10:10:10 leave-service INFO Request processed successfully
+2026-05-04 10:17:23 notification-service INFO Request processed successfully
+2026-05-05 10:24:36 gateway-service INFO Request processed successfully
+2026-05-06 10:31:49 employee-service INFO Request processed successfully
+2026-05-07 10:38:02 reporting-service INFO Request processed successfully
+2026-05-08 10:45:15 payroll-service INFO Request processed successfully
+2026-05-09 10:52:28 auth-service INFO Request processed successfully
+2026-05-10 10:59:41 leave-service INFO Request processed successfully
+2026-05-11 10:06:54 notification-service INFO Request processed successfully
+2026-05-12 10:13:07 gateway-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-13 10:20:20 employee-service INFO Request processed successfully
+2026-05-14 10:27:33 reporting-service INFO Request processed successfully
+2026-05-15 10:34:46 payroll-service WARN SMTP quota exceeded, retry scheduled
+2026-05-16 10:41:59 auth-service INFO Request processed successfully
+2026-05-17 10:48:12 leave-service INFO Request processed successfully
+2026-05-18 10:55:25 notification-service INFO Request processed successfully
+2026-05-19 10:02:38 gateway-service INFO Request processed successfully
+2026-05-20 10:09:51 employee-service INFO Request processed successfully
+2026-05-21 10:16:04 reporting-service INFO Request processed successfully
+2026-05-22 10:23:17 payroll-service INFO Request processed successfully
+2026-05-23 10:30:30 auth-service INFO Request processed successfully
+2026-05-24 10:37:43 leave-service INFO Request processed successfully
+2026-05-25 10:44:56 notification-service INFO Request processed successfully
+2026-05-26 10:51:09 gateway-service WARN JWT signature verification failed
+2026-05-27 10:58:22 employee-service INFO Request processed successfully
+2026-05-28 10:05:35 reporting-service INFO Request processed successfully
+2026-05-01 10:12:48 payroll-service INFO Request processed successfully
+2026-05-02 10:19:01 auth-service INFO Request processed successfully
+2026-05-03 10:26:14 leave-service INFO Request processed successfully
+2026-05-04 10:33:27 notification-service INFO Request processed successfully
+2026-05-05 10:40:40 gateway-service INFO Request processed successfully
+2026-05-06 10:47:53 employee-service INFO Request processed successfully
+2026-05-07 10:54:06 reporting-service INFO Request processed successfully
+2026-05-08 10:01:19 payroll-service INFO Request processed successfully
+2026-05-09 10:08:32 auth-service INFO Request processed successfully
+2026-05-10 10:15:45 leave-service WARN SMTP quota exceeded, retry scheduled
+2026-05-11 10:22:58 notification-service INFO Request processed successfully
+2026-05-12 10:29:11 gateway-service INFO Request processed successfully
+2026-05-13 10:36:24 employee-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-14 10:43:37 reporting-service INFO Request processed successfully
+2026-05-15 10:50:50 payroll-service ERROR Database migration failed: column salary_amount not found
+2026-05-16 10:57:03 auth-service INFO Request processed successfully
+2026-05-17 10:04:16 leave-service INFO Request processed successfully
+2026-05-18 10:11:29 notification-service INFO Request processed successfully
+2026-05-19 10:18:42 gateway-service INFO Request processed successfully
+2026-05-20 10:25:55 employee-service INFO Request processed successfully
+2026-05-21 10:32:08 reporting-service INFO Request processed successfully
+2026-05-22 10:39:21 payroll-service INFO Request processed successfully
+2026-05-23 10:46:34 auth-service INFO Request processed successfully
+2026-05-24 10:53:47 leave-service INFO Request processed successfully
+2026-05-25 10:00:00 notification-service INFO Request processed successfully
+2026-05-26 10:07:13 gateway-service INFO Request processed successfully
+2026-05-27 10:14:26 employee-service INFO Request processed successfully
+2026-05-28 10:21:39 reporting-service INFO Request processed successfully
+2026-05-01 10:28:52 payroll-service INFO Request processed successfully
+2026-05-02 10:35:05 auth-service INFO Request processed successfully
+2026-05-03 10:42:18 leave-service INFO Request processed successfully
+2026-05-04 10:49:31 notification-service INFO Request processed successfully
+2026-05-05 10:56:44 gateway-service WARN SMTP quota exceeded, retry scheduled
+2026-05-06 10:03:57 employee-service INFO Request processed successfully
+2026-05-07 10:10:10 reporting-service WARN JWT signature verification failed
+2026-05-08 10:17:23 payroll-service INFO Request processed successfully
+2026-05-09 10:24:36 auth-service INFO Request processed successfully
+2026-05-10 10:31:49 leave-service INFO Request processed successfully
+2026-05-11 10:38:02 notification-service INFO Request processed successfully
+2026-05-12 10:45:15 gateway-service INFO Request processed successfully
+2026-05-13 10:52:28 employee-service INFO Request processed successfully
+2026-05-14 10:59:41 reporting-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-15 10:06:54 payroll-service INFO Request processed successfully
+2026-05-16 10:13:07 auth-service INFO Request processed successfully
+2026-05-17 10:20:20 leave-service INFO Request processed successfully
+2026-05-18 10:27:33 notification-service INFO Request processed successfully
+2026-05-19 10:34:46 gateway-service INFO Request processed successfully
+2026-05-20 10:41:59 employee-service INFO Request processed successfully
+2026-05-21 10:48:12 reporting-service INFO Request processed successfully
+2026-05-22 10:55:25 payroll-service INFO Request processed successfully
+2026-05-23 10:02:38 auth-service INFO Request processed successfully
+2026-05-24 10:09:51 leave-service INFO Request processed successfully
+2026-05-25 10:16:04 notification-service INFO Request processed successfully
+2026-05-26 10:23:17 gateway-service INFO Request processed successfully
+2026-05-27 10:30:30 employee-service INFO Request processed successfully
+2026-05-28 10:37:43 reporting-service WARN SMTP quota exceeded, retry scheduled
+2026-05-01 10:44:56 payroll-service INFO Request processed successfully
+2026-05-02 10:51:09 auth-service INFO Request processed successfully
+2026-05-03 10:58:22 leave-service INFO Request processed successfully
+2026-05-04 10:05:35 notification-service INFO Request processed successfully
+2026-05-05 10:12:48 gateway-service INFO Request processed successfully
+2026-05-06 10:19:01 employee-service INFO Request processed successfully
+2026-05-07 10:26:14 reporting-service INFO Request processed successfully
+2026-05-08 10:33:27 payroll-service INFO Request processed successfully
+2026-05-09 10:40:40 auth-service ERROR Database migration failed: column salary_amount not found
+2026-05-10 10:47:53 leave-service INFO Request processed successfully
+2026-05-11 10:54:06 notification-service INFO Request processed successfully
+2026-05-12 10:01:19 gateway-service INFO Request processed successfully
+2026-05-13 10:08:32 employee-service INFO Request processed successfully
+2026-05-14 10:15:45 reporting-service INFO Request processed successfully
+2026-05-15 10:22:58 payroll-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-16 10:29:11 auth-service WARN JWT signature verification failed
+2026-05-17 10:36:24 leave-service INFO Request processed successfully
+2026-05-18 10:43:37 notification-service INFO Request processed successfully
+2026-05-19 10:50:50 gateway-service INFO Request processed successfully
+2026-05-20 10:57:03 employee-service INFO Request processed successfully
+2026-05-21 10:04:16 reporting-service INFO Request processed successfully
+2026-05-22 10:11:29 payroll-service INFO Request processed successfully
+2026-05-23 10:18:42 auth-service WARN SMTP quota exceeded, retry scheduled
+2026-05-24 10:25:55 leave-service INFO Request processed successfully
+2026-05-25 10:32:08 notification-service INFO Request processed successfully
+2026-05-26 10:39:21 gateway-service INFO Request processed successfully
+2026-05-27 10:46:34 employee-service INFO Request processed successfully
+2026-05-28 10:53:47 reporting-service INFO Request processed successfully
+2026-05-01 10:00:00 payroll-service INFO Request processed successfully
+2026-05-02 10:07:13 auth-service INFO Request processed successfully
+2026-05-03 10:14:26 leave-service INFO Request processed successfully
+2026-05-04 10:21:39 notification-service INFO Request processed successfully
+2026-05-05 10:28:52 gateway-service INFO Request processed successfully
+2026-05-06 10:35:05 employee-service INFO Request processed successfully
+2026-05-07 10:42:18 reporting-service INFO Request processed successfully
+2026-05-08 10:49:31 payroll-service INFO Request processed successfully
+2026-05-09 10:56:44 auth-service INFO Request processed successfully
+2026-05-10 10:03:57 leave-service INFO Request processed successfully
+2026-05-11 10:10:10 notification-service INFO Request processed successfully
+2026-05-12 10:17:23 gateway-service INFO Request processed successfully
+2026-05-13 10:24:36 employee-service INFO Request processed successfully
+2026-05-14 10:31:49 reporting-service INFO Request processed successfully
+2026-05-15 10:38:02 payroll-service INFO Request processed successfully
+2026-05-16 10:45:15 auth-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-17 10:52:28 leave-service INFO Request processed successfully
+2026-05-18 10:59:41 notification-service WARN SMTP quota exceeded, retry scheduled
+2026-05-19 10:06:54 gateway-service INFO Request processed successfully
+2026-05-20 10:13:07 employee-service INFO Request processed successfully
+2026-05-21 10:20:20 reporting-service INFO Request processed successfully
+2026-05-22 10:27:33 payroll-service INFO Request processed successfully
+2026-05-23 10:34:46 auth-service INFO Request processed successfully
+2026-05-24 10:41:59 leave-service INFO Request processed successfully
+2026-05-25 10:48:12 notification-service WARN JWT signature verification failed
+2026-05-26 10:55:25 gateway-service INFO Request processed successfully
+2026-05-27 10:02:38 employee-service INFO Request processed successfully
+2026-05-28 10:09:51 reporting-service INFO Request processed successfully
+2026-05-01 10:16:04 payroll-service INFO Request processed successfully
+2026-05-02 10:23:17 auth-service INFO Request processed successfully
+2026-05-03 10:30:30 leave-service ERROR Database migration failed: column salary_amount not found
+2026-05-04 10:37:43 notification-service INFO Request processed successfully
+2026-05-05 10:44:56 gateway-service INFO Request processed successfully
+2026-05-06 10:51:09 employee-service INFO Request processed successfully
+2026-05-07 10:58:22 reporting-service INFO Request processed successfully
+2026-05-08 10:05:35 payroll-service INFO Request processed successfully
+2026-05-09 10:12:48 auth-service INFO Request processed successfully
+2026-05-10 10:19:01 leave-service INFO Request processed successfully
+2026-05-11 10:26:14 notification-service INFO Request processed successfully
+2026-05-12 10:33:27 gateway-service INFO Request processed successfully
+2026-05-13 10:40:40 employee-service WARN SMTP quota exceeded, retry scheduled
+2026-05-14 10:47:53 reporting-service INFO Request processed successfully
+2026-05-15 10:54:06 payroll-service INFO Request processed successfully
+2026-05-16 10:01:19 auth-service INFO Request processed successfully
+2026-05-17 10:08:32 leave-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-18 10:15:45 notification-service INFO Request processed successfully
+2026-05-19 10:22:58 gateway-service INFO Request processed successfully
+2026-05-20 10:29:11 employee-service INFO Request processed successfully
+2026-05-21 10:36:24 reporting-service INFO Request processed successfully
+2026-05-22 10:43:37 payroll-service INFO Request processed successfully
+2026-05-23 10:50:50 auth-service INFO Request processed successfully
+2026-05-24 10:57:03 leave-service INFO Request processed successfully
+2026-05-25 10:04:16 notification-service INFO Request processed successfully
+2026-05-26 10:11:29 gateway-service INFO Request processed successfully
+2026-05-27 10:18:42 employee-service INFO Request processed successfully
+2026-05-28 10:25:55 reporting-service INFO Request processed successfully
+2026-05-01 10:32:08 payroll-service INFO Request processed successfully
+2026-05-02 10:39:21 auth-service INFO Request processed successfully
+2026-05-03 10:46:34 leave-service INFO Request processed successfully
+2026-05-04 10:53:47 notification-service INFO Request processed successfully
+2026-05-05 10:00:00 gateway-service INFO Request processed successfully
+2026-05-06 10:07:13 employee-service WARN JWT signature verification failed
+2026-05-07 10:14:26 reporting-service INFO Request processed successfully
+2026-05-08 10:21:39 payroll-service WARN SMTP quota exceeded, retry scheduled
+2026-05-09 10:28:52 auth-service INFO Request processed successfully
+2026-05-10 10:35:05 leave-service INFO Request processed successfully
+2026-05-11 10:42:18 notification-service INFO Request processed successfully
+2026-05-12 10:49:31 gateway-service INFO Request processed successfully
+2026-05-13 10:56:44 employee-service INFO Request processed successfully
+2026-05-14 10:03:57 reporting-service INFO Request processed successfully
+2026-05-15 10:10:10 payroll-service INFO Request processed successfully
+2026-05-16 10:17:23 auth-service INFO Request processed successfully
+2026-05-17 10:24:36 leave-service INFO Request processed successfully
+2026-05-18 10:31:49 notification-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-19 10:38:02 gateway-service INFO Request processed successfully
+2026-05-20 10:45:15 employee-service INFO Request processed successfully
+2026-05-21 10:52:28 reporting-service INFO Request processed successfully
+2026-05-22 10:59:41 payroll-service INFO Request processed successfully
+2026-05-23 10:06:54 auth-service INFO Request processed successfully
+2026-05-24 10:13:07 leave-service INFO Request processed successfully
+2026-05-25 10:20:20 notification-service ERROR Database migration failed: column salary_amount not found
+2026-05-26 10:27:33 gateway-service INFO Request processed successfully
+2026-05-27 10:34:46 employee-service INFO Request processed successfully
+2026-05-28 10:41:59 reporting-service INFO Request processed successfully
+2026-05-01 10:48:12 payroll-service INFO Request processed successfully
+2026-05-02 10:55:25 auth-service INFO Request processed successfully
+2026-05-03 10:02:38 leave-service WARN SMTP quota exceeded, retry scheduled
+2026-05-04 10:09:51 notification-service INFO Request processed successfully
+2026-05-05 10:16:04 gateway-service INFO Request processed successfully
+2026-05-06 10:23:17 employee-service INFO Request processed successfully
+2026-05-07 10:30:30 reporting-service INFO Request processed successfully
+2026-05-08 10:37:43 payroll-service INFO Request processed successfully
+2026-05-09 10:44:56 auth-service INFO Request processed successfully
+2026-05-10 10:51:09 leave-service INFO Request processed successfully
+2026-05-11 10:58:22 notification-service INFO Request processed successfully
+2026-05-12 10:05:35 gateway-service INFO Request processed successfully
+2026-05-13 10:12:48 employee-service INFO Request processed successfully
+2026-05-14 10:19:01 reporting-service INFO Request processed successfully
+2026-05-15 10:26:14 payroll-service WARN JWT signature verification failed
+2026-05-16 10:33:27 auth-service INFO Request processed successfully
+2026-05-17 10:40:40 leave-service INFO Request processed successfully
+2026-05-18 10:47:53 notification-service INFO Request processed successfully
+2026-05-19 10:54:06 gateway-service ERROR 502 Bad Gateway upstream connection failed
+2026-05-20 10:01:19 employee-service INFO Request processed successfully
+2026-05-21 10:08:32 reporting-service INFO Request processed successfully
+2026-05-22 10:15:45 payroll-service INFO Request processed successfully
+2026-05-23 10:22:58 auth-service INFO Request processed successfully
+2026-05-24 10:29:11 leave-service INFO Request processed successfully
+2026-05-25 10:36:24 notification-service INFO Request processed successfully
+2026-05-26 10:43:37 gateway-service WARN SMTP quota exceeded, retry scheduled
+2026-05-27 10:50:50 employee-service INFO Request processed successfully
+2026-05-28 10:57:03 reporting-service INFO Request processed successfully
+2026-05-01 10:04:16 payroll-service INFO Request processed successfully
+2026-05-02 10:11:29 auth-service INFO Request processed successfully
+2026-05-03 10:18:42 leave-service INFO Request processed successfully
+2026-05-04 10:25:55 notification-service INFO Request processed successfully
+2026-05-05 10:32:08 gateway-service INFO Request processed successfully
+2026-05-06 10:39:21 employee-service INFO Request processed successfully
+2026-05-07 10:46:34 reporting-service INFO Request processed successfully
+2026-05-08 10:53:47 payroll-service INFO Request processed successfully
+2026-05-09 10:00:00 auth-service INFO Request processed successfully
+2026-05-10 10:07:13 leave-service INFO Request processed successfully
+2026-05-11 10:14:26 notification-service INFO Request processed successfully
+2026-05-12 10:21:39 gateway-service INFO Request processed successfully
+2026-05-13 10:28:52 employee-service INFO Request processed successfully
+2026-05-14 10:35:05 reporting-service INFO Request processed successfully
+2026-05-15 10:42:18 payroll-service INFO Request processed successfully
+2026-05-16 10:49:31 auth-service INFO Request processed successfully
+2026-05-17 10:56:44 leave-service INFO Request processed successfully
+2026-05-18 10:03:57 notification-service INFO Request processed successfully
+2026-05-19 10:10:10 gateway-service ERROR Database migration failed: column salary_amount not found

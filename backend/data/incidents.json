@@ -1,0 +1,182 @@
+[
+  {
+    "id": "INC-001",
+    "severity": "Critical",
+    "service": "payroll-service",
+    "title": "Payroll generation failing",
+    "root_cause": "Database migration missing salary_amount column",
+    "deployment_id": "DEP-101",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-002",
+    "severity": "High",
+    "service": "auth-service",
+    "title": "Users unable to login",
+    "root_cause": "JWT signing key mismatch",
+    "deployment_id": "DEP-102",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-003",
+    "severity": "High",
+    "service": "leave-service",
+    "title": "Leave balances incorrect",
+    "root_cause": "Cache invalidation failure",
+    "deployment_id": "DEP-103",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-004",
+    "severity": "Medium",
+    "service": "notification-service",
+    "title": "Emails delayed",
+    "root_cause": "SMTP rate limits exceeded",
+    "deployment_id": "DEP-104",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-005",
+    "severity": "Critical",
+    "service": "gateway-service",
+    "title": "API gateway outage",
+    "root_cause": "Ingress configuration error",
+    "deployment_id": "DEP-105",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-006",
+    "severity": "High",
+    "service": "employee-service",
+    "title": "Employee search failing",
+    "root_cause": "Elasticsearch index corruption",
+    "deployment_id": "DEP-106",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-007",
+    "severity": "Medium",
+    "service": "reporting-service",
+    "title": "Reports loading slowly",
+    "root_cause": "Missing database indexes",
+    "deployment_id": "DEP-107",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-008",
+    "severity": "Critical",
+    "service": "auth-service",
+    "title": "SSO authentication failure",
+    "root_cause": "OAuth provider certificate expired",
+    "deployment_id": "DEP-108",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-009",
+    "severity": "High",
+    "service": "payroll-service",
+    "title": "Duplicate payroll records",
+    "root_cause": "Batch job executed twice",
+    "deployment_id": "DEP-109",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-010",
+    "severity": "Medium",
+    "service": "notification-service",
+    "title": "SMS notifications not sent",
+    "root_cause": "Third-party SMS API outage",
+    "deployment_id": "DEP-110",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-011",
+    "severity": "High",
+    "service": "leave-service",
+    "title": "Leave approval workflow stuck",
+    "root_cause": "Message queue backlog",
+    "deployment_id": "DEP-111",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-012",
+    "severity": "Critical",
+    "service": "gateway-service",
+    "title": "High API error rate",
+    "root_cause": "Backend service timeout",
+    "deployment_id": "DEP-112",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-013",
+    "severity": "Medium",
+    "service": "employee-service",
+    "title": "Profile updates not saving",
+    "root_cause": "Database connection pool exhaustion",
+    "deployment_id": "DEP-113",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-014",
+    "severity": "High",
+    "service": "reporting-service",
+    "title": "Dashboard metrics incorrect",
+    "root_cause": "ETL job failure",
+    "deployment_id": "DEP-114",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-015",
+    "severity": "Critical",
+    "service": "payroll-service",
+    "title": "Payroll API returning 500 errors",
+    "root_cause": "Schema version mismatch",
+    "deployment_id": "DEP-115",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-016",
+    "severity": "Medium",
+    "service": "auth-service",
+    "title": "Frequent user session expirations",
+    "root_cause": "Misconfigured token expiry",
+    "deployment_id": "DEP-116",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-017",
+    "severity": "High",
+    "service": "notification-service",
+    "title": "Email queue growth",
+    "root_cause": "Worker pod crash loop",
+    "deployment_id": "DEP-117",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-018",
+    "severity": "Critical",
+    "service": "gateway-service",
+    "title": "Service unavailable during deployment",
+    "root_cause": "Blue-green switch failure",
+    "deployment_id": "DEP-118",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-019",
+    "severity": "Medium",
+    "service": "employee-service",
+    "title": "Employee export timing out",
+    "root_cause": "Large unoptimized query",
+    "deployment_id": "DEP-119",
+    "status": "Resolved"
+  },
+  {
+    "id": "INC-020",
+    "severity": "High",
+    "service": "reporting-service",
+    "title": "Scheduled reports not generated",
+    "root_cause": "Cron job configuration error",
+    "deployment_id": "DEP-120",
+    "status": "Resolved"
+  }
+]
