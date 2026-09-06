@@ -1,0 +1,24 @@
+# Enterprise AI Operations Copilot - backend dependencies
+# Install with:  pip install -r requirements.txt
+
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+python-dotenv==1.0.1
+
+# RAG / vector search
+qdrant-client==1.12.1
+sentence-transformers==3.3.1
+
+# Workflow orchestration
+langgraph==0.2.60
+
+# LLM
+google-genai==0.6.0
+
+# Observability
+langfuse>=3.0.0,<4
+
+# Testing
+pytest==8.3.4
+httpx==0.28.1
