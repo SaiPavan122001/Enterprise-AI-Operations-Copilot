@@ -71,6 +71,12 @@ def test_question_is_redacted_before_any_llm_call(monkeypatch):
                            provider="openai", model="m")
 
     monkeypatch.setattr(gemini_rca_agent, "generate_text", fake)
+    # Retrieval is stubbed (no seeded vector store needed) so the LLM is actually reached.
+    from models.evidence import IncidentEvidence
+    monkeypatch.setattr(rca_graph, "incident_agent", lambda query, **k: {"incidents": [IncidentEvidence(
+        incident_id="INC-002", service="auth-service", severity="High", status="Resolved",
+        title="Users unable to login", root_cause="JWT signing key mismatch", relevance_score=0.8)],
+        "scores": [0.8]})
     q = "Why can't jane.doe@acme-corp.com log in with password=Hunter2!Secret on the auth-service?"
     state = rca_graph.run_investigation(q, principal=system_principal("t"))
     assert prompts and all("jane.doe" not in p and "Hunter2" not in p for p in prompts)

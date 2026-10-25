@@ -156,11 +156,38 @@ class TestTenantIsolation:
         rca_graph.incident_matching_node({"question": "What caused INC-002?", "incidents": [], "_principal": principal})
         assert [c.incident_id for c in seen.get("c", [])] == []
 
-    def test_search_endpoint_filters_by_tenant(self, tenants):
+    def test_search_endpoint_filters_by_tenant(self, tenants, monkeypatch):
+        """The route searches only the services the SERVER grants the principal
+        (no seeded vector store needed: the Qdrant filter itself is tested below)."""
+        from api import routes
+        seen = {}
+
+        def fake_search(**kwargs):
+            seen.update(kwargs)
+            return []
+        monkeypatch.setattr(routes, "search_incidents", fake_search)
         s = sign_in("ann")
-        r = s.post("/search", {"query": "users unable to login authentication", "limit": 20})
+        r = s.post("/search", {"query": "users unable to login authentication", "limit": 20},
+                   headers={"X-Tenant": "globex", "X-Services": "auth-service"})     # forged scope is ignored
         assert r.status_code == 200
-        assert {x["service"] for x in r.json()["results"]} <= {"payroll-service", "leave-service"}
+        assert seen["services"] == frozenset({"payroll-service", "leave-service"})
+
+    def test_search_filter_restricts_services_inside_qdrant(self, monkeypatch):
+        from qdrant_client.models import MatchAny
+
+        from vector_store import search_service
+        seen = {}
+
+        class FakeClient:
+            def query_points(self, **kwargs):
+                seen.update(kwargs)
+                return type("R", (), {"points": []})()
+        monkeypatch.setattr(search_service, "client", FakeClient())
+        search_service.search_incidents("login failures", services=frozenset({"payroll-service", "leave-service"}))
+        conds = seen["query_filter"].must
+        assert any(isinstance(c.match, MatchAny) and c.key == "service"
+                   and c.match.any == ["leave-service", "payroll-service"] for c in conds)
+        assert search_service.search_incidents("x", services=frozenset()) == []     # no access: no query
 
     def test_tool_lookup_across_tenants_is_not_found(self, tenants):
         s = sign_in("ann")
