@@ -1,0 +1,107 @@
+# RAG regression gate: runs the eval suite on PRs that can change retrieval or
+# generation quality, and fails the check if any threshold in
+# evals/thresholds.yaml is not met.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   OPENAI_API_KEY (judge, and generation when LLM_PROVIDER=openai),
+#   GEMINI_API_KEY (only when LLM_PROVIDER=gemini),
+#   LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST (https://jp.cloud.langfuse.com).
+# Optional repository variables: LLM_PROVIDER (openai|gemini), OPENAI_MODEL, GEMINI_MODEL.
+name: RAG eval gate
+
+on:
+  pull_request:
+    paths:
+      - "backend/agents/**"            # prompt (gemini_rca_agent.RCA_PROMPT), retrieval agents
+      - "backend/vector_store/**"      # embedding model, retriever, collection config
+      - "backend/scripts/seed.py"      # chunking / embedded text / payload
+      - "backend/workflows/**"         # pipeline orchestration
+      - "backend/models/**"
+      - "backend/config.py"            # model, MIN_RELEVANCE_SCORE
+      - "backend/data/**"              # corpus
+      - "backend/requirements.txt"
+      - "evals/**"
+  workflow_dispatch:
+    inputs:
+      sample:
+        description: "Stratified sample size (empty = full test set)"
+        required: false
+
+concurrency:
+  group: rag-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'openai' }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4.1-mini' }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      LANGFUSE_HOST: ${{ secrets.LANGFUSE_HOST || 'https://jp.cloud.langfuse.com' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            evals/requirements.txt
+
+      - name: Install dependencies (CPU-only torch)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r backend/requirements.txt -r evals/requirements.txt
+
+      - name: Cache embedding and NLI models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-bge-small-nli-deberta-v3-xsmall   # embedding model + claim-verifier NLI model
+
+      # LLM-judge and copilot responses are cached by exact inputs, so re-runs of
+      # an unchanged PR cost nothing.
+      - name: Cache eval LLM calls
+        uses: actions/cache@v4
+        with:
+          path: evals/.cache
+          key: eval-llm-cache-${{ github.head_ref }}-${{ github.sha }}
+          restore-keys: |
+            eval-llm-cache-${{ github.head_ref }}-
+            eval-llm-cache-
+
+      # Unit + integration tests first: no API keys or credits needed, and a
+      # failure here stops the (paid) evaluation from running.
+      - name: Unit and integration tests
+        run: python -m pytest backend/tests evals/tests -q
+
+      - name: Seed vector store
+        working-directory: backend
+        run: python -m scripts.seed
+
+      - name: Sync test set to Langfuse dataset
+        run: python -m evals.testset upload
+
+      - name: Run evals with regression gate
+        run: |
+          SAMPLE_ARG=""
+          if [ -n "${{ github.event.inputs.sample }}" ]; then SAMPLE_ARG="--sample ${{ github.event.inputs.sample }}"; fi
+          python -m evals.run --gate --yes --label "ci-${{ github.event.pull_request.number || github.run_id }}" $SAMPLE_ARG
+
+      - name: Build report tables
+        if: always()
+        run: python -m evals.report || true
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: evals/runs/

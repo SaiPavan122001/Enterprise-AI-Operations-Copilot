@@ -1,0 +1,9 @@
+# NeMo Guardrails - INPUT rails (security/guardrails/__init__.py).
+# No `models:` section: NeMo's own LLM is a stub that must never be called; the
+# model-based self-check runs through the project's LLM provider (checks.llm_self_check).
+rails:
+  input:
+    flows:
+      - check prompt injection
+      - check action and secret requests
+      - llm self check input

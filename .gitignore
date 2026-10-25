@@ -22,3 +22,9 @@ backend/storage/
 # OS
 .DS_Store
 Thumbs.db
+# Local Python env
+.venv/
+
+# Eval caches / run outputs
+evals/.cache/
+evals/runs/

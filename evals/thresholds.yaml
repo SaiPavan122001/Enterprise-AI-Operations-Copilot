@@ -1,0 +1,11 @@
+# Regression gate. `python -m evals.run --gate` exits non-zero if any fails.
+# Operators: ">=", "<=", "==". Metric names match the run summary keys.
+thresholds:
+  hit_rate@5: {op: ">=", value: 0.95}   # raised from 0.85 to the user-specified gate (2026-10-23)
+  faithfulness: {op: ">=", value: 0.85}
+  answer_relevancy: {op: ">=", value: 0.80}
+  correct_refusal_rate: {op: ">=", value: 0.90}
+  permission_leaks: {op: "==", value: 0}
+  # Guard: answers produced by the evidence-only fallback (LLM errors / rate
+  # limits) are excluded from judging; a run with any of them is not trustworthy.
+  llm_fallback_rate: {op: "<=", value: 0.0}

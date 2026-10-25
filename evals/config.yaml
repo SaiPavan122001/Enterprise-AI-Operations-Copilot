@@ -1,0 +1,87 @@
+# Evaluation configuration. Every tunable lives here; secrets come from .env.
+# Paths are relative to the repository root.
+
+testset:
+  version: v1                      # bump when regenerating; old files are kept
+  dir: evals/testsets
+  sme_file: evals/testsets/sme_questions.jsonl   # optional hand-written questions
+  seed: 42
+  # Stratified sampling of vector-store records (grouped by `stratify_by`).
+  stratify_by: service
+  max_chunks: null                 # null = every record (the corpus has only 20)
+  # One single-chunk question per style per sampled record.
+  single_chunk_styles:
+    symptom: >-
+      Phrase it the way an on-call engineer would report the problem: describe
+      the observable symptom on the service and ask why it is happening. Do NOT
+      reveal the root cause in the question.
+    specific: >-
+      Ask directly about the root cause of this specific incident, naming the
+      service and the incident's subject so it is unambiguous.
+    deployment: >-
+      Ask which change or deployment is associated with this problem on the
+      service, describing the problem rather than quoting the title verbatim.
+  multi_chunk_count: 15
+  out_of_scope_count: 20
+  # Quality filter: an LLM sees the whole corpus and must identify exactly the
+  # expected record(s) from the question alone, and rate it >= min_quality (1-5).
+  min_quality: 4
+
+llm:
+  provider: openai
+  generator_model: gpt-4o-mini     # writes test questions (cheap)
+  judge_model: gpt-4o-mini         # RAGAS + refusal judge (cheap)
+  judge_embedding_model: text-embedding-3-small
+  temperature: 0.0
+  # RAGAS defaults to 1024; statement extraction from a long RCA report needs more.
+  judge_max_tokens: 8192
+  max_concurrency: 8
+  # USD per 1M tokens, used only for the pre-run cost estimate.
+  pricing:
+    gpt-4.1-mini: {input: 0.40, output: 1.60}
+    gpt-4.1: {input: 2.00, output: 8.00}
+    gpt-4o-mini: {input: 0.15, output: 0.60}
+    text-embedding-3-small: {input: 0.02, output: 0.0}
+    gemini-2.5-flash: {input: 0.30, output: 2.50}
+    gemini-3.8-flash: {input: 0.30, output: 2.50}   # UNVERIFIED - assumed same as 2.5-flash
+    gpt-4.1-mini-2025-04-14: {input: 0.40, output: 1.60}
+  confirm_above_usd: 2.00          # full runs costing more need --yes
+
+retrieval:
+  k_values: [1, 3, 5, 10]
+  max_k: 10
+
+generation:
+  # The copilot answers with a long markdown RCA. Answer views:
+  #   factual = Summary, Impact, Evidence, Root Cause, Contributing Factors
+  #             (claims about what happened - what faithfulness should gate on)
+  #   core    = Summary + Root Cause (the "answer" to the question)
+  #   full    = whole report incl. remediation/preventive advice (reported as
+  #             faithfulness_full; advice is not expected to be in the evidence)
+  faithfulness_view: factual
+  answer_view: core
+  # NLI statements verified per judge call (single-call NLI over ~40
+  # statements was found to rubber-stamp everything with gpt-4o-mini).
+  faithfulness_nli_batch: 8
+  # Cache copilot answers keyed by (provider, model, exact prompt), so re-scoring an unchanged
+  # pipeline costs nothing. `python -m evals.run --fresh-generation` bypasses it.
+  cache_generation: true
+  # Parallel copilot runs (gpt-4.1-mini RCA ~9 s; gemini-3.8-flash measured ~210 s).
+  workers: 6
+  # The copilot's own evidence-strength labels that count as "declined to answer".
+  refusal_evidence_strengths: [INSUFFICIENT]
+
+langfuse:
+  dataset_prefix: rca-copilot-eval   # dataset name = <prefix>-<testset version>
+  prompt_version: null               # null = short hash of RCA_PROMPT text
+
+calibration:
+  n_samples: 100
+  metrics: [faithfulness, answer_relevancy, context_precision, context_recall, answer_correctness]  # + correct_refusal
+  binarize_at: 0.5                   # judge score >= this counts as "pass"
+  out_file: evals/calibration/calibration_samples.csv
+
+paths:
+  cache_db: evals/.cache/llm_cache.sqlite
+  runs_dir: evals/runs
+  thresholds: evals/thresholds.yaml

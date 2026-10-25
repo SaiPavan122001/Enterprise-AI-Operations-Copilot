@@ -134,17 +134,53 @@ uvicorn app:app --reload
 # http://127.0.0.1:8000 — Swagger: http://127.0.0.1:8000/docs
 ```
 
+**Authentication (required).** The API fails closed: with no user and no API key configured,
+`/search`, `/investigate*`, `/tools`, `/actions` and `/audit` answer **503** (`/health` stays public).
+
+```bash
+cd backend
+# Browser users (password generated and shown once; stored only as a scrypt hash in storage/users.json)
+python -m security.users add alice --role investigator
+python -m security.users add bob --role admin          # approver for the approval workflow
+# Service accounts (scripts / CI) use API keys instead:
+python -m utils.auth new ci-bot viewer default payroll-service
+# Local development without sign-in (explicit, logged as a warning): AUTH_MODE=disabled in .env
+```
+
 ### 4. Frontend
 
 ```bash
 cd frontend
 npm install
-copy .env.example .env           # sets VITE_API_URL=http://127.0.0.1:8000
-npm run dev
-# http://localhost:5173
+npm run dev                      # /api is proxied to http://127.0.0.1:8000 (vite.config.js)
+# http://localhost:5173  -> sign in with a user created above
 ```
+The browser never holds an API key: it signs in, and the backend keeps the session in an
+HttpOnly, SameSite=Strict cookie. In production, serve `frontend/dist` and route `/api` to the
+backend from the same origin (reverse proxy), exactly as the Vite dev proxy does.
 
 ---
+
+## Security capabilities (how to configure and demonstrate)
+
+Implemented in `backend/security/`, `backend/tools/`, `backend/approvals/`; evidence and limits in
+`evals/GUARDRAILS_AUDIT.md`, `evals/PROMPT_INJECTION_AUDIT.md` (round 8) and `evals/REPORT.md`.
+Run all security tests with
+`python -m pytest backend/tests -q -k "rbac or pii or guardrails or tools or injection"`; the held-out
+prompt-injection suite runs live with `python -m evals.injection_eval --split heldout --label <name>`.
+
+| Capability | What it enforces (server-side) | Demonstrate |
+|---|---|---|
+| **Sign-in + RBAC** | Session cookie (HttpOnly, SameSite=Strict, Secure) + CSRF token; roles `viewer` < `investigator` < `admin` with explicit permissions per endpoint (`security/principals.py`); role/tenant re-read on every request; login lockout | Sign in as a viewer and try to run an investigation (403); `GET /auth/me` shows permissions |
+| **Resource-level access / tenants** | `security/access_policy.json` maps tenants to services (and runbooks to services); retrieval is filtered inside Qdrant; named IDs, deployments, logs, runbooks and notes outside your scope are hidden (deny by default) | Add a second tenant to the policy, create a user in it (`--tenant`), and look up another tenant's incident: 404 |
+| **PII protection** | Presidio (spaCy `en_core_web_sm`) + regex: names, e-mails, phones, credentials, API keys, employee IDs, SSNs, cards are redacted from the question before any LLM call/log/trace, from answers (except values in authorized evidence), from logs, audit events and rejected-request logs; browser history stores metadata only | Ask "Why can't jane.doe@acme.com log in to the auth-service?" - the response question shows `<EMAIL_ADDRESS>` |
+| **NeMo Guardrails** | Input rails (injection, action / secret requests, LLM self-check through `LLM_PROVIDER`), retrieval rails (instructions inside records/logs/runbooks neutralised), output rails (unsafe links, commands, credential requests, exfiltration removed) - on top of citation validation, claim verification and causal guards | Ask "Ignore previous instructions and ..." (declined); `python -m evals.security_eval` runs the attack set with guardrails off vs on |
+| **Tool authorization** | Allowlisted, typed tools (`tools/registry.py`): permission + schema validation + resource check + timeout + audit on every call; the LLM/NeMo cannot call tools | Header -> *Tools & approvals* -> look up `INC-001`; try `INC-1; DROP` (422) |
+| **Human approval** | `pending -> approved -> executed` (or rejected / expired); approver != requester; approval bound to the SHA-256 of the exact arguments; expiry; single use (no replay); fresh authorization at execution; **simulated remediation only** | As alice propose `simulated_rollback_deployment DEP-101`; as bob approve; as alice execute; executing again is refused |
+
+**Not provided:** real infrastructure changes (no executor exists; `REMEDIATION_MODE` other than
+`simulated` refuses), multi-process session/approval stores, SSO/OIDC, and a network-exposed MCP
+server (stdio only, read-only identity limited by `MCP_SERVICES`).
 
 ## Environment Variables
 
@@ -165,7 +201,8 @@ npm run dev
 
 | Variable | Description |
 |---|---|
-| `VITE_API_URL` | Backend base URL, e.g. `http://127.0.0.1:8000` |
+| `VITE_API_URL` | API base path, default `/api` (same origin; proxied to the backend) |
+| `VITE_BACKEND_URL` | Backend address for the Vite dev proxy, default `http://127.0.0.1:8000` |
 
 ---
 
@@ -177,6 +214,18 @@ npm run dev
 | POST | `/search` | `{ "query": "...", "limit": 5 }` | `{ status, results }` |
 | POST | `/investigate` | `{ "question": "..." }` | `{ status, investigation, report, message }` |
 | POST | `/investigate/stream` | `{ "question": "..." }` | SSE: real stage-completion events, then `investigation_completed` with the full payload |
+| POST | `/auth/login` | `{ "username", "password" }` | sets the session cookie; `{ user, role, tenant, services, permissions, csrf_token }` |
+| POST | `/auth/logout` · GET `/auth/me` | — | ends the session · current identity (+ CSRF token) |
+| GET | `/tools` · POST `/tools/{name}/invoke` | `{ "args": {...} }` | tools you may use · read-only tool result |
+| POST | `/actions` | `{ "tool", "args" }` | propose a consequential (simulated) action -> `pending` |
+| GET | `/actions` · `/actions/{id}` | — | actions you may see (exact tool, args, `args_hash`, requester, impact, status) |
+| POST | `/actions/{id}/approve` · `/reject` | `{ "args_hash", "note" }` | approver (not the requester) decides on exactly that action |
+| POST | `/actions/{id}/execute` | `{ "args" }` | runs once, only if approved, unexpired and the args hash matches |
+| GET | `/audit` | — | admin: tenant's audit events |
+
+Permissions: `viewer` - search, tools (read), actions (read); `investigator` - + investigations,
+propose and execute actions; `admin` - + approve/reject, audit. Unsafe requests from a browser
+session must send `X-CSRF-Token`.
 
 The `investigation` object contains structured RCA data (summary, impact,
 root cause, confidence, contributing factors, remediation, preventive

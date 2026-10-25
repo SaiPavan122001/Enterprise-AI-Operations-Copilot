@@ -1,0 +1,10 @@
+# NeMo Guardrails - RETRIEVAL rails. Applied to every retrieved record field
+# (incident title/root cause/severity/status, deployment change, log message/level,
+# runbook title/text; MCP tool results)
+# before any prompt sees it. Run as a flow on a dedicated configuration: NeMo
+# 0.24.1's native `retrieval` rail only fires inside NeMo's own knowledge-base
+# retrieval, which this application does not use.
+rails:
+  input:
+    flows:
+      - neutralize retrieved instructions

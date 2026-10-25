@@ -1,0 +1,1403 @@
+sample_id,metric,question,reference_answer,retrieved_contexts,answer_evaluated,human_label,human_notes
+1,faithfulness,What was the root cause of the 'Leave approval workflow stuck' incident in the leave-service?,The root cause of the 'Leave approval workflow stuck' incident in the leave-service was a message queue backlog. This incident was associated with deployment DEP-111.,"[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-011: deployment link DEP-111 belongs to notification-service ('Database schema migration'), not leave-service; link quarantined for data review
+- INC-011: no log lines on leave-service corroborate this incident
+---
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.","Summary: The root cause of the 'Leave approval workflow stuck' incident in the leave-service was recorded as a message queue backlog.
+
+Impact: The incident had high severity and affected the leave-service's leave approval workflow. [INC-011]
+
+Root Cause: The recorded root cause of the 'Leave approval workflow stuck' incident was a message queue backlog. [INC-011]
+
+Evidence:
+- The incident titled 'Leave approval workflow stuck' in the leave-service was recorded with high severity and resolved status, with the root cause noted as message queue backlog. [INC-011]
+- No verified deployment links exist for this incident; the only deployment link found (DEP-111) belongs to notification-service and is quarantined for data review. [INC-011]
+- No log lines from leave-service corroborate the incident or its root cause. [INC-011]
+
+Evidence-backed conclusions:
+- Since no deployment links or logs corroborate the incident, the message queue backlog root cause is recorded but unverified. [INC-011]",,
+2,answer_correctness,Why are there duplicate payroll records appearing in the payroll service?,"The duplicate payroll records were caused by the batch job executing twice, as noted in the incident record [INC-009].",,"Duplicate payroll records in the payroll service were caused by a batch job executing twice, as recorded in incident INC-009.
+
+Root cause: The root cause of duplicate payroll records was the batch job executing twice. [INC-009]",,
+3,context_recall,Why is the payroll API returning 500 errors during the recent deployment DEP-115?,The root cause of the issue was a schema version mismatch.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+---
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+",,,
+4,correct_refusal,What may lead to a failure in the payroll reconciliation process?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,"[INC-001] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column | linked deployment: DEP-101 (verified)
+---
+[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+---
+[DEP-101] service=payroll-service | time=2026-05-02T10:03:00 | change=""Database schema migration"" | linked to INC-001
+---
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+","The payroll reconciliation failures were caused by (1) a missing salary_amount column due to an incomplete database migration [INC-001] and (2) a schema version mismatch [INC-015]. [INC-001, INC-015]. Evidence strength: MEDIUM.
+
+Root cause: The payroll reconciliation failures were caused by (1) a missing salary_amount column due to an incomplete database migration [INC-001] and (2) a schema version mismatch [INC-015]. [INC-001; INC-015]",,
+5,answer_relevancy,What was the root cause of the 'Email queue growth' incident for the notification-service?,"The root cause of the 'Email queue growth' incident for the notification-service was a worker pod crash loop, as noted in the incident record INC-017.",,"The 'Email queue growth' incident in the notification-service was recorded with a root cause of a worker pod crash loop.
+
+Root cause: The recorded root cause of the 'Email queue growth' incident was a worker pod crash loop in the notification-service. [INC-017]",,
+6,context_precision,Why was there a high API error rate observed in the gateway-service during deployment DEP-112?,The high API error rate was caused by a backend service timeout.,"[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+---
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+7,correct_refusal,What might lead to differences in payroll data across regions?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-001, INC-015, INC-009, INC-019).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+8,answer_correctness,"What were the root causes of the incidents that occurred in the auth-service and leave-service, and how might they be related in terms of impact on user experience?","The root cause of the incident in the auth-service was a JWT signing key mismatch, which prevented users from logging in. In contrast, the leave-service incident was caused by a cache invalidation failure, leading to incorrect leave balances. Both incidents significantly affected user functionality, one by blocking access and the other by providing inaccurate information.",,"INC-016 on auth-service records ""Frequent user session expirations"" with recorded root cause: Misconfigured token expiry [INC-016]. INC-003 on leave-service records ""Leave balances incorrect"" with recorded root cause: Cache invalidation failure [INC-003]. INC-011 on leave-service records ""Leave approval workflow stuck"" with recorded root cause: Message queue backlog [INC-011]. INC-002 on auth-service records ""Users unable to login"" with recorded root cause: JWT signing key mismatch [INC-002]. INC-008 on auth-service records ""SSO authentication failure"" with recorded root cause: OAuth provider certificate expired [INC-008]. No direct relationship between the auth-service and leave-service incidents is established from the records [INC-016, INC-003].
+
+Root cause: Misconfigured token expiry; Cache invalidation failure; Message queue backlog; JWT signing key mismatch; OAuth provider certificate expired [INC-016; INC-002; INC-008; INC-003; INC-011]",,
+9,answer_correctness,"What configuration issue related to a scheduled task caused the reporting service to fail in generating reports, and what deployment is linked to this incident?","The problem was caused by a cron job configuration error, and it is associated with deployment DEP-120.",,"The reporting service failed to generate scheduled reports due to a cron job configuration error, as recorded in incident INC-020.
+
+Root cause: The root cause of the reporting service failing to generate reports was a cron job configuration error. [INC-020]",,
+10,answer_relevancy,What was the root cause of the API gateway outage incident [INC-005] for the gateway-service?,The root cause of the API gateway outage incident [INC-005] for the gateway-service was an ingress configuration error. This incident was related to deployment DEP-105.,,"The root cause of the API gateway outage incident INC-005 was an ingress configuration error. [INC-005]. Evidence strength: MEDIUM.
+
+Root cause: The root cause of the API gateway outage incident INC-005 was an ingress configuration error. [INC-005]",,
+11,faithfulness,"What common underlying issues, if any, can be identified between the JWT signing key mismatch in the auth-service and the database connection pool exhaustion in the employee-service that may have contributed to user experience disruptions?","The root cause for the auth-service incident was a JWT signing key mismatch, which prevented users from logging in, while the employee-service incident was due to database connection pool exhaustion, leading to issues with saving profile updates. Both incidents indicate potential weaknesses in system configuration and resource management that could impact overall service stability.","[INC-002] service=auth-service | severity=High | status=Resolved | title=""Users unable to login"" | recorded root cause: JWT signing key mismatch | linked deployment: DEP-102 (verified)
+---
+[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+---
+[DEP-102] service=auth-service | time=2026-05-03T10:06:00 | change=""JWT authentication upgrade"" | linked to INC-002
+---
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-002: no log lines on auth-service corroborate this incident
+- INC-013: no log lines on employee-service corroborate this incident
+- Matched incidents record different root causes (INC-002: JWT signing key mismatch; INC-013: Database connection pool exhaustion); each is reported separately, none is merged or chosen silently.
+---
+KNOWN TIMELINE:
+- 2026-05-03T10:06:00 - Deployment DEP-102 executed on auth-service: JWT authentication upgrade (source: deployments.json)
+- 2026-05-14T10:39:00 - Deployment DEP-113 executed on employee-service: Cache optimization (source: deployments.json)
+---
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-016] service=auth-service | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry","Summary: The JWT signing key mismatch in auth-service and the database connection pool exhaustion in employee-service are separate issues linked to different deployments and root causes, with no established connection between them that contributed jointly to user experience disruptions [INC-002, INC-013, DEP-102, DEP-113].
+
+Impact: Users were unable to login due to the auth-service JWT signing key mismatch (high severity). [INC-002]
+Profile updates were not saving due to database connection pool exhaustion in employee-service (medium severity). [INC-013]
+
+Root Cause: The root cause of the auth-service disruption was a JWT signing key mismatch as recorded in INC-002. The root cause of the employee-service disruption was database connection pool exhaustion as recorded in INC-013. [INC-002; INC-013]
+
+Evidence:
+- INC-002 reports a high severity incident in auth-service titled 'Users unable to login' caused by a JWT signing key mismatch linked to deployment DEP-102 which upgraded JWT authentication. [INC-002; DEP-102]
+- INC-013 reports a medium severity incident in employee-service titled 'Profile updates not saving' caused by database connection pool exhaustion linked to deployment DEP-113 which performed cache optimization. [INC-013; DEP-113]
+- No log lines corroborate the incidents in their respective services near the linked deployments. [INC-002; INC-013]
+
+Evidence-backed conclusions:
+- The incidents occurred independently in different services with distinct root causes and linked to separate deployments. [INC-002; INC-013; DEP-102; DEP-113]
+- There is no documented evidence or explicit record linking the two incidents or their root causes. [INC-002; INC-013]",,
+12,faithfulness,What was the root cause of the incident related to the 'Employee export timing out' in the employee-service?,The root cause of the 'Employee export timing out' incident in the employee-service was a large unoptimized query. This incident was recorded under deployment DEP-119.,"[INC-019] service=employee-service | severity=Medium | status=Resolved | title=""Employee export timing out"" | recorded root cause: Large unoptimized query | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-019: deployment link DEP-119 belongs to gateway-service ('Connection pool tuning'), not employee-service; link quarantined for data review
+- INC-019: no log lines on employee-service corroborate this incident
+---
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.","Summary: The recorded root cause for the 'Employee export timing out' incident was a large unoptimized query. [INC-019]. Evidence strength: LOW.
+
+Impact: The incident caused employee export operations to time out, classified as medium severity in employee-service. [INC-019]
+
+Root Cause: The recorded root cause for the 'Employee export timing out' incident was a large unoptimized query. [INC-019]
+
+Evidence:
+- The incident titled 'Employee export timing out' in employee-service was recorded with medium severity and resolved status, with a root cause noted as a large unoptimized query. [INC-019]
+- No verified deployment links exist for this incident, and no log lines from employee-service corroborate the incident details. [INC-019]
+
+Evidence-backed conclusions:
+- Since no deployment links or logs corroborate the incident, the root cause attribution relies solely on the incident record without external verification. [INC-019]",,
+13,answer_relevancy,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?","The incident involving the notification-service (INC-010) was caused by a third-party SMS API outage, which prevented SMS notifications from being sent. In contrast, the payroll-service incident (INC-009) was attributed to a batch job being executed twice, leading to duplicate payroll records. The occurrence of both incidents within a close timeframe could indicate underlying issues with service dependencies and scheduling that may affect overall service reliability.",,"INC-009 on payroll-service records ""Duplicate payroll records"" with recorded root cause: Batch job executed twice [INC-009]. INC-010 on notification-service records ""SMS notifications not sent"" with recorded root cause: Third-party SMS API outage [INC-010]. INC-004 on notification-service records ""Emails delayed"" with recorded root cause: SMTP rate limits exceeded [INC-004]. INC-017 on notification-service records ""Email queue growth"" with recorded root cause: Worker pod crash loop [INC-017]. The timing of these incidents, occurring independently with no verified shared deployment or direct connection, suggests separate reliability challenges for each service without evidence of cascading impact [INC-004, INC-009, INC-010, INC-017].
+
+Root cause: Batch job executed twice; Third-party SMS API outage; SMTP rate limits exceeded; Worker pod crash loop [INC-009; INC-010; INC-004; INC-017]",,
+14,answer_relevancy,What was the root cause of the high API error rate incident for the gateway-service?,"The root cause of the high API error rate incident for the gateway-service was a backend service timeout, as recorded in incident INC-012.",,"The root cause of the high API error rate incident was a backend service timeout as recorded in incident INC-012. [INC-012]. Evidence strength: MEDIUM.
+
+Root cause: The root cause of the high API error rate incident was a backend service timeout as recorded in incident INC-012. [INC-012]",,
+15,context_precision,What was the root cause of the SSO authentication failure incident for the auth-service in incident record INC-008?,The root cause of the SSO authentication failure incident for the auth-service was that the OAuth provider certificate expired. This incident was associated with deployment DEP-108.,"[INC-008] service=auth-service | severity=Critical | status=Resolved | title=""SSO authentication failure"" | recorded root cause: OAuth provider certificate expired | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+",,,
+16,context_recall,"What deployment is linked to the critical outage of the API gateway, and what was the underlying issue that caused this problem?","The outage of the API gateway is linked to deployment DEP-105, and the root cause of the incident was an ingress configuration error.","[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+---
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+---
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+17,correct_refusal,What could lead to increased latency in the auth-service?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-016, INC-004, INC-019, INC-008, INC-012).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+18,context_recall,Why are the leave balances incorrect in the leave-service?,The leave balances were incorrect due to a cache invalidation failure during deployment DEP-103.,"[INC-003] service=leave-service | severity=High | status=Resolved | title=""Leave balances incorrect"" | recorded root cause: Cache invalidation failure | linked deployment: DEP-103 (verified)
+---
+[DEP-103] service=leave-service | time=2026-05-04T10:09:00 | change=""Cache optimization"" | linked to INC-003",,,
+19,context_precision,What was the root cause of the incident INC-004 regarding the notification-service's emails being delayed?,The root cause of incident INC-004 regarding the notification-service's emails being delayed was that the SMTP rate limits were exceeded. This incident was related to deployment DEP-104.,"[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+---
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+20,correct_refusal,What are the typical security vulnerabilities in web applications?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"This question is outside what the copilot supports: it investigates incidents in this organisation's services using incident, deployment and log records, and these records do not address it.
+
+Root cause: Not determined - the available records do not establish the cause.",,
+21,answer_relevancy,What deployment is associated with the issue of SMS notifications not being sent due to a third-party SMS API outage?,"The incident is associated with deployment DEP-110, and the root cause of the problem was a third-party SMS API outage.",,"The incident involving SMS notifications not being sent due to a third-party SMS API outage is recorded for the notification-service, but no verified deployment is linked to this issue in the records.
+
+Root cause: The root cause of the SMS notifications not being sent was a third-party SMS API outage. [INC-010]",,
+22,faithfulness,What recent deployment is linked to the issue where the leave approval process was interrupted due to a backlog in the message queue?,"The problem is associated with deployment DEP-111, which caused a backlog in the message queue, leading to the leave approval workflow being stuck.","[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-011: deployment link DEP-111 belongs to notification-service ('Database schema migration'), not leave-service; link quarantined for data review
+- INC-011: no log lines on leave-service corroborate this incident
+---
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.","Summary: The leave approval process interruption due to a message queue backlog is linked to incident INC-011 in the leave-service.
+
+Impact: The incident caused a high severity disruption in the leave-service's leave approval workflow. [INC-011]
+
+Root Cause: The root cause of the leave approval process interruption was a message queue backlog as recorded in incident INC-011. [INC-011]
+
+Evidence:
+- Incident INC-011 describes a high severity issue in the leave-service titled 'Leave approval workflow stuck' with a recorded root cause of message queue backlog. [INC-011]
+- The deployment link associated with INC-011 is unverified; DEP-111 belongs to notification-service and not leave-service. [INC-011]
+- No log lines on leave-service corroborate the incident or link it to any deployment. [INC-011]
+
+Evidence-backed conclusions:
+- No verified deployment is linked to the leave-service incident causing the leave approval workflow to be stuck. [INC-011]
+- The deployment DEP-111 linked to the incident belongs to a different service (notification-service) and is quarantined for data review. [INC-011]",,
+23,context_precision,What deployment is associated with the critical issue of payroll generation failure due to a missing salary_amount column in the database?,"The issue is associated with deployment DEP-101, and the root cause was a database migration that did not include the salary_amount column.","[INC-001] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column | linked deployment: DEP-101 (verified)
+---
+[DEP-101] service=payroll-service | time=2026-05-02T10:03:00 | change=""Database schema migration"" | linked to INC-001
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+",,,
+24,answer_relevancy,Why was there a high API error rate observed in the gateway-service during deployment DEP-112?,The high API error rate was caused by a backend service timeout.,,"A high API error rate was observed in the gateway-service during deployment DEP-112, which upgraded JWT authentication. The incident INC-012 linked to this deployment recorded the root cause as a backend service timeout.
+
+Root cause: The root cause of the high API error rate during deployment DEP-112 was a backend service timeout as recorded in incident INC-012. [INC-012]",,
+25,faithfulness,What was the root cause of the incident INC-004 regarding the notification-service's emails being delayed?,The root cause of incident INC-004 regarding the notification-service's emails being delayed was that the SMTP rate limits were exceeded. This incident was related to deployment DEP-104.,"[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+---
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-004: no log lines on notification-service corroborate this incident
+---
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+---
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-017] service=notification-service | title=""Email queue growth"" | recorded root cause: Worker pod crash loop
+[INC-010] service=notification-service | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage","Summary: The root cause of the email delays in notification-service was SMTP rate limits exceeded. [INC-004]. Evidence strength: MEDIUM.
+
+Impact: Emails were delayed in the notification-service with medium severity. [INC-004]
+
+Root Cause: The root cause of the email delays in notification-service was SMTP rate limits exceeded. [INC-004]
+
+Evidence:
+- INC-004 was a medium severity incident on notification-service titled 'Emails delayed' with a recorded root cause of SMTP rate limits exceeded. [INC-004]
+- INC-004 is linked to deployment DEP-104, which was an SMTP provider update executed on 2026-05-05T10:12:00 on notification-service. [INC-004; DEP-104]
+- No log lines from notification-service corroborate the incident INC-004. [INC-004]
+
+Evidence-backed conclusions:
+- Despite the recorded root cause, the absence of corroborating log lines reduces the ability to fully verify the incident details. [INC-004]",,
+26,correct_refusal,What might cause a failure in our load balancers?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-003, INC-018, INC-014, INC-013, INC-012).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+27,context_precision,What was the root cause of the slow loading reports incident for the reporting-service (INC-007)?,The root cause of the slow loading reports incident for the reporting-service was missing database indexes.,"[INC-007] service=reporting-service | severity=Medium | status=Resolved | title=""Reports loading slowly"" | recorded root cause: Missing database indexes | linked deployment: DEP-107 (verified)
+---
+[DEP-107] service=reporting-service | time=2026-05-08T10:21:00 | change=""ETL pipeline enhancement"" | linked to INC-007
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+",,,
+28,answer_relevancy,What deployment is linked to the issue of slow report loading due to database indexing problems in the reporting service?,"The root cause of the slow report loading was missing database indexes, and this incident is associated with deployment DEP-107.",,"The slow report loading issue in the reporting service is linked to deployment DEP-107, which involved an ETL pipeline enhancement. The recorded root cause for the incident INC-007 is missing database indexes, which explains the slow report loading [INC-007, DEP-107].
+
+Root cause: The root cause of the slow report loading issue was missing database indexes as recorded in incident INC-007. [INC-007]",,
+29,answer_relevancy,"What configuration issue related to a scheduled task caused the reporting service to fail in generating reports, and what deployment is linked to this incident?","The problem was caused by a cron job configuration error, and it is associated with deployment DEP-120.",,"The reporting service failed to generate scheduled reports due to a cron job configuration error, as recorded in incident INC-020.
+
+Root cause: The root cause of the reporting service failing to generate reports was a cron job configuration error. [INC-020]",,
+30,correct_refusal,What causes discrepancies in departmental leave reports?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-003, INC-014, INC-007, INC-001, INC-019).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+31,answer_correctness,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?","The incident involving the notification-service (INC-010) was caused by a third-party SMS API outage, which prevented SMS notifications from being sent. In contrast, the payroll-service incident (INC-009) was attributed to a batch job being executed twice, leading to duplicate payroll records. The occurrence of both incidents within a close timeframe could indicate underlying issues with service dependencies and scheduling that may affect overall service reliability.",,"INC-009 on payroll-service records ""Duplicate payroll records"" with recorded root cause: Batch job executed twice [INC-009]. INC-010 on notification-service records ""SMS notifications not sent"" with recorded root cause: Third-party SMS API outage [INC-010]. INC-004 on notification-service records ""Emails delayed"" with recorded root cause: SMTP rate limits exceeded [INC-004]. INC-017 on notification-service records ""Email queue growth"" with recorded root cause: Worker pod crash loop [INC-017]. The timing of these incidents, occurring independently with no verified shared deployment or direct connection, suggests separate reliability challenges for each service without evidence of cascading impact [INC-004, INC-009, INC-010, INC-017].
+
+Root cause: Batch job executed twice; Third-party SMS API outage; SMTP rate limits exceeded; Worker pod crash loop [INC-009; INC-010; INC-004; INC-017]",,
+32,context_precision,What was the root cause of the high severity incident regarding incorrect leave balances in the leave-service?,The root cause of the incident regarding incorrect leave balances in the leave-service was a cache invalidation failure. This incident is associated with deployment DEP-103.,"[INC-003] service=leave-service | severity=High | status=Resolved | title=""Leave balances incorrect"" | recorded root cause: Cache invalidation failure | linked deployment: DEP-103 (verified)
+---
+[DEP-103] service=leave-service | time=2026-05-04T10:09:00 | change=""Cache optimization"" | linked to INC-003",,,
+33,answer_correctness,What deployment is associated with the issue of timing out during employee exports due to a large unoptimized query?,"The problem of timing out during employee exports is associated with deployment DEP-119, which had a root cause of a large unoptimized query.",,"The incident involving employee export timing out due to a large unoptimized query is associated with the employee-service, but no verified deployment is linked to this issue in the records.
+
+Root cause: The root cause of the employee export timing out is a large unoptimized query. [INC-019]",,
+34,context_precision,"What were the root causes of the incidents that occurred in the auth-service and leave-service, and how might they be related in terms of impact on user experience?","The root cause of the incident in the auth-service was a JWT signing key mismatch, which prevented users from logging in. In contrast, the leave-service incident was caused by a cache invalidation failure, leading to incorrect leave balances. Both incidents significantly affected user functionality, one by blocking access and the other by providing inaccurate information.","[INC-016] service=auth-service | severity=Medium | status=Resolved | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry | linked deployment: DEP-116 (verified)
+---
+[INC-003] service=leave-service | severity=High | status=Resolved | title=""Leave balances incorrect"" | recorded root cause: Cache invalidation failure | linked deployment: DEP-103 (verified)
+---
+[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified
+---
+[INC-002] service=auth-service | severity=High | status=Resolved | title=""Users unable to login"" | recorded root cause: JWT signing key mismatch | linked deployment: DEP-102 (verified)
+---
+[INC-008] service=auth-service | severity=Critical | status=Resolved | title=""SSO authentication failure"" | recorded root cause: OAuth provider certificate expired | deployment link: unverified
+---
+[DEP-116] service=auth-service | time=2026-05-17T10:48:00 | change=""Search index refresh"" | linked to INC-016
+---
+[DEP-103] service=leave-service | time=2026-05-04T10:09:00 | change=""Cache optimization"" | linked to INC-003
+---
+[DEP-102] service=auth-service | time=2026-05-03T10:06:00 | change=""JWT authentication upgrade"" | linked to INC-002
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+",,,
+35,answer_relevancy,Why is the employee export timing out in the employee-service?,"The employee export is timing out due to a large unoptimized query, as indicated in incident record INC-019.",,"The employee export in the employee-service timed out due to a large unoptimized query, as recorded in incident INC-019.
+
+Root cause: The root cause of the employee export timing out in the employee-service was a large unoptimized query. [INC-019]",,
+36,correct_refusal,What are the implications of using outdated libraries in our applications?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about.
+
+Root cause: Not determined - the available records do not establish the cause.",,
+37,faithfulness,What was the root cause of the API gateway outage incident [INC-005] for the gateway-service?,The root cause of the API gateway outage incident [INC-005] for the gateway-service was an ingress configuration error. This incident was related to deployment DEP-105.,"[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+---
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-005: no log lines on gateway-service corroborate this incident
+---
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+---
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-018] service=gateway-service | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure","Summary: The root cause of the API gateway outage incident INC-005 was an ingress configuration error. [INC-005]. Evidence strength: MEDIUM.
+
+Impact: The incident INC-005 was a critical severity API gateway outage affecting the gateway-service. [INC-005]
+
+Root Cause: The root cause of the API gateway outage incident INC-005 was an ingress configuration error. [INC-005]
+
+Evidence:
+- Incident INC-005 on gateway-service was a critical severity API gateway outage with a recorded root cause of ingress configuration error. [INC-005]
+- Deployment DEP-105 on gateway-service at 2026-05-06T10:15:00 involved an ingress configuration change and is linked to incident INC-005. [DEP-105; INC-005]
+- No log lines from gateway-service corroborate the incident INC-005. [INC-005]
+
+Evidence-backed conclusions:
+- The ingress configuration change in deployment DEP-105 is linked to the API gateway outage incident INC-005. [INC-005; DEP-105]
+- The absence of corroborating log lines from gateway-service limits the ability to further verify the root cause. [INC-005]",,
+38,answer_correctness,What was the root cause of the payroll generation failing incident for the payroll-service?,"The root cause of the payroll generation failing incident for the payroll-service was that the database migration was missing the salary_amount column, as indicated in incident record INC-001.",,"The payroll generation failure in the payroll-service was caused by a missing salary_amount column due to a database schema migration deployed on 2026-05-02T10:03:00 [INC-001, DEP-101].
+
+Root cause: The root cause of the payroll generation failure was the database migration missing the salary_amount column. [INC-001]",,
+39,faithfulness,How did the cron job configuration error in INC-020 and the missing database indexes in INC-007 contribute to the overall performance and reliability of the reporting-service?,"The cron job configuration error in INC-020 led to scheduled reports not being generated, impacting the timely delivery of data. Meanwhile, the missing database indexes in INC-007 caused reports to load slowly, further degrading the performance of the reporting-service. Together, these issues created significant disruptions in the service's functionality.","[INC-020] service=reporting-service | severity=High | status=Resolved | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error | deployment link: unverified
+---
+[INC-007] service=reporting-service | severity=Medium | status=Resolved | title=""Reports loading slowly"" | recorded root cause: Missing database indexes | linked deployment: DEP-107 (verified)
+---
+[DEP-107] service=reporting-service | time=2026-05-08T10:21:00 | change=""ETL pipeline enhancement"" | linked to INC-007
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-020: deployment link DEP-120 belongs to employee-service ('API version upgrade'), not reporting-service; link quarantined for data review
+- INC-020: no log lines on reporting-service corroborate this incident
+- INC-007: no log lines on reporting-service corroborate this incident
+- Matched incidents record different root causes (INC-020: Cron job configuration error; INC-007: Missing database indexes); each is reported separately, none is merged or chosen silently.
+---
+KNOWN TIMELINE:
+- 2026-05-08T10:21:00 - Deployment DEP-107 executed on reporting-service: ETL pipeline enhancement (source: deployments.json)
+---
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure
+[INC-006] service=employee-service | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query","Summary: The cron job configuration error in INC-020 caused scheduled reports not to be generated, impacting reporting-service reliability, while the missing database indexes in INC-007 led to slow report loading, affecting performance.
+
+Impact: INC-020 caused high severity impact by preventing scheduled reports from being generated in reporting-service. [INC-020]
+INC-007 caused medium severity impact by slowing report loading in reporting-service. [INC-007]
+
+Root Cause: The root cause for the scheduled reports not being generated was a cron job configuration error (INC-020), and the root cause for slow report loading was missing database indexes (INC-007). [INC-020; INC-007]
+
+Evidence:
+- INC-020 affected reporting-service with high severity due to a cron job configuration error causing scheduled reports not to be generated. [INC-020]
+- INC-007 affected reporting-service with medium severity due to missing database indexes causing reports to load slowly. [INC-007]
+- INC-007 is linked to deployment DEP-107 which involved an ETL pipeline enhancement on reporting-service. [INC-007; DEP-107]
+- No log lines on reporting-service corroborate the incidents INC-020 or INC-007. [INC-020; INC-007]
+- The deployment link DEP-120 associated with INC-020 is unverified and belongs to employee-service, not reporting-service. [INC-020]
+
+Evidence-backed conclusions:
+- The cron job configuration error directly impacted the reliability of the reporting-service by preventing scheduled reports from being generated. [INC-020]
+- The missing database indexes contributed to degraded performance by causing slow report loading times. [INC-007]
+
+Contributing factors:
+- The cron job configuration error was a contributing factor to the failure to generate scheduled reports. [INC-020]
+- Missing database indexes contributed to slow report loading performance. [INC-007]",,
+40,answer_correctness,"What were the root causes of service unavailability during the deployment of the gateway-service and the incorrect dashboard metrics in the reporting-service, and how might these issues be related to their respective deployments?","The root cause of the service unavailability during the deployment of the gateway-service was a blue-green switch failure, while the incorrect dashboard metrics in the reporting-service were due to an ETL job failure. Both incidents occurred during their respective deployments, DEP-118 for the gateway-service and DEP-114 for the reporting-service, highlighting the potential impact of deployment processes on service reliability.",,"INC-014 on reporting-service records ""Dashboard metrics incorrect"" with recorded root cause: ETL job failure [INC-014]. The gateway-service experienced service unavailability due to a blue-green switch failure during deployment. There is no established relationship between these issues or their deployments [INC-014, INC-018].
+
+Root cause: The root cause of the gateway-service unavailability was a blue-green switch failure as recorded in INC-018. The root cause of the reporting-service incorrect dashboard metrics was an ETL job failure linked to deployment DEP-114 as recorded in INC-014. [INC-018; INC-014; DEP-114]",,
+41,context_precision,"What configuration issue related to a scheduled task caused the reporting service to fail in generating reports, and what deployment is linked to this incident?","The problem was caused by a cron job configuration error, and it is associated with deployment DEP-120.","[INC-020] service=reporting-service | severity=High | status=Resolved | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error | deployment link: unverified",,,
+42,answer_correctness,What was the root cause of the 'Service unavailable during deployment' incident for the gateway-service?,The root cause of the 'Service unavailable during deployment' incident for the gateway-service was a blue-green switch failure during deployment DEP-118.,,"The root cause of the 'Service unavailable during deployment' incident for gateway-service was recorded as a blue-green switch failure.
+
+Root cause: The recorded root cause for the gateway-service outage during deployment is a blue-green switch failure. [INC-018]",,
+43,answer_correctness,Why is the employee search failing in the employee-service?,"The root cause of the employee search failure in the employee-service was Elasticsearch index corruption, as indicated in incident record INC-006.",,"The employee search failure in the employee-service was caused by Elasticsearch index corruption, as recorded in incident INC-006, which is linked to deployment DEP-106 that performed a search index refresh [INC-006, DEP-106].
+
+Root cause: The root cause of the employee search failure in employee-service was Elasticsearch index corruption. [INC-006]",,
+44,correct_refusal,What could cause the leave service to not reflect the latest policy changes?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-003, INC-011, INC-001, INC-013, INC-019).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+45,faithfulness,What deployment is linked to the issue of the email queue growing due to a worker pod experiencing a crash loop?,"The problem of email queue growth is associated with deployment DEP-117, and the root cause of the issue was identified as a worker pod crash loop.","[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-017: no log lines on notification-service corroborate this incident
+---
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.","Summary: The incident involving the email queue growth due to a worker pod crash loop in the notification-service is recorded with a root cause but lacks a verified linked deployment. An attempted deployment link to DEP-117 was quarantined as it belongs to a different service, leaving no confirmed deployment associated with the issue [INC-017].
+
+Impact: The incident caused email queue growth with high severity in notification-service. [INC-017]
+
+Root Cause: The recorded root cause for the email queue growth incident is a worker pod crash loop in the notification-service. [INC-017]
+
+Evidence:
+- INC-017 describes an incident in notification-service with high severity titled 'Email queue growth' caused by a worker pod crash loop. [INC-017]
+- The deployment link DEP-117 associated with INC-017 is unverified and quarantined because it belongs to leave-service, not notification-service. [INC-017]
+- No log lines corroborate the incident in notification-service. [INC-017]
+
+Evidence-backed conclusions:
+- Since the deployment link is unverified and belongs to a different service, no deployment can be confirmed as linked to the incident. [INC-017]",,
+46,correct_refusal,What unrelated issues could affect the performance of our server infrastructure?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-007, INC-012, INC-013, INC-019, INC-018).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+47,context_recall,Why were SMS notifications not sent for the notification-service during the incident?,The SMS notifications were not sent due to an outage in the third-party SMS API.,"[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+48,context_recall,What was the root cause of the 500 errors returned by the payroll-service in incident INC-015?,The root cause of the 500 errors returned by the payroll-service in incident INC-015 was a schema version mismatch. This incident was associated with deployment DEP-115.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+---
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+",,,
+49,context_recall,Why are users experiencing frequent session expirations in the auth-service?,The frequent user session expirations in the auth-service were caused by a misconfigured token expiry in deployment DEP-116.,"[INC-016] service=auth-service | severity=Medium | status=Resolved | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry | linked deployment: DEP-116 (verified)
+---
+[DEP-116] service=auth-service | time=2026-05-17T10:48:00 | change=""Search index refresh"" | linked to INC-016
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+",,,
+50,answer_correctness,How did the issues of the OAuth provider certificate expiration and the misconfigured token expiry collectively impact the user experience for the auth-service during the incidents?,"The OAuth provider certificate expiration resulted in critical SSO authentication failures, preventing users from logging in. Simultaneously, the misconfigured token expiry led to frequent user session expirations, causing further disruption to the user experience as users were repeatedly logged out.",,"The OAuth provider certificate expiration caused a critical SSO authentication failure impacting the auth-service, while the misconfigured token expiry led to medium-severity frequent user session expirations on the same service.
+
+Root cause: The root cause for the SSO authentication failure was the OAuth provider certificate expiration, and the root cause for the frequent user session expirations was the misconfigured token expiry. [INC-008; INC-016]",,
+51,faithfulness,Why are there duplicate payroll records appearing in the payroll service?,"The duplicate payroll records were caused by the batch job executing twice, as noted in the incident record [INC-009].","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+---
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.","Summary: Duplicate payroll records in the payroll service were caused by a batch job executing twice, as recorded in incident INC-009.
+
+Impact: Duplicate payroll records appeared in payroll-service, classified as a high severity incident. [INC-009]
+
+Root Cause: The root cause of duplicate payroll records was the batch job executing twice. [INC-009]
+
+Evidence:
+- Incident INC-009 on payroll-service was recorded with high severity and resolved status, with the root cause identified as a batch job executed twice. [INC-009]
+- The deployment link DEP-109 associated with INC-009 belongs to auth-service and not payroll-service, and is quarantined for data review. [INC-009]
+- No log lines on payroll-service corroborate the duplicate payroll records incident. [INC-009]
+
+Evidence-backed conclusions:
+- Since no verified deployment links exist for payroll-service related to this incident, the batch job duplication likely occurred independently of a recent deployment. [INC-009]
+- The lack of corroborating payroll-service logs reduces confidence in the incident's root cause attribution. [INC-009]",,
+52,answer_correctness,What recent deployment is linked to the issue where the leave approval process was interrupted due to a backlog in the message queue?,"The problem is associated with deployment DEP-111, which caused a backlog in the message queue, leading to the leave approval workflow being stuck.",,"The leave approval process interruption due to a message queue backlog is linked to incident INC-011 in the leave-service.
+
+Root cause: The root cause of the leave approval process interruption was a message queue backlog as recorded in incident INC-011. [INC-011]",,
+53,answer_relevancy,What was the deployment associated with the reporting service issue that caused incorrect metrics on the dashboard due to an ETL job failure?,"The issue with the incorrect dashboard metrics was associated with deployment DEP-114, and the root cause was an ETL job failure.",,"The root cause of the reporting service issue causing incorrect metrics on the dashboard was an ETL job failure as recorded in incident INC-014. [INC-014]. Evidence strength: MEDIUM.
+
+Root cause: The root cause of the reporting service issue causing incorrect metrics on the dashboard was an ETL job failure as recorded in incident INC-014. [INC-014]",,
+54,context_recall,What deployment is linked to the issue of the employee search failing due to an Elasticsearch index corruption?,"The problem with the employee search failing is associated with deployment DEP-106, which was caused by Elasticsearch index corruption.","[INC-006] service=employee-service | severity=High | status=Resolved | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption | linked deployment: DEP-106 (verified)
+---
+[DEP-106] service=employee-service | time=2026-05-07T10:18:00 | change=""Search index refresh"" | linked to INC-006
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+",,,
+55,context_recall,Why did the API gateway service experience an outage that was classified as critical?,The outage was caused by an ingress configuration error. This incident is associated with deployment DEP-105.,"[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+---
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+---
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+56,context_recall,How did the blue-green switch failure during deployment (INC-018) contribute to the service unavailability in comparison to the ingress configuration error that caused the API gateway outage (INC-005)?,"The blue-green switch failure during deployment (INC-018) resulted in a critical service unavailability as the system attempted to switch traffic to a new version that was not operational. In contrast, the ingress configuration error (INC-005) directly led to a complete outage of the API gateway, preventing any requests from being processed. Both incidents highlight different aspects of service disruption within the same gateway-service.","[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+---
+[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+---
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+57,correct_refusal,What might cause a failure in processing webhook callbacks in the gateway-service?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-012, INC-018, INC-005, INC-011, INC-014).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+58,faithfulness,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?","The incident involving the notification-service (INC-010) was caused by a third-party SMS API outage, which prevented SMS notifications from being sent. In contrast, the payroll-service incident (INC-009) was attributed to a batch job being executed twice, leading to duplicate payroll records. The occurrence of both incidents within a close timeframe could indicate underlying issues with service dependencies and scheduling that may affect overall service reliability.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+---
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+---
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+---
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+- INC-010: no log lines on notification-service corroborate this incident
+- INC-004: no log lines on notification-service corroborate this incident
+- INC-017: no log lines on notification-service corroborate this incident
+- Matched incidents record different root causes (INC-009: Batch job executed twice; INC-010: Third-party SMS API outage; INC-004: SMTP rate limits exceeded; INC-017: Worker pod crash loop); each is reported separately, none is merged or chosen silently.
+---
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+---
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure","Summary: INC-009 on payroll-service records ""Duplicate payroll records"" with recorded root cause: Batch job executed twice [INC-009]. INC-010 on notification-service records ""SMS notifications not sent"" with recorded root cause: Third-party SMS API outage [INC-010]. INC-004 on notification-service records ""Emails delayed"" with recorded root cause: SMTP rate limits exceeded [INC-004]. INC-017 on notification-service records ""Email queue growth"" with recorded root cause: Worker pod crash loop [INC-017]. The timing of these incidents, occurring independently with no verified shared deployment or direct connection, suggests separate reliability challenges for each service without evidence of cascading impact [INC-004, INC-009, INC-010, INC-017].
+
+Impact: Not recorded in the available evidence.
+
+Root Cause: Batch job executed twice; Third-party SMS API outage; SMTP rate limits exceeded; Worker pod crash loop [INC-009; INC-010; INC-004; INC-017]
+
+Evidence:
+- INC-009 (payroll-service) was a high severity incident titled 'Duplicate payroll records' caused by a batch job executing twice; the linked deployment is unverified and no payroll-service logs corroborate the incident. [INC-009]
+- INC-010 (notification-service) was a medium severity incident titled 'SMS notifications not sent' caused by a third-party SMS API outage; the linked deployment is unverified and no notification-service logs corroborate the incident. [INC-010]
+- INC-004 (notification-service) was a medium severity incident titled 'Emails delayed' caused by SMTP rate limits exceeded; it is linked to deployment DEP-104 (SMTP provider update) executed at 2026-05-05T10:12:00, but no notification-service logs corroborate the incident. [INC-004; DEP-104]
+- INC-017 (notification-service) was a high severity incident titled 'Email queue growth' caused by a worker pod crash loop; the linked deployment is unverified and no notification-service logs corroborate the incident. [INC-017]
+
+Evidence-backed conclusions:
+- Each incident affecting payroll-service and notification-service had a distinct root cause with no verified shared deployment or direct causal relationship between them. [INC-009; INC-010; INC-004; INC-017]",,
+59,context_recall,What was the root cause of the incident related to the 'Employee export timing out' in the employee-service?,The root cause of the 'Employee export timing out' incident in the employee-service was a large unoptimized query. This incident was recorded under deployment DEP-119.,"[INC-019] service=employee-service | severity=Medium | status=Resolved | title=""Employee export timing out"" | recorded root cause: Large unoptimized query | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+",,,
+60,correct_refusal,What might lead to incorrect user permissions in the auth-service?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-002, INC-016, INC-008, INC-006).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+61,answer_correctness,"What were the different root causes of the service unavailability during deployment and the high API error rate for the gateway-service, and how might they have interacted during the deployment process?","The service unavailability during deployment was caused by a blue-green switch failure, which indicates an issue with the deployment process itself. In contrast, the high API error rate was attributed to a backend service timeout, suggesting that even after the deployment, the backend services were unable to handle the requests efficiently, potentially compounding the issues experienced during the deployment.",,"The service unavailability during deployment of gateway-service was attributed to a blue-green switch failure, while the high API error rate was caused by a backend service timeout during a JWT authentication upgrade deployment [INC-018, INC-012, DEP-112].
+
+Root cause: The high API error rate on gateway-service was caused by a backend service timeout during deployment DEP-112 [INC-012]. The service unavailability during deployment was caused by a blue-green switch failure, though the deployment link to gateway-service is unverified [INC-018]. [INC-012; INC-018]",,
+62,answer_relevancy,How did the issues of the OAuth provider certificate expiration and the misconfigured token expiry collectively impact the user experience for the auth-service during the incidents?,"The OAuth provider certificate expiration resulted in critical SSO authentication failures, preventing users from logging in. Simultaneously, the misconfigured token expiry led to frequent user session expirations, causing further disruption to the user experience as users were repeatedly logged out.",,"The OAuth provider certificate expiration caused a critical SSO authentication failure impacting the auth-service, while the misconfigured token expiry led to medium-severity frequent user session expirations on the same service.
+
+Root cause: The root cause for the SSO authentication failure was the OAuth provider certificate expiration, and the root cause for the frequent user session expirations was the misconfigured token expiry. [INC-008; INC-016]",,
+63,context_precision,What was the root cause of the 'Employee search failing' incident in the employee-service?,The root cause of the 'Employee search failing' incident in the employee-service was Elasticsearch index corruption. This incident was associated with deployment DEP-106.,"[INC-006] service=employee-service | severity=High | status=Resolved | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption | linked deployment: DEP-106 (verified)
+---
+[DEP-106] service=employee-service | time=2026-05-07T10:18:00 | change=""Search index refresh"" | linked to INC-006
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+",,,
+64,correct_refusal,What external factors could affect our overall system performance?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about.
+
+Root cause: Not determined - the available records do not establish the cause.",,
+65,context_precision,What was the root cause of the incident [INC-020] regarding the reporting-service where scheduled reports were not generated?,The root cause of the incident [INC-020] for the reporting-service was a cron job configuration error. This incident was associated with deployment DEP-120.,"[INC-020] service=reporting-service | severity=High | status=Resolved | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error | deployment link: unverified",,,
+66,answer_relevancy,Why are the leave balances incorrect in the leave-service?,The leave balances were incorrect due to a cache invalidation failure during deployment DEP-103.,,"The leave balances were incorrect in the leave-service due to a cache invalidation failure linked to deployment DEP-103, which involved a cache optimization change [INC-003, DEP-103].
+
+Root cause: The root cause of the incorrect leave balances was a cache invalidation failure in the leave-service. [INC-003]",,
+67,answer_relevancy,What was the root cause of the 'Leave approval workflow stuck' incident in the leave-service?,The root cause of the 'Leave approval workflow stuck' incident in the leave-service was a message queue backlog. This incident was associated with deployment DEP-111.,,"The root cause of the 'Leave approval workflow stuck' incident in the leave-service was recorded as a message queue backlog.
+
+Root cause: The recorded root cause of the 'Leave approval workflow stuck' incident was a message queue backlog. [INC-011]",,
+68,context_precision,"What were the different root causes of the service unavailability during deployment and the high API error rate for the gateway-service, and how might they have interacted during the deployment process?","The service unavailability during deployment was caused by a blue-green switch failure, which indicates an issue with the deployment process itself. In contrast, the high API error rate was attributed to a backend service timeout, suggesting that even after the deployment, the backend services were unable to handle the requests efficiently, potentially compounding the issues experienced during the deployment.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+---
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+---
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+69,context_recall,What deployment is linked to the issue of the email queue growing due to a worker pod experiencing a crash loop?,"The problem of email queue growth is associated with deployment DEP-117, and the root cause of the issue was identified as a worker pod crash loop.","[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+70,answer_correctness,Why is the employee export timing out in the employee-service?,"The employee export is timing out due to a large unoptimized query, as indicated in incident record INC-019.",,"The employee export in the employee-service timed out due to a large unoptimized query, as recorded in incident INC-019.
+
+Root cause: The root cause of the employee export timing out in the employee-service was a large unoptimized query. [INC-019]",,
+71,correct_refusal,What could lead to problems with the employee profile visibility?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-013, INC-006, INC-019, INC-014, INC-001).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+72,context_recall,Why was the leave approval workflow stuck in the leave-service?,"The leave approval workflow was stuck due to a message queue backlog, as indicated in incident record INC-011. This incident was associated with deployment DEP-111.","[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified",,,
+73,faithfulness,What deployment is associated with the critical issue of payroll generation failure due to a missing salary_amount column in the database?,"The issue is associated with deployment DEP-101, and the root cause was a database migration that did not include the salary_amount column.","[INC-001] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column | linked deployment: DEP-101 (verified)
+---
+[DEP-101] service=payroll-service | time=2026-05-02T10:03:00 | change=""Database schema migration"" | linked to INC-001
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-001: no log lines on payroll-service corroborate this incident
+---
+KNOWN TIMELINE:
+- 2026-05-02T10:03:00 - Deployment DEP-101 executed on payroll-service: Database schema migration (source: deployments.json)","Summary: The critical payroll generation failure due to a missing salary_amount column in the database is associated with deployment DEP-101, which performed a database schema migration on the payroll-service [INC-001, DEP-101].
+
+Impact: Payroll generation failed critically in the payroll-service. [INC-001]
+
+Root Cause: The root cause of the payroll generation failure is a database migration missing the salary_amount column, as recorded in INC-001. [INC-001]
+
+Evidence:
+- Incident INC-001 reports a critical payroll generation failure caused by a missing salary_amount column in the database, linked to deployment DEP-101. [INC-001]
+- Deployment DEP-101 on payroll-service executed a database schema migration at 2026-05-02T10:03:00 and is linked to INC-001. [DEP-101]
+- No log lines from payroll-service corroborate the incident INC-001. [INC-001]
+
+Evidence-backed conclusions:
+- The payroll generation failure incident is directly linked to the database schema migration deployment DEP-101. [INC-001; DEP-101]
+
+Contributing factors:
+- The database migration did not include the salary_amount column, which is essential for payroll generation. [INC-001]",,
+74,context_precision,What was the root cause of the 'Email queue growth' incident for the notification-service?,"The root cause of the 'Email queue growth' incident for the notification-service was a worker pod crash loop, as noted in the incident record INC-017.","[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+75,answer_relevancy,"What common underlying issues, if any, can be identified between the JWT signing key mismatch in the auth-service and the database connection pool exhaustion in the employee-service that may have contributed to user experience disruptions?","The root cause for the auth-service incident was a JWT signing key mismatch, which prevented users from logging in, while the employee-service incident was due to database connection pool exhaustion, leading to issues with saving profile updates. Both incidents indicate potential weaknesses in system configuration and resource management that could impact overall service stability.",,"The JWT signing key mismatch in auth-service and the database connection pool exhaustion in employee-service are separate issues linked to different deployments and root causes, with no established connection between them that contributed jointly to user experience disruptions [INC-002, INC-013, DEP-102, DEP-113].
+
+Root cause: The root cause of the auth-service disruption was a JWT signing key mismatch as recorded in INC-002. The root cause of the employee-service disruption was database connection pool exhaustion as recorded in INC-013. [INC-002; INC-013]",,
+76,answer_correctness,Why did the API gateway service experience an outage that was classified as critical?,The outage was caused by an ingress configuration error. This incident is associated with deployment DEP-105.,,"The API gateway service experienced two critical outages with different recorded root causes: an ingress configuration error linked to deployment DEP-105 [INC-005, DEP-105], and a blue-green switch failure reported separately without verified deployment linkage [INC-018].
+
+Root cause: The root cause of the API gateway outage was an ingress configuration error associated with deployment DEP-105, as recorded in INC-005. [INC-005; DEP-105]",,
+77,context_recall,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?","The incident involving the notification-service (INC-010) was caused by a third-party SMS API outage, which prevented SMS notifications from being sent. In contrast, the payroll-service incident (INC-009) was attributed to a batch job being executed twice, leading to duplicate payroll records. The occurrence of both incidents within a close timeframe could indicate underlying issues with service dependencies and scheduling that may affect overall service reliability.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+---
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+---
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+---
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+78,context_precision,What was the critical issue related to the SSO authentication for the auth-service and what was the root cause of this problem?,The critical issue with the SSO authentication for the auth-service was caused by an expired OAuth provider certificate. This incident is associated with deployment DEP-108.,"[INC-008] service=auth-service | severity=Critical | status=Resolved | title=""SSO authentication failure"" | recorded root cause: OAuth provider certificate expired | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+",,,
+79,faithfulness,What deployment is linked to the issue of incorrect leave balances in the leave-service due to a cache invalidation failure?,"The issue of incorrect leave balances in the leave-service was linked to the deployment DEP-103, with the root cause identified as a cache invalidation failure.","[INC-003] service=leave-service | severity=High | status=Resolved | title=""Leave balances incorrect"" | recorded root cause: Cache invalidation failure | linked deployment: DEP-103 (verified)
+---
+[DEP-103] service=leave-service | time=2026-05-04T10:09:00 | change=""Cache optimization"" | linked to INC-003
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-003: no log lines on leave-service corroborate this incident
+---
+KNOWN TIMELINE:
+- 2026-05-04T10:09:00 - Deployment DEP-103 executed on leave-service: Cache optimization (source: deployments.json)","Summary: The issue of incorrect leave balances in the leave-service due to a cache invalidation failure is linked to deployment DEP-103, which was executed on 2026-05-04T10:09:00 and involved a cache optimization change [INC-003, DEP-103].
+
+Impact: The incident INC-003 caused incorrect leave balances in the leave-service with high severity. [INC-003]
+
+Root Cause: The root cause of the incorrect leave balances issue was a cache invalidation failure as recorded in incident INC-003. [INC-003]
+
+Evidence:
+- Incident INC-003 on leave-service with high severity titled 'Leave balances incorrect' recorded the root cause as a cache invalidation failure and linked it to deployment DEP-103. [INC-003]
+- Deployment DEP-103 on leave-service occurred at 2026-05-04T10:09:00 with a change described as 'Cache optimization' and is linked to incident INC-003. [DEP-103]
+
+Evidence-backed conclusions:
+- The deployment DEP-103 is directly linked to the incident INC-003 involving incorrect leave balances due to cache invalidation failure. [INC-003; DEP-103]",,
+80,correct_refusal,What could cause a failure in retrieving user session history from the auth-service?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-016, INC-008, INC-002).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+81,context_recall,"What were the underlying issues that affected the employee-service, specifically regarding the failure of employee search and the inability to save profile updates, and how did these issues relate to the system's overall performance?","The employee search failure was caused by Elasticsearch index corruption, which impacted the ability to retrieve employee data efficiently. Simultaneously, the profile updates not saving was linked to database connection pool exhaustion, indicating a bottleneck in managing concurrent database connections. Together, these issues highlight significant performance challenges within the employee-service.","[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+---
+[INC-006] service=employee-service | severity=High | status=Resolved | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption | linked deployment: DEP-106 (verified)
+---
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+---
+[DEP-106] service=employee-service | time=2026-05-07T10:18:00 | change=""Search index refresh"" | linked to INC-006
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+",,,
+82,answer_relevancy,Why is the SSO authentication failing for the auth-service?,"The SSO authentication failure for the auth-service is due to the OAuth provider certificate being expired, as indicated in incident record INC-008.",,"The SSO authentication failure for the auth-service was caused by an expired OAuth provider certificate, as recorded in the critical incident INC-008.
+
+Root cause: The root cause of the SSO authentication failure in auth-service was the expiration of the OAuth provider certificate. [INC-008]",,
+83,context_recall,What deployment caused the gateway service to be unavailable due to a blue-green switch failure?,"The deployment associated with this problem is DEP-118, which experienced a blue-green switch failure leading to the service being unavailable.","[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+84,context_precision,Why are users unable to login to the auth-service?,"The root cause of users being unable to login to the auth-service was a JWT signing key mismatch, as indicated in incident record [INC-002] related to deployment DEP-102.","[INC-002] service=auth-service | severity=High | status=Resolved | title=""Users unable to login"" | recorded root cause: JWT signing key mismatch | linked deployment: DEP-102 (verified)
+---
+[DEP-102] service=auth-service | time=2026-05-03T10:06:00 | change=""JWT authentication upgrade"" | linked to INC-002
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+",,,
+85,answer_relevancy,What deployment is linked to the issue of the employee search failing due to an Elasticsearch index corruption?,"The problem with the employee search failing is associated with deployment DEP-106, which was caused by Elasticsearch index corruption.",,"The employee search failure caused by Elasticsearch index corruption is linked to deployment DEP-106 on the employee-service, which executed a search index refresh on 2026-05-07T10:18:00 [INC-006, DEP-106].
+
+Root cause: The root cause of the employee search failure was Elasticsearch index corruption as recorded in incident INC-006. [INC-006]",,
+86,faithfulness,"What were the contributing factors to the high severity incidents in the leave-service, specifically regarding the incorrect leave balances and the stuck leave approval workflow?","The incorrect leave balances were caused by a cache invalidation failure, which likely led to outdated data being served to users. Simultaneously, the stuck leave approval workflow was due to a message queue backlog, preventing timely processing of approval requests. Both issues impacted the overall functionality of the leave-service.","[INC-003] service=leave-service | severity=High | status=Resolved | title=""Leave balances incorrect"" | recorded root cause: Cache invalidation failure | linked deployment: DEP-103 (verified)
+---
+[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified
+---
+[DEP-103] service=leave-service | time=2026-05-04T10:09:00 | change=""Cache optimization"" | linked to INC-003
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-011: deployment link DEP-111 belongs to notification-service ('Database schema migration'), not leave-service; link quarantined for data review
+- INC-003: no log lines on leave-service corroborate this incident
+- INC-011: no log lines on leave-service corroborate this incident
+- Matched incidents record different root causes (INC-003: Cache invalidation failure; INC-011: Message queue backlog); each is reported separately, none is merged or chosen silently.
+---
+KNOWN TIMELINE:
+- 2026-05-04T10:09:00 - Deployment DEP-103 executed on leave-service: Cache optimization (source: deployments.json)
+---
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column","Summary: The root cause for the incorrect leave balances incident was a cache invalidation failure (INC-003). The root cause for the stuck leave approval workflow incident was a message queue backlog (INC-011). [INC-003, INC-011]. Evidence strength: LOW.
+
+Impact: Both incidents were high severity and affected the leave-service, causing incorrect leave balances and a stuck leave approval workflow respectively. [INC-003; INC-011]
+
+Root Cause: The root cause for the incorrect leave balances incident was a cache invalidation failure (INC-003). The root cause for the stuck leave approval workflow incident was a message queue backlog (INC-011). [INC-003; INC-011]
+
+Evidence:
+- INC-003 (Leave balances incorrect) was a high severity incident in leave-service, recorded root cause was cache invalidation failure, linked to deployment DEP-103 which involved a cache optimization change executed on 2026-05-04T10:09:00. [INC-003; DEP-103]
+- INC-011 (Leave approval workflow stuck) was a high severity incident in leave-service, recorded root cause was message queue backlog, but the deployment link is unverified and no corroborating logs exist. [INC-011]
+- No log lines on leave-service corroborate either INC-003 or INC-011. [INC-003; INC-011]
+
+Evidence-backed conclusions:
+- The two high severity incidents in leave-service had distinct root causes and no evidence establishes a relationship between them. [INC-003; INC-011]
+- The cache invalidation failure was linked to a verified deployment (DEP-103), while the message queue backlog incident's deployment link remains unverified. [INC-003; DEP-103; INC-011]
+
+Contributing factors:
+- Cache invalidation failure contributed to the incorrect leave balances incident. [INC-003]
+- Message queue backlog contributed to the stuck leave approval workflow incident. [INC-011]",,
+87,answer_relevancy,What deployment is associated with the problem of delayed emails in the notification service due to SMTP rate limits being exceeded?,"The issue of delayed emails in the notification service, caused by exceeding SMTP rate limits, is associated with deployment DEP-104.",,"The root cause of the delayed emails was SMTP rate limits being exceeded as recorded in incident INC-004. [INC-004]. Evidence strength: MEDIUM.
+
+Root cause: The root cause of the delayed emails was SMTP rate limits being exceeded as recorded in incident INC-004. [INC-004]",,
+88,correct_refusal,What could lead to a failure in our cloud storage services?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-006, INC-003, INC-018, INC-013, INC-014).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+89,context_precision,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?","The incident involving the notification-service (INC-010) was caused by a third-party SMS API outage, which prevented SMS notifications from being sent. In contrast, the payroll-service incident (INC-009) was attributed to a batch job being executed twice, leading to duplicate payroll records. The occurrence of both incidents within a close timeframe could indicate underlying issues with service dependencies and scheduling that may affect overall service reliability.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+---
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+---
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+---
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+90,context_precision,"Why is the email queue growing excessively, causing high severity issues in the notification service?","The email queue growth was caused by a crash loop of the worker pod, as noted in incident record INC-017 related to deployment DEP-117.","[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+",,,
+91,context_recall,"What are the combined root causes that led to the critical incidents affecting the gateway-service, specifically the API gateway outage and the high API error rate?","The API gateway outage was caused by an ingress configuration error, while the high API error rate was due to a backend service timeout. Both issues occurred during different deployments of the gateway-service.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+---
+[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+---
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+---
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+92,context_precision,What was the root cause of the high API error rate incident for the gateway-service?,"The root cause of the high API error rate incident for the gateway-service was a backend service timeout, as recorded in incident INC-012.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+---
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+93,correct_refusal,What could lead to inconsistencies in payroll deductions?,The available incident data does not contain information to answer this; the copilot should say the evidence is insufficient rather than give a root cause.,,"The available incident records do not establish the cause. No retrieved incident describes the problem asked about; related records on the same services describe different problems (INC-009, INC-001, INC-015, INC-003, INC-019).
+
+Root cause: Not determined - the available records do not establish the cause.",,
+94,answer_correctness,What was the root cause of the incident [INC-014] involving the reporting-service and the incorrect dashboard metrics?,The root cause of the incident [INC-014] involving the reporting-service was an ETL job failure. This incident was associated with deployment DEP-114.,,"The root cause of incident INC-014 involving the reporting-service and incorrect dashboard metrics was recorded as an ETL job failure, linked to deployment DEP-114 which updated the SMTP provider on the reporting-service [INC-014, DEP-114].
+
+Root cause: The root cause of the incorrect dashboard metrics in incident INC-014 was an ETL job failure as recorded in the incident report. [INC-014]",,
+95,answer_correctness,What was the root cause of the incident [INC-020] regarding the reporting-service where scheduled reports were not generated?,The root cause of the incident [INC-020] for the reporting-service was a cron job configuration error. This incident was associated with deployment DEP-120.,,"The root cause of the incident INC-020 involving the reporting-service where scheduled reports were not generated was recorded as a cron job configuration error [INC-020].
+
+Root cause: The recorded root cause for the reporting-service incident INC-020 was a cron job configuration error. [INC-020]",,
+96,faithfulness,What deployment is associated with the problem of delayed emails in the notification service due to SMTP rate limits being exceeded?,"The issue of delayed emails in the notification service, caused by exceeding SMTP rate limits, is associated with deployment DEP-104.","[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+---
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-004: no log lines on notification-service corroborate this incident
+---
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)","Summary: The root cause of the delayed emails was SMTP rate limits being exceeded as recorded in incident INC-004. [INC-004]. Evidence strength: MEDIUM.
+
+Impact: Emails were delayed in the notification-service with a severity level of Medium. [INC-004]
+
+Root Cause: The root cause of the delayed emails was SMTP rate limits being exceeded as recorded in incident INC-004. [INC-004]
+
+Evidence:
+- Incident INC-004 on notification-service reported emails delayed with a recorded root cause of SMTP rate limits exceeded and linked deployment DEP-104. [INC-004]
+- Deployment DEP-104 on notification-service occurred at 2026-05-05T10:12:00 and involved an SMTP provider update, linked to incident INC-004. [DEP-104]
+
+Evidence-backed conclusions:
+- The SMTP provider update deployment DEP-104 is linked to the incident INC-004 involving delayed emails due to SMTP rate limits. [INC-004; DEP-104]",,
+97,faithfulness,What deployment is associated with the critical issue of the Payroll API returning 500 errors due to a schema version mismatch?,"The problem is linked to deployment DEP-115, which caused the Payroll API to return 500 errors due to a schema version mismatch.","[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+---
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+---
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+---
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+---
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)","Summary: The critical issue of the Payroll API returning 500 errors due to a schema version mismatch is associated with deployment DEP-115, which involved an ingress configuration change on the payroll-service at 2026-05-16T10:45:00 [INC-015, DEP-115].
+
+Impact: The incident INC-015 caused critical severity 500 errors on the payroll-service Payroll API. [INC-015]
+
+Root Cause: The root cause of the Payroll API returning 500 errors is a schema version mismatch as recorded in incident INC-015. [INC-015]
+
+Evidence:
+- Incident INC-015 reports a critical severity issue on payroll-service with 500 errors caused by a schema version mismatch and links this incident to deployment DEP-115. [INC-015]
+- Deployment DEP-115 on payroll-service occurred at 2026-05-16T10:45:00 and involved an ingress configuration change. [DEP-115]
+- No log lines on payroll-service corroborate the incident INC-015. [INC-015]",,
+98,answer_correctness,Why was the gateway-service unavailable during the deployment DEP-118?,The service unavailability was due to a blue-green switch failure.,,"The gateway-service was unavailable due to a blue-green switch failure during an incident recorded as INC-018.
+
+Root cause: The recorded root cause of the gateway-service unavailability during the incident INC-018 is a blue-green switch failure. [INC-018]",,
+99,context_recall,What deployment is linked to the critical issue of a high API error rate caused by a backend service timeout in the gateway-service?,"The issue is associated with deployment DEP-112, which was linked to a critical problem of high API error rates due to a backend service timeout.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+---
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+",,,
+100,faithfulness,Why is the employee export timing out in the employee-service?,"The employee export is timing out due to a large unoptimized query, as indicated in incident record INC-019.","[INC-019] service=employee-service | severity=Medium | status=Resolved | title=""Employee export timing out"" | recorded root cause: Large unoptimized query | deployment link: unverified
+---
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+---
+EVIDENCE STRENGTH (computed by the application): LOW
+---
+EVIDENCE NOTES:
+- INC-019: deployment link DEP-119 belongs to gateway-service ('Connection pool tuning'), not employee-service; link quarantined for data review
+- INC-019: no log lines on employee-service corroborate this incident
+---
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.","Summary: The employee export in the employee-service timed out due to a large unoptimized query, as recorded in incident INC-019.
+
+Impact: Employee export timing out in employee-service with medium severity. [INC-019]
+
+Root Cause: The root cause of the employee export timing out in the employee-service was a large unoptimized query. [INC-019]
+
+Evidence:
+- Incident INC-019 recorded a medium severity employee export timeout in the employee-service with a root cause identified as a large unoptimized query. [INC-019]
+- No verified deployment links exist for INC-019, and the only deployment link found (DEP-119) belongs to gateway-service, not employee-service. [INC-019]
+- No log lines on employee-service corroborate the incident INC-019. [INC-019]
+
+Evidence-backed conclusions:
+- The timeout was related to query performance issues rather than deployment changes, as no verified deployment links exist for the incident. [INC-019]
+- Lack of corroborating logs limits the ability to fully validate the incident details or timeline. [INC-019]",,

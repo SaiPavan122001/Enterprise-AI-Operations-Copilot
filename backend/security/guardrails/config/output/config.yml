@@ -1,0 +1,6 @@
+# NeMo Guardrails - OUTPUT rails over the structured answer (after citation
+# validation, claim verification and causal guards, which they complement).
+rails:
+  output:
+    flows:
+      - sanitize answer

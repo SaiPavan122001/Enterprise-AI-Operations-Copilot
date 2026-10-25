@@ -3,7 +3,6 @@
 External services (Gemini, Qdrant) are mocked - no API credits consumed.
 """
 
-import pytest
 
 from agents.deployment_agent import investigate_deployments
 from agents.gemini_rca_agent import (
@@ -106,14 +105,14 @@ class TestDeploymentCorrelation:
         assert result[0].deployment_id == "DEP-101"
         assert result[0].change == "Database schema migration"
 
-    def test_service_fallback_only_without_deployment_id(self, monkeypatch):
+    def test_no_service_name_fallback_without_deployment_id(self, monkeypatch):
         monkeypatch.setattr(
             "agents.deployment_agent.get_deployments", lambda: DEPLOYMENTS_RAW
         )
+        # A deployment that only shares the service name is not evidence for
+        # this incident (it may belong to another incident) - no fallback.
         incident = INCIDENT.model_copy(update={"deployment_id": None})
-        result = investigate_deployments([incident])
-        assert len(result) == 1
-        assert result[0].service == "payroll-service"
+        assert investigate_deployments([incident]) == []
 
     def test_no_incidents_returns_empty(self):
         assert investigate_deployments([]) == []
@@ -209,6 +208,8 @@ class TestGeminiFailure:
         from agents import gemini_rca_agent
         import config
 
+        monkeypatch.setattr(config.settings, "LLM_PROVIDER", "gemini")
+        monkeypatch.setattr(config.settings, "GEMINI_API_KEY", "test-key")
         monkeypatch.setattr(config.settings, "GEMINI_MAX_RETRIES", 0)
 
         class FailingModels:
@@ -224,23 +225,34 @@ class TestGeminiFailure:
         assert result.confidence in ("LOW", "INSUFFICIENT")
         assert result.root_cause is None  # no invented root cause
         assert "boom" not in (result.report_markdown or "")
+        assert result.generation_error == "error"  # fallback is never a model answer
         assert any("salary_amount" in item for item in result.recommended_remediation)
         assert any("INC-001" in item for item in result.observed_evidence)
 
     def test_success_produces_structured_result(self, monkeypatch):
-        from agents import gemini_rca_agent
+        import json as _json
 
-        markdown = (
-            "# Root Cause Analysis\n\n## Summary\nTest summary.\n\n## Impact\nImpact.\n\n"
-            "## Evidence\n- INC-001 exists\n\n## Root Cause\nBad migration.\n\n"
-            "## Contributing Factors\n- Weak monitoring\n\n"
-            "## Recommended Remediation\n1. Rollback deployment\n2. Re-run migration\n\n"
-            "## Preventive Actions\n1. Add checks\n\n## Confidence\nHigh - clear.\n\n"
-            "## Investigation Details\nUsed INC-001.\n"
-        )
+        from agents import gemini_rca_agent
+        import config
+
+        monkeypatch.setattr(config.settings, "LLM_PROVIDER", "gemini")
+        monkeypatch.setattr(config.settings, "GEMINI_API_KEY", "test-key")
+
+        answer = {
+            "answer_status": "answered",
+            "summary": "Payroll failed because the migration dropped salary_amount [INC-001].",
+            "confirmed_facts": [{"statement": "INC-001 records a missing salary_amount column.",
+                                 "refs": ["INC-001"]}],
+            "root_cause": {"status": "determined", "statement": "Bad migration.", "refs": ["INC-001"]},
+            "conclusions": [], "hypotheses": [],
+            "impact": [{"statement": "Payroll generation failed.", "refs": ["INC-001"]}],
+            "contributing_factors": [{"statement": "Weak monitoring", "refs": ["INC-001"]}],
+            "unknowns": [], "recommended_remediation": ["Rollback deployment", "Re-run migration"],
+            "preventive_actions": ["Add checks"], "confidence": "HIGH", "confidence_reason": "clear.",
+        }
 
         class FakeResponse:
-            text = markdown
+            text = _json.dumps(answer)
 
         class FakeModels:
             def generate_content(self, **kwargs):
@@ -252,15 +264,15 @@ class TestGeminiFailure:
 
         result = generate_gemini_rca(make_bundle(), VALIDATION, TIMELINE)
         assert result.status == "success"
-        assert result.summary == "Test summary."
-        assert result.root_cause == "Bad migration."
-        assert result.recommended_remediation == [
-            "Rollback deployment",
-            "Re-run migration",
-        ]
+        assert result.answer_source == "llm"
+        assert result.summary.startswith("Payroll failed")
+        assert result.root_cause == "Bad migration. [INC-001]"
+        assert result.recommended_remediation == ["Rollback deployment", "Re-run migration"]
         assert result.preventive_actions == ["Add checks"]
-        assert result.contributing_factors == ["Weak monitoring"]
+        assert result.contributing_factors == ["Weak monitoring [INC-001]"]
         assert result.confidence == "HIGH"
         assert result.timeline == TIMELINE
         assert result.evidence.incident_evidence[0].incident_id == "INC-001"
         assert result.validation.evidence_strength == "HIGH"
+        assert result.generation_provider == "gemini"
+        assert result.generation_error is None

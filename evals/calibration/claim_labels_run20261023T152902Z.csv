@@ -1,0 +1,1519 @@
+claim_id,run_name,item_id,question_type,question,claim,judge_verdict,judge_reason,evidence,assistant_label,assistant_note,human_label,human_note
+q-a96b5e64b7#11,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-a96b5e64b7,multi_chunk,"What were the different root causes of the service unavailability during deployment and the high API error rate for the gateway-service, and how might they have interacted during the deployment process?",The backend service timeout directly caused the high API error rate during the JWT authentication upgrade deployment.,unsupported,"The context states that INC-012 has a recorded root cause of backend service timeout, but it does not directly link this to the high API error rate during the JWT authentication upgrade deployment.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-012: no log lines on gateway-service corroborate this incident
+- INC-018: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-012: Backend service timeout; INC-018: Blue-green switch failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-13T10:36:00 - Deployment DEP-112 executed on gateway-service: JWT authentication upgrade (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-005] service=gateway-service | title=""API gateway outage"" | recorded root cause: Ingress configuration error",,,,
+q-16f21b3447#7,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-16f21b3447,multi_chunk,"What are the root causes of the two critical incidents involving the payroll-service that occurred during different deployments, and how do they relate to the data integrity of the service?","INC-015 caused the Payroll API to return 500 errors, which is a critical service disruption.",supported,"The context explicitly states that INC-015 is associated with the Payroll API returning 500 errors, confirming it as a critical disruption.","[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[INC-001] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column | linked deployment: DEP-101 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+[DEP-101] service=payroll-service | time=2026-05-02T10:03:00 | change=""Database schema migration"" | linked to INC-001
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+- INC-001: no log lines on payroll-service corroborate this incident
+- Matched incidents record different root causes (INC-015: Schema version mismatch; INC-001: Database migration missing salary_amount column); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-02T10:03:00 - Deployment DEP-101 executed on payroll-service: Database schema migration (source: deployments.json)
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-009] service=payroll-service | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-7779901111#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-7779901111,single_chunk,What was the root cause of the 500 errors returned by the payroll-service in incident INC-015?,The 500 errors caused a critical severity incident on payroll-service.,supported,The context indicates that the severity of the incident related to the 500 errors was critical.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column
+[INC-009] service=payroll-service | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-db197b7691#8,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-db197b7691,single_chunk,What deployment is associated with the critical issue of the Payroll API returning 500 errors due to a schema version mismatch?,No log lines on payroll-service corroborate the incident INC-015.,supported,The context explicitly states that there are no log lines on payroll-service that corroborate the incident INC-015.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)",,,,
+q-fb3cc59beb#0,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-fb3cc59beb,single_chunk,What was the root cause of the high severity incident regarding incorrect leave balances in the leave-service?,The high severity incident regarding incorrect leave balances in the leave-service was caused by a cache invalidation failure linked to the cache optimization deployment DEP-103.,unsupported,"While the incident is high severity and linked to DEP-103, the statement implies causation which is not explicitly stated in the context.","[INC-003] service=leave-service | severity=High | status=Resolved | title=""Leave balances incorrect"" | recorded root cause: Cache invalidation failure | linked deployment: DEP-103 (verified)
+[DEP-103] service=leave-service | time=2026-05-04T10:09:00 | change=""Cache optimization"" | linked to INC-003
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-003: no log lines on leave-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-04T10:09:00 - Deployment DEP-103 executed on leave-service: Cache optimization (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-d300b63c8e#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-d300b63c8e,single_chunk,Why are users experiencing frequent session expirations in the auth-service?,The root cause of frequent user session expirations in the auth-service is a misconfigured token expiry.,unsupported,"The context identifies misconfigured token expiry as the root cause, but does not confirm that it is specifically linked to frequent user session expirations.","[INC-016] service=auth-service | severity=Medium | status=Resolved | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry | linked deployment: DEP-116 (verified)
+[DEP-116] service=auth-service | time=2026-05-17T10:48:00 | change=""Search index refresh"" | linked to INC-016
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-016: no log lines on auth-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-17T10:48:00 - Deployment DEP-116 executed on auth-service: Search index refresh (source: deployments.json)",,,,
+q-23e0393f31#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-23e0393f31,multi_chunk,"What are the combined root causes that led to the critical incidents affecting the gateway-service, specifically the API gateway outage and the high API error rate?",The combined root causes for the critical incidents on gateway-service are the ingress configuration error causing the API gateway outage.,unsupported,"While the ingress configuration error is a root cause for one incident, the context indicates that there are two distinct root causes, so this statement is misleading.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-012: no log lines on gateway-service corroborate this incident
+- INC-005: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-012: Backend service timeout; INC-005: Ingress configuration error); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+- 2026-05-13T10:36:00 - Deployment DEP-112 executed on gateway-service: JWT authentication upgrade (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-018] service=gateway-service | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure",,,,
+q-60a32c2381#13,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-60a32c2381,multi_chunk,"What were the root causes of service unavailability during the deployment of the gateway-service and the incorrect dashboard metrics in the reporting-service, and how might these issues be related to their respective deployments?",The reporting-service metrics issue is directly linked to a verified deployment involving an SMTP provider update.,supported,"The context states that DEP-114, which is linked to INC-014, executed a deployment involving an SMTP provider update.","[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[INC-014] service=reporting-service | severity=High | status=Resolved | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure | linked deployment: DEP-114 (verified)
+[DEP-114] service=reporting-service | time=2026-05-15T10:42:00 | change=""SMTP provider update"" | linked to INC-014
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-018: no log lines on gateway-service corroborate this incident
+- INC-014: no log lines on reporting-service corroborate this incident
+- Matched incidents record different root causes (INC-018: Blue-green switch failure; INC-014: ETL job failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-15T10:42:00 - Deployment DEP-114 executed on reporting-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-005] service=gateway-service | title=""API gateway outage"" | recorded root cause: Ingress configuration error
+[INC-020] service=reporting-service | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error",,,,
+q-60a32c2381#1,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-60a32c2381,multi_chunk,"What were the root causes of service unavailability during the deployment of the gateway-service and the incorrect dashboard metrics in the reporting-service, and how might these issues be related to their respective deployments?",The incorrect dashboard metrics in reporting-service were caused by an ETL job failure linked to a verified deployment involving an SMTP provider update.,unsupported,"The context states that the ETL job failure caused the incorrect dashboard metrics, but it does not link this to the SMTP provider update, which is related to a different deployment.","[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[INC-014] service=reporting-service | severity=High | status=Resolved | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure | linked deployment: DEP-114 (verified)
+[DEP-114] service=reporting-service | time=2026-05-15T10:42:00 | change=""SMTP provider update"" | linked to INC-014
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-018: no log lines on gateway-service corroborate this incident
+- INC-014: no log lines on reporting-service corroborate this incident
+- Matched incidents record different root causes (INC-018: Blue-green switch failure; INC-014: ETL job failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-15T10:42:00 - Deployment DEP-114 executed on reporting-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-005] service=gateway-service | title=""API gateway outage"" | recorded root cause: Ingress configuration error
+[INC-020] service=reporting-service | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error",,,,
+q-d6bedd9f05#6,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-d6bedd9f05,single_chunk,What deployment is associated with the critical issue of payroll generation failure due to a missing salary_amount column in the database?,Deployment DEP-101 on payroll-service executed a database schema migration on 2026-05-02T10:03:00.,supported,"The context provides the exact time and details of the deployment DEP-101, confirming the execution of the migration.","[INC-001] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column | linked deployment: DEP-101 (verified)
+[DEP-101] service=payroll-service | time=2026-05-02T10:03:00 | change=""Database schema migration"" | linked to INC-001
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-001: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-02T10:03:00 - Deployment DEP-101 executed on payroll-service: Database schema migration (source: deployments.json)",,,,
+q-f1e9c9c226#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f1e9c9c226,single_chunk,"What configuration issue related to a scheduled task caused the reporting service to fail in generating reports, and what deployment is linked to this incident?",The recorded root cause of the issue in incident INC-020 is a cron job configuration error.,supported,The context states that the recorded root cause for incident INC-020 is indeed a cron job configuration error.,"[INC-020] service=reporting-service | severity=High | status=Resolved | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error | deployment link: unverified
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-020: deployment link DEP-120 belongs to employee-service ('API version upgrade'), not reporting-service; link quarantined for data review
+- INC-020: no log lines on reporting-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure
+[INC-007] service=reporting-service | title=""Reports loading slowly"" | recorded root cause: Missing database indexes",,,,
+q-f1e9c9c226#7,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f1e9c9c226,single_chunk,"What configuration issue related to a scheduled task caused the reporting service to fail in generating reports, and what deployment is linked to this incident?","The only deployment link associated with the employee service is DEP-120, which is quarantined for data review.",unsupported,"The context states that DEP-120 belongs to the employee-service and is quarantined, but it does not confirm that it is the only deployment link associated with the employee service.","[INC-020] service=reporting-service | severity=High | status=Resolved | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error | deployment link: unverified
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-020: deployment link DEP-120 belongs to employee-service ('API version upgrade'), not reporting-service; link quarantined for data review
+- INC-020: no log lines on reporting-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure
+[INC-007] service=reporting-service | title=""Reports loading slowly"" | recorded root cause: Missing database indexes",,,,
+q-db197b7691#0,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-db197b7691,single_chunk,What deployment is associated with the critical issue of the Payroll API returning 500 errors due to a schema version mismatch?,The critical issue of the Payroll API returning 500 errors due to a schema version mismatch is associated with deployment DEP-115.,unsupported,"The context states that the Payroll API returned 500 errors and that the root cause was a schema version mismatch, but it does not explicitly state that this issue is associated with deployment DEP-115.","[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)",,,,
+q-b31013755d#3,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-b31013755d,single_chunk,Why is the employee export timing out in the employee-service?,The root cause of the employee export timing out in the employee-service was a large unoptimized query.,unsupported,"The context mentions a large unoptimized query as the recorded root cause, but does not confirm it as the definitive cause of the employee export timing out.","[INC-019] service=employee-service | severity=Medium | status=Resolved | title=""Employee export timing out"" | recorded root cause: Large unoptimized query | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-019: deployment link DEP-119 belongs to gateway-service ('Connection pool tuning'), not employee-service; link quarantined for data review
+- INC-019: no log lines on employee-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.",,,,
+q-b98ead0962#6,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-b98ead0962,single_chunk,Why are emails being delayed in the notification service?,Deployment DEP-104 on the notification service involved an SMTP provider update executed on 2026-05-05 at 10:12:00.,supported,"The context provides specific details about deployment DEP-104, including the SMTP provider update and the execution time.","[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-004: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-017] service=notification-service | title=""Email queue growth"" | recorded root cause: Worker pod crash loop
+[INC-010] service=notification-service | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage",,,,
+q-62011f5f3c#12,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-62011f5f3c,single_chunk,What deployment is linked to the issue of frequent user session expirations in the auth-service due to a misconfiguration?,The misconfiguration of token expiry caused the session expiration issue.,supported,The context states that the recorded root cause of the frequent user session expirations is 'Misconfigured token expiry'.,"[INC-016] service=auth-service | severity=Medium | status=Resolved | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry | linked deployment: DEP-116 (verified)
+[DEP-116] service=auth-service | time=2026-05-17T10:48:00 | change=""Search index refresh"" | linked to INC-016
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-016: no log lines on auth-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-17T10:48:00 - Deployment DEP-116 executed on auth-service: Search index refresh (source: deployments.json)",,,,
+q-78689d6a88#12,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-78689d6a88,single_chunk,Why are profile updates failing to save in the employee-service?,"Deployment DEP-113 involving cache optimization is linked to incident INC-013, indicating a temporal and causal relationship.",unsupported,"While the context states that DEP-113 is linked to INC-013, it does not provide evidence of a causal relationship, only a temporal one.","[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-013: no log lines on employee-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-14T10:39:00 - Deployment DEP-113 executed on employee-service: Cache optimization (source: deployments.json)",,,,
+q-22e80fcd08#2,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-22e80fcd08,single_chunk,What deployment is linked to the issue of the email queue growing due to a worker pod experiencing a crash loop?,An attempted deployment link to DEP-117 was quarantined because it belongs to a different service.,supported,The context explicitly states that the deployment link DEP-117 belongs to leave-service and was quarantined for data review.,"[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-017: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.",,,,
+q-c247e0d3cd#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-c247e0d3cd,single_chunk,What was the root cause of the slow loading reports incident for the reporting-service (INC-007)?,The incident is classified as a medium severity incident.,supported,The context states that the severity of the incident is Medium.,"[INC-007] service=reporting-service | severity=Medium | status=Resolved | title=""Reports loading slowly"" | recorded root cause: Missing database indexes | linked deployment: DEP-107 (verified)
+[DEP-107] service=reporting-service | time=2026-05-08T10:21:00 | change=""ETL pipeline enhancement"" | linked to INC-007
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-007: no log lines on reporting-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-08T10:21:00 - Deployment DEP-107 executed on reporting-service: ETL pipeline enhancement (source: deployments.json)",,,,
+q-b34255c7a3#4,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-b34255c7a3,single_chunk,What was the critical issue related to the SSO authentication for the auth-service and what was the root cause of this problem?,INC-008 recorded a critical severity incident titled 'SSO authentication failure' for the auth-service.,supported,The context confirms that INC-008 is a critical incident titled 'SSO authentication failure' related to the auth-service.,"[INC-008] service=auth-service | severity=Critical | status=Resolved | title=""SSO authentication failure"" | recorded root cause: OAuth provider certificate expired | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-008: deployment link DEP-108 belongs to payroll-service ('Blue-green deployment'), not auth-service; link quarantined for data review
+- INC-008: no log lines on auth-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-002] service=auth-service | title=""Users unable to login"" | recorded root cause: JWT signing key mismatch",,,,
+q-f7f1306817#8,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f7f1306817,multi_chunk,How did the failure of the ETL job in the reporting-service (INC-014) potentially impact the database connection pool exhaustion in the employee-service (INC-013)?,No log lines corroborate the incidents in their respective services.,supported,The evidence notes explicitly state that there are no log lines on the reporting-service or employee-service that corroborate the incidents.,"[INC-014] service=reporting-service | severity=High | status=Resolved | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure | linked deployment: DEP-114 (verified)
+[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+[DEP-114] service=reporting-service | time=2026-05-15T10:42:00 | change=""SMTP provider update"" | linked to INC-014
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-014: no log lines on reporting-service corroborate this incident
+- INC-013: no log lines on employee-service corroborate this incident
+- Matched incidents record different root causes (INC-014: ETL job failure; INC-013: Database connection pool exhaustion); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-14T10:39:00 - Deployment DEP-113 executed on employee-service: Cache optimization (source: deployments.json)
+- 2026-05-15T10:42:00 - Deployment DEP-114 executed on reporting-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-007] service=reporting-service | title=""Reports loading slowly"" | recorded root cause: Missing database indexes
+[INC-006] service=employee-service | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption",,,,
+q-1b773e1b65#13,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-1b773e1b65,single_chunk,Why are reports loading slowly in the reporting service?,The absence of corroborating log lines from the reporting service limits the ability to fully verify the incident details.,supported,"The context mentions that the absence of log lines limits verification, making this statement valid.","[INC-007] service=reporting-service | severity=Medium | status=Resolved | title=""Reports loading slowly"" | recorded root cause: Missing database indexes | linked deployment: DEP-107 (verified)
+[DEP-107] service=reporting-service | time=2026-05-08T10:21:00 | change=""ETL pipeline enhancement"" | linked to INC-007
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-007: no log lines on reporting-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-08T10:21:00 - Deployment DEP-107 executed on reporting-service: ETL pipeline enhancement (source: deployments.json)",,,,
+q-60a32c2381#6,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-60a32c2381,multi_chunk,"What were the root causes of service unavailability during the deployment of the gateway-service and the incorrect dashboard metrics in the reporting-service, and how might these issues be related to their respective deployments?",The reporting-service incorrect dashboard metrics were caused by an ETL job failure linked to deployment DEP-114.,unsupported,"The context states that the ETL job failure caused the incorrect dashboard metrics, but it does not confirm a direct link to deployment DEP-114.","[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[INC-014] service=reporting-service | severity=High | status=Resolved | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure | linked deployment: DEP-114 (verified)
+[DEP-114] service=reporting-service | time=2026-05-15T10:42:00 | change=""SMTP provider update"" | linked to INC-014
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-018: no log lines on gateway-service corroborate this incident
+- INC-014: no log lines on reporting-service corroborate this incident
+- Matched incidents record different root causes (INC-018: Blue-green switch failure; INC-014: ETL job failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-15T10:42:00 - Deployment DEP-114 executed on reporting-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-005] service=gateway-service | title=""API gateway outage"" | recorded root cause: Ingress configuration error
+[INC-020] service=reporting-service | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error",,,,
+q-d300b63c8e#3,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-d300b63c8e,single_chunk,Why are users experiencing frequent session expirations in the auth-service?,Users experienced frequent session expirations causing authentication issues in the auth-service.,unsupported,"The context mentions symptoms of users unable to login and 401 Unauthorized, but does not confirm that users experienced frequent session expirations.","[INC-016] service=auth-service | severity=Medium | status=Resolved | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry | linked deployment: DEP-116 (verified)
+[DEP-116] service=auth-service | time=2026-05-17T10:48:00 | change=""Search index refresh"" | linked to INC-016
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-016: no log lines on auth-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-17T10:48:00 - Deployment DEP-116 executed on auth-service: Search index refresh (source: deployments.json)",,,,
+q-422437c591#13,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-422437c591,single_chunk,Why is the payroll API returning 500 errors during the recent deployment DEP-115?,The ingress configuration change coincided with the schema version mismatch causing the 500 errors.,unsupported,The context does not provide a direct link between the ingress configuration change and the schema version mismatch causing the errors; it only states both events occurred.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column",,,,
+q-cb4c582e72#6,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-cb4c582e72,multi_chunk,How did the blue-green switch failure during deployment (INC-018) contribute to the service unavailability in comparison to the ingress configuration error that caused the API gateway outage (INC-005)?,Incident INC-005 reports a critical API gateway outage on the gateway-service.,supported,The context states that incident INC-005 has a severity of Critical and is titled 'API gateway outage'.,"[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-018: no log lines on gateway-service corroborate this incident
+- INC-005: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-018: Blue-green switch failure; INC-005: Ingress configuration error); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout",,,,
+q-ea9e3e8646#0,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-ea9e3e8646,single_chunk,What deployment is associated with the issue of SMS notifications not being sent due to a third-party SMS API outage?,The incident involving SMS notifications not being sent due to a third-party SMS API outage is recorded for the notification-service.,unsupported,"The context states that the incident is related to the notification-service, but the deployment link belongs to leave-service, indicating a lack of direct correlation.","[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-010: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.",,,,
+q-99a35e23ce#19,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-99a35e23ce,multi_chunk,How did the cron job configuration error in INC-020 and the missing database indexes in INC-007 contribute to the overall performance and reliability of the reporting-service?,The missing database indexes degraded the performance of the reporting-service.,supported,"The context mentions missing database indexes as a root cause for slow report loading, which implies degradation of performance.","[INC-020] service=reporting-service | severity=High | status=Resolved | title=""Scheduled reports not generated"" | recorded root cause: Cron job configuration error | deployment link: unverified
+[INC-007] service=reporting-service | severity=Medium | status=Resolved | title=""Reports loading slowly"" | recorded root cause: Missing database indexes | linked deployment: DEP-107 (verified)
+[DEP-107] service=reporting-service | time=2026-05-08T10:21:00 | change=""ETL pipeline enhancement"" | linked to INC-007
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-020: deployment link DEP-120 belongs to employee-service ('API version upgrade'), not reporting-service; link quarantined for data review
+- INC-020: no log lines on reporting-service corroborate this incident
+- INC-007: no log lines on reporting-service corroborate this incident
+- Matched incidents record different root causes (INC-020: Cron job configuration error; INC-007: Missing database indexes); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-08T10:21:00 - Deployment DEP-107 executed on reporting-service: ETL pipeline enhancement (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure
+[INC-006] service=employee-service | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-d7d135746b#2,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-d7d135746b,single_chunk,Why did the API gateway service experience an outage that was classified as critical?,Another incident suggests a blue-green switch failure.,unsupported,"The context mentions another incident (INC-018) with a blue-green switch failure, but it does not directly relate to the critical outage of the API gateway service.","[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-005: no log lines on gateway-service corroborate this incident
+- INC-018: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-005: Ingress configuration error; INC-018: Blue-green switch failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-010] service=notification-service | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-11069da0e1#3,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-11069da0e1,multi_chunk,"What were the underlying issues that affected the employee-service, specifically regarding the failure of employee search and the inability to save profile updates, and how did these issues relate to the system's overall performance?",These issues indicate separate underlying problems impacting the system's overall performance.,supported,"The context mentions different root causes for the incidents, indicating separate underlying problems.","[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+[INC-006] service=employee-service | severity=High | status=Resolved | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption | linked deployment: DEP-106 (verified)
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+[DEP-106] service=employee-service | time=2026-05-07T10:18:00 | change=""Search index refresh"" | linked to INC-006
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-013: no log lines on employee-service corroborate this incident
+- INC-006: no log lines on employee-service corroborate this incident
+- Matched incidents record different root causes (INC-013: Database connection pool exhaustion; INC-006: Elasticsearch index corruption); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-07T10:18:00 - Deployment DEP-106 executed on employee-service: Search index refresh (source: deployments.json)
+- 2026-05-14T10:39:00 - Deployment DEP-113 executed on employee-service: Cache optimization (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column",,,,
+q-d1903f3c55#10,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-d1903f3c55,single_chunk,Why is the SSO authentication failing for the auth-service?,The expired OAuth provider certificate directly caused the SSO authentication failure in auth-service.,unsupported,"The context states that the root cause is the expired OAuth provider certificate, but it does not confirm that it directly caused the failure.","[INC-008] service=auth-service | severity=Critical | status=Resolved | title=""SSO authentication failure"" | recorded root cause: OAuth provider certificate expired | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-008: deployment link DEP-108 belongs to payroll-service ('Blue-green deployment'), not auth-service; link quarantined for data review
+- INC-008: no log lines on auth-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-002] service=auth-service | title=""Users unable to login"" | recorded root cause: JWT signing key mismatch",,,,
+q-7779901111#15,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-7779901111,single_chunk,What was the root cause of the 500 errors returned by the payroll-service in incident INC-015?,Payroll-service returned 500 errors during incident INC-015.,unsupported,"The context indicates that incident INC-015 is related to payroll-service returning 500 errors, but does not explicitly state that the service returned these errors during the incident.","[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column
+[INC-009] service=payroll-service | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-9f9dd0cd36#9,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-9f9dd0cd36,single_chunk,"Why is the email queue growing excessively, causing high severity issues in the notification service?",No log lines on the notification service corroborate incident INC-017.,supported,The context mentions that there are no log lines on the notification-service that corroborate this incident.,"[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-017: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-004] service=notification-service | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded",,,,
+q-e047c68e67#3,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-e047c68e67,single_chunk,What was the root cause of the 'Duplicate payroll records' incident for the payroll-service?,The root cause of the duplicate payroll records incident was a batch job executed twice.,supported,The context confirms that the root cause is 'Batch job executed twice'.,"[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.",,,,
+q-02dec4edf0#6,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-02dec4edf0,multi_chunk,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?",The payroll-service incident was caused by a batch job executing twice.,unsupported,"The context mentions that the recorded root cause for INC-009 is a batch job executed twice, but it does not confirm it as the cause of the payroll-service incident.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+- INC-010: no log lines on notification-service corroborate this incident
+- INC-004: no log lines on notification-service corroborate this incident
+- INC-017: no log lines on notification-service corroborate this incident
+- Matched incidents record different root causes (INC-009: Batch job executed twice; INC-010: Third-party SMS API outage; INC-004: SMTP rate limits exceeded; INC-017: Worker pod crash loop); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-02dec4edf0#20,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-02dec4edf0,multi_chunk,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?",The lack of corroborating log lines limits the ability to confirm the timing impact on overall service reliability.,unsupported,"While the context discusses the lack of corroborating log lines, it does not explicitly state that this limits the ability to confirm timing impact on overall service reliability.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+- INC-010: no log lines on notification-service corroborate this incident
+- INC-004: no log lines on notification-service corroborate this incident
+- INC-017: no log lines on notification-service corroborate this incident
+- Matched incidents record different root causes (INC-009: Batch job executed twice; INC-010: Third-party SMS API outage; INC-004: SMTP rate limits exceeded; INC-017: Worker pod crash loop); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-90220e1ffd#4,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-90220e1ffd,single_chunk,Why was the leave approval workflow stuck in the leave-service?,Incident INC-011 recorded a high severity issue titled 'Leave approval workflow stuck' in the leave-service.,supported,"The context confirms that incident INC-011 has a high severity and is titled 'Leave approval workflow stuck', thus this statement is accurate.","[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-011: deployment link DEP-111 belongs to notification-service ('Database schema migration'), not leave-service; link quarantined for data review
+- INC-011: no log lines on leave-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.",,,,
+q-9b83a8f38e#14,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-9b83a8f38e,single_chunk,"What deployment is linked to the critical outage of the API gateway, and what was the underlying issue that caused this problem?",Ingress configuration error is the cause of the critical outage.,unsupported,"The context states that INC-005 has an ingress configuration error as its root cause, but it does not confirm it as the cause of the critical outage since INC-018 has a different root cause.","[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-005: no log lines on gateway-service corroborate this incident
+- INC-018: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-005: Ingress configuration error; INC-018: Blue-green switch failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-013] service=employee-service | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-8a0003f3a1#2,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-8a0003f3a1,single_chunk,What recent deployment is linked to the issue where the leave approval process was interrupted due to a backlog in the message queue?,The root cause of the leave approval process interruption was a message queue backlog as recorded in incident INC-011.,unsupported,"The context states that the recorded root cause of incident INC-011 is a message queue backlog, but it does not confirm that this directly caused the leave approval process interruption.","[INC-011] service=leave-service | severity=High | status=Resolved | title=""Leave approval workflow stuck"" | recorded root cause: Message queue backlog | deployment link: unverified
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-011: deployment link DEP-111 belongs to notification-service ('Database schema migration'), not leave-service; link quarantined for data review
+- INC-011: no log lines on leave-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.",,,,
+q-a96b5e64b7#10,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-a96b5e64b7,multi_chunk,"What were the different root causes of the service unavailability during deployment and the high API error rate for the gateway-service, and how might they have interacted during the deployment process?",No log lines corroborate either incident for gateway-service.,supported,The context explicitly mentions that there are no log lines on gateway-service that corroborate either incident (INC-012 and INC-018).,"[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-012: no log lines on gateway-service corroborate this incident
+- INC-018: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-012: Backend service timeout; INC-018: Blue-green switch failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-13T10:36:00 - Deployment DEP-112 executed on gateway-service: JWT authentication upgrade (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-005] service=gateway-service | title=""API gateway outage"" | recorded root cause: Ingress configuration error",,,,
+q-02dec4edf0#0,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-02dec4edf0,multi_chunk,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?",The timing of the incidents suggests potential impacts on service reliability.,unsupported,The context does not provide specific timing details or direct implications on service reliability from the incidents.,"[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+- INC-010: no log lines on notification-service corroborate this incident
+- INC-004: no log lines on notification-service corroborate this incident
+- INC-017: no log lines on notification-service corroborate this incident
+- Matched incidents record different root causes (INC-009: Batch job executed twice; INC-010: Third-party SMS API outage; INC-004: SMTP rate limits exceeded; INC-017: Worker pod crash loop); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-cd1cd828ad#11,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-cd1cd828ad,single_chunk,Why is the employee search failing in the employee-service?,The index corruption occurred or was detected around the time of deployment DEP-106.,unsupported,"The context states that the root cause of the incident was Elasticsearch index corruption, but does not specify the timing of when it occurred relative to DEP-106.","[INC-006] service=employee-service | severity=High | status=Resolved | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption | linked deployment: DEP-106 (verified)
+[DEP-106] service=employee-service | time=2026-05-07T10:18:00 | change=""Search index refresh"" | linked to INC-006
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-006: no log lines on employee-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-07T10:18:00 - Deployment DEP-106 executed on employee-service: Search index refresh (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-9f9dd0cd36#2,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-9f9dd0cd36,single_chunk,"Why is the email queue growing excessively, causing high severity issues in the notification service?",The incident recorded as INC-017 is related to the excessive growth of the email queue.,unsupported,The context mentions 'Email queue growth' but does not confirm that INC-017 is specifically related to excessive growth.,"[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-017: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-004] service=notification-service | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded",,,,
+q-f9e3e09637#4,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f9e3e09637,single_chunk,Why was there a high API error rate observed in the gateway-service during deployment DEP-112?,The root cause of the high API error rate during deployment DEP-112 was a backend service timeout.,unsupported,The context does not directly link the high API error rate during deployment DEP-112 to the backend service timeout as the root cause.,"[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-012: no log lines on gateway-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-13T10:36:00 - Deployment DEP-112 executed on gateway-service: JWT authentication upgrade (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-005] service=gateway-service | title=""API gateway outage"" | recorded root cause: Ingress configuration error
+[INC-018] service=gateway-service | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure",,,,
+q-f8f3b01bd7#1,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f8f3b01bd7,single_chunk,What was the root cause of the incident [INC-014] involving the reporting-service and the incorrect dashboard metrics?,The ETL job failure was linked to deployment DEP-114.,unsupported,The context does not state that the ETL job failure was linked to deployment DEP-114; it only mentions the deployment and its change.,"[INC-014] service=reporting-service | severity=High | status=Resolved | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure | linked deployment: DEP-114 (verified)
+[DEP-114] service=reporting-service | time=2026-05-15T10:42:00 | change=""SMTP provider update"" | linked to INC-014
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-014: no log lines on reporting-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-15T10:42:00 - Deployment DEP-114 executed on reporting-service: SMTP provider update (source: deployments.json)",,,,
+q-8d4fba77e3#8,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-8d4fba77e3,single_chunk,What was the root cause of the 'Employee search failing' incident in the employee-service?,Deployment DEP-106 executed a 'Search index refresh' on employee-service at 2026-05-07T10:18:00.,supported,The context explicitly states that DEP-106 was executed on employee-service with the change being 'Search index refresh' at the specified time.,"[INC-006] service=employee-service | severity=High | status=Resolved | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption | linked deployment: DEP-106 (verified)
+[DEP-106] service=employee-service | time=2026-05-07T10:18:00 | change=""Search index refresh"" | linked to INC-006
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-006: no log lines on employee-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-07T10:18:00 - Deployment DEP-106 executed on employee-service: Search index refresh (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-014c2a09a7#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-014c2a09a7,single_chunk,What change or deployment is linked to the issue where users are unable to save their profile updates due to a specific problem?,The root cause of the profile update saving issue was database connection pool exhaustion.,supported,"The context states that the root cause of incident INC-013 is database connection pool exhaustion, which is related to the profile update saving issue.","[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-013: no log lines on employee-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-14T10:39:00 - Deployment DEP-113 executed on employee-service: Cache optimization (source: deployments.json)",,,,
+q-f7f1306817#7,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f7f1306817,multi_chunk,How did the failure of the ETL job in the reporting-service (INC-014) potentially impact the database connection pool exhaustion in the employee-service (INC-013)?,The root cause of the employee-service incident was database connection pool exhaustion.,supported,The context explicitly states that the recorded root cause for INC-013 is database connection pool exhaustion.,"[INC-014] service=reporting-service | severity=High | status=Resolved | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure | linked deployment: DEP-114 (verified)
+[INC-013] service=employee-service | severity=Medium | status=Resolved | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion | linked deployment: DEP-113 (verified)
+[DEP-114] service=reporting-service | time=2026-05-15T10:42:00 | change=""SMTP provider update"" | linked to INC-014
+[DEP-113] service=employee-service | time=2026-05-14T10:39:00 | change=""Cache optimization"" | linked to INC-013
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Database Timeout (source: database_timeout)
+# Database Timeout
+
+Symptoms:
+- Slow APIs
+- Query timeout
+
+Checks:
+1. Review slow queries
+2. Check indexes
+3. Verify connection pool
+
+Resolution:
+Optimize queries and add indexes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-014: no log lines on reporting-service corroborate this incident
+- INC-013: no log lines on employee-service corroborate this incident
+- Matched incidents record different root causes (INC-014: ETL job failure; INC-013: Database connection pool exhaustion); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-14T10:39:00 - Deployment DEP-113 executed on employee-service: Cache optimization (source: deployments.json)
+- 2026-05-15T10:42:00 - Deployment DEP-114 executed on reporting-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-007] service=reporting-service | title=""Reports loading slowly"" | recorded root cause: Missing database indexes
+[INC-006] service=employee-service | title=""Employee search failing"" | recorded root cause: Elasticsearch index corruption",,,,
+q-02dec4edf0#7,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-02dec4edf0,multi_chunk,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?",The notification-service incidents were caused by a third-party SMS API outage.,supported,"The context states that INC-010 is related to a third-party SMS API outage, confirming its role in the incident.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+- INC-010: no log lines on notification-service corroborate this incident
+- INC-004: no log lines on notification-service corroborate this incident
+- INC-017: no log lines on notification-service corroborate this incident
+- Matched incidents record different root causes (INC-009: Batch job executed twice; INC-010: Third-party SMS API outage; INC-004: SMTP rate limits exceeded; INC-017: Worker pod crash loop); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-16f21b3447#12,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-16f21b3447,multi_chunk,"What are the root causes of the two critical incidents involving the payroll-service that occurred during different deployments, and how do they relate to the data integrity of the service?",INC-015 was a critical incident titled 'Payroll API returning 500 errors' with a recorded root cause of 'Schema version mismatch'.,supported,The context confirms that INC-015 is a critical incident with the specified title and root cause.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[INC-001] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column | linked deployment: DEP-101 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+[DEP-101] service=payroll-service | time=2026-05-02T10:03:00 | change=""Database schema migration"" | linked to INC-001
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+- INC-001: no log lines on payroll-service corroborate this incident
+- Matched incidents record different root causes (INC-015: Schema version mismatch; INC-001: Database migration missing salary_amount column); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-02T10:03:00 - Deployment DEP-101 executed on payroll-service: Database schema migration (source: deployments.json)
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-009] service=payroll-service | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-0716bcfce8#5,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-0716bcfce8,single_chunk,What was the root cause of the incident [INC-010] related to the notification-service where SMS notifications were not sent?,No deployment links have been verified for incident INC-010.,unsupported,"The context mentions that the deployment link is unverified, but does not state that no links have been verified.","[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-010: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- No reliable timestamps were available; no timeline can be constructed.
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-004] service=notification-service | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded",,,,
+q-d7d135746b#7,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-d7d135746b,single_chunk,Why did the API gateway service experience an outage that was classified as critical?,INC-005 reports a critical API gateway outage caused by an ingress configuration error linked to deployment DEP-105.,supported,The context confirms that INC-005 is related to a critical API gateway outage caused by an ingress configuration error linked to deployment DEP-105.,"[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-005: no log lines on gateway-service corroborate this incident
+- INC-018: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-005: Ingress configuration error; INC-018: Blue-green switch failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-010] service=notification-service | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-b98ead0962#3,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-b98ead0962,single_chunk,Why are emails being delayed in the notification service?,The root cause of email delays in the notification service is SMTP rate limits being exceeded.,supported,This statement is a repeat of a previous statement and is still valid as it is directly supported by the context.,"[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-004: no log lines on notification-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-017] service=notification-service | title=""Email queue growth"" | recorded root cause: Worker pod crash loop
+[INC-010] service=notification-service | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage",,,,
+q-7779901111#2,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-7779901111,single_chunk,What was the root cause of the 500 errors returned by the payroll-service in incident INC-015?,The schema version mismatch was linked to deployment DEP-115.,unsupported,The context does not explicitly state that the schema version mismatch is linked to deployment DEP-115; it only mentions the deployment and its change.,"[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column
+[INC-009] service=payroll-service | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-23e0393f31#0,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-23e0393f31,multi_chunk,"What are the combined root causes that led to the critical incidents affecting the gateway-service, specifically the API gateway outage and the high API error rate?",The critical incidents affecting gateway-service were caused by two distinct root causes.,supported,"The context explicitly states that INC-012 and INC-005 have different root causes: Backend service timeout and Ingress configuration error, respectively.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-012: no log lines on gateway-service corroborate this incident
+- INC-005: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-012: Backend service timeout; INC-005: Ingress configuration error); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+- 2026-05-13T10:36:00 - Deployment DEP-112 executed on gateway-service: JWT authentication upgrade (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-018] service=gateway-service | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure",,,,
+q-23e0393f31#6,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-23e0393f31,multi_chunk,"What are the combined root causes that led to the critical incidents affecting the gateway-service, specifically the API gateway outage and the high API error rate?",The combined root causes for the critical incidents on gateway-service are the backend service timeout causing the high API error rate.,unsupported,"Similar to the previous statement, this statement incorrectly implies a single combined root cause when there are two distinct root causes.","[INC-012] service=gateway-service | severity=Critical | status=Resolved | title=""High API error rate"" | recorded root cause: Backend service timeout | linked deployment: DEP-112 (verified)
+[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[DEP-112] service=gateway-service | time=2026-05-13T10:36:00 | change=""JWT authentication upgrade"" | linked to INC-012
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-012: no log lines on gateway-service corroborate this incident
+- INC-005: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-012: Backend service timeout; INC-005: Ingress configuration error); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+- 2026-05-13T10:36:00 - Deployment DEP-112 executed on gateway-service: JWT authentication upgrade (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-018] service=gateway-service | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure",,,,
+q-422437c591#4,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-422437c591,single_chunk,Why is the payroll API returning 500 errors during the recent deployment DEP-115?,The payroll API returning 500 errors caused critical service disruption.,unsupported,"While the context states the severity of the incident as Critical, it does not explicitly state that the 500 errors caused a service disruption.","[INC-015] service=payroll-service | severity=Critical | status=Resolved | title=""Payroll API returning 500 errors"" | recorded root cause: Schema version mismatch | linked deployment: DEP-115 (verified)
+[DEP-115] service=payroll-service | time=2026-05-16T10:45:00 | change=""Ingress configuration change"" | linked to INC-015
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Payroll Failure Runbook (source: payment_failure)
+# Payroll Failure Runbook
+
+Symptoms:
+- Payroll generation fails
+- Missing salary records
+
+Checks:
+1. Verify schema migration
+2. Check payroll database logs
+3. Validate salary_amount column
+
+Resolution:
+Rollback migration and re-run payroll job.
+
+EVIDENCE STRENGTH (computed by the application): MEDIUM
+EVIDENCE NOTES:
+- INC-015: no log lines on payroll-service corroborate this incident
+KNOWN TIMELINE:
+- 2026-05-16T10:45:00 - Deployment DEP-115 executed on payroll-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-001] service=payroll-service | title=""Payroll generation failing"" | recorded root cause: Database migration missing salary_amount column",,,,
+q-02dec4edf0#17,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-02dec4edf0,multi_chunk,"What were the distinct root causes of the incidents involving the notification-service and payroll-service, and how might the timing of these incidents impact overall service reliability?",INC-017 involved notification-service with high severity and was resolved.,supported,"The context confirms that INC-017 is related to the notification-service, has high severity, and its status is resolved.","[INC-009] service=payroll-service | severity=High | status=Resolved | title=""Duplicate payroll records"" | recorded root cause: Batch job executed twice | deployment link: unverified
+[INC-010] service=notification-service | severity=Medium | status=Resolved | title=""SMS notifications not sent"" | recorded root cause: Third-party SMS API outage | deployment link: unverified
+[INC-004] service=notification-service | severity=Medium | status=Resolved | title=""Emails delayed"" | recorded root cause: SMTP rate limits exceeded | linked deployment: DEP-104 (verified)
+[INC-017] service=notification-service | severity=High | status=Resolved | title=""Email queue growth"" | recorded root cause: Worker pod crash loop | deployment link: unverified
+[DEP-104] service=notification-service | time=2026-05-05T10:12:00 | change=""SMTP provider update"" | linked to INC-004
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Email Delivery Failure (source: email_delivery_failure)
+# Email Delivery Failure
+
+Symptoms:
+- Emails delayed
+- SMTP errors
+
+Checks:
+1. Verify SMTP quota
+2. Check retry queue
+
+Resolution:
+Increase quota or switch SMTP provider.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-009: deployment link DEP-109 belongs to auth-service ('Connection pool tuning'), not payroll-service; link quarantined for data review
+- INC-010: deployment link DEP-110 belongs to leave-service ('API version upgrade'), not notification-service; link quarantined for data review
+- INC-017: deployment link DEP-117 belongs to leave-service ('ETL pipeline enhancement'), not notification-service; link quarantined for data review
+- INC-009: no log lines on payroll-service corroborate this incident
+- INC-010: no log lines on notification-service corroborate this incident
+- INC-004: no log lines on notification-service corroborate this incident
+- INC-017: no log lines on notification-service corroborate this incident
+- Matched incidents record different root causes (INC-009: Batch job executed twice; INC-010: Third-party SMS API outage; INC-004: SMTP rate limits exceeded; INC-017: Worker pod crash loop); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-05T10:12:00 - Deployment DEP-104 executed on notification-service: SMTP provider update (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-014] service=reporting-service | title=""Dashboard metrics incorrect"" | recorded root cause: ETL job failure",,,,
+q-9b83a8f38e#13,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-9b83a8f38e,single_chunk,"What deployment is linked to the critical outage of the API gateway, and what was the underlying issue that caused this problem?",Only deployment DEP-105 is verified as linked to a critical outage on the API gateway.,supported,"The context does not provide information that verifies any other deployment as linked to a critical outage, making this statement true.","[INC-005] service=gateway-service | severity=Critical | status=Resolved | title=""API gateway outage"" | recorded root cause: Ingress configuration error | linked deployment: DEP-105 (verified)
+[INC-018] service=gateway-service | severity=Critical | status=Resolved | title=""Service unavailable during deployment"" | recorded root cause: Blue-green switch failure | deployment link: unverified
+[DEP-105] service=gateway-service | time=2026-05-06T10:15:00 | change=""Ingress configuration change"" | linked to INC-005
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: API Gateway Outage (source: gateway_outage)
+# API Gateway Outage
+
+Symptoms:
+- 502 Bad Gateway
+- Service unavailable
+
+Checks:
+1. Verify ingress configuration
+2. Verify backend service health
+
+Resolution:
+Rollback ingress changes.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-018: deployment link DEP-118 belongs to notification-service ('Blue-green deployment'), not gateway-service; link quarantined for data review
+- INC-005: no log lines on gateway-service corroborate this incident
+- INC-018: no log lines on gateway-service corroborate this incident
+- Matched incidents record different root causes (INC-005: Ingress configuration error; INC-018: Blue-green switch failure); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-06T10:15:00 - Deployment DEP-105 executed on gateway-service: Ingress configuration change (source: deployments.json)
+RETRIEVED BUT NOT THE ASKED PROBLEM:
+[INC-012] service=gateway-service | title=""High API error rate"" | recorded root cause: Backend service timeout
+[INC-013] service=employee-service | title=""Profile updates not saving"" | recorded root cause: Database connection pool exhaustion
+[INC-019] service=employee-service | title=""Employee export timing out"" | recorded root cause: Large unoptimized query",,,,
+q-f8f19f304a#15,bge-small-en-v1.5_chunk-one-record-per-incident_k5_thr0.6-m0.1_rca-b206b175_openai-gpt-4.1-mini_20261023T152902Z,q-f8f19f304a,multi_chunk,How did the issues of the OAuth provider certificate expiration and the misconfigured token expiry collectively impact the user experience for the auth-service during the incidents?,The critical failure impacted login capability.,unsupported,"While INC-008 is a critical incident, the context does not explicitly state that it impacted login capability, only that users were unable to login.","[INC-016] service=auth-service | severity=Medium | status=Resolved | title=""Frequent user session expirations"" | recorded root cause: Misconfigured token expiry | linked deployment: DEP-116 (verified)
+[INC-008] service=auth-service | severity=Critical | status=Resolved | title=""SSO authentication failure"" | recorded root cause: OAuth provider certificate expired | deployment link: unverified
+[DEP-116] service=auth-service | time=2026-05-17T10:48:00 | change=""Search index refresh"" | linked to INC-016
+RUNBOOK GUIDANCE [RUNBOOK]:
+Runbook: Authentication Failure Runbook (source: jwt_auth_failure)
+# Authentication Failure Runbook
+
+Symptoms:
+- Users unable to login
+- 401 Unauthorized
+
+Checks:
+1. Verify JWT secret
+2. Verify token expiry
+3. Check OAuth provider
+
+Resolution:
+Rotate JWT keys and restart auth-service.
+
+EVIDENCE STRENGTH (computed by the application): LOW
+EVIDENCE NOTES:
+- INC-008: deployment link DEP-108 belongs to payroll-service ('Blue-green deployment'), not auth-service; link quarantined for data review
+- INC-016: no log lines on auth-service corroborate this incident
+- INC-008: no log lines on auth-service corroborate this incident
+- Matched incidents record different root causes (INC-016: Misconfigured token expiry; INC-008: OAuth provider certificate expired); each is reported separately, none is merged or chosen silently.
+KNOWN TIMELINE:
+- 2026-05-17T10:48:00 - Deployment DEP-116 executed on auth-service: Search index refresh (source: deployments.json)",,,,

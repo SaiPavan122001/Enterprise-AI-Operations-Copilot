@@ -1,0 +1,23 @@
+{
+  "description": "Resource-level access policy (security/access.py). A tenant owns a set of services; a principal can read incidents, deployments, logs and runbooks only for services of its own tenant that it is granted. Runbooks are mapped to the services they cover; '*' means every service of the reader's tenant. Anything not listed here is denied. The data files carry no tenant field: tenancy is this partition of services. This repository runs one tenant ('default') that owns all seven services.",
+  "tenants": {
+    "default": {
+      "services": [
+        "auth-service",
+        "employee-service",
+        "gateway-service",
+        "leave-service",
+        "notification-service",
+        "payroll-service",
+        "reporting-service"
+      ]
+    }
+  },
+  "runbooks": {
+    "payment_failure": ["payroll-service"],
+    "jwt_auth_failure": ["auth-service"],
+    "gateway_outage": ["gateway-service"],
+    "email_delivery_failure": ["notification-service"],
+    "database_timeout": ["*"]
+  }
+}

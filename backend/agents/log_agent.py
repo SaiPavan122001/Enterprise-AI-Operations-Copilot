@@ -109,3 +109,81 @@ def investigate_logs(
         len(selected), len(candidates), services or "{}",
     )
     return selected
+
+
+# --------------------------------------------------------------------------- corroboration
+
+CORROBORATION_LEVELS = ("ERROR", "CRITICAL", "EXCEPTION", "WARN")
+_TERM_STOPWORDS = {
+    "the", "and", "for", "with", "from", "not", "service", "failed", "failure", "failing",
+    "error", "errors", "incorrect", "issue", "issues",
+}
+
+
+def _terms(text: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z0-9_]+", (text or "").lower())
+            if len(w) > 3 and w not in _TERM_STOPWORDS}
+
+
+def corroborating_logs(
+    incidents: list,   # list[IncidentEvidence] - matched incidents only
+    deployments: list | None = None,  # list[DeploymentEvidence] - verified links only
+    window_hours: float = 24.0,
+    dependencies: set[tuple[str, str]] | None = None,
+    limit: int = 10,
+) -> list[LogEvidence]:
+    """Log lines that corroborate a SPECIFIC incident (used by the RCA workflow).
+
+    A line counts only if all hold:
+      * it is on the incident's service (or a documented dependency of it);
+      * it is ERROR/CRITICAL/EXCEPTION/WARN;
+      * its message shares a specific term with the incident's title, root
+        cause or linked deployment change;
+      * its message is service-specific (not seen on >= 3 services);
+      * when the incident has a verified deployment, it falls within
+        ``window_hours`` after that deployment.
+    Unlike ``investigate_logs`` (keyword search, kept for the MCP tool), this
+    never joins logs across services by keyword.
+    """
+    from datetime import datetime, timedelta
+
+    from utils.data_integrity import NON_SPECIFIC_MESSAGE_MIN_SERVICES, load_dependencies
+
+    logs = get_logs()
+    if not logs or not incidents:
+        return []
+    dependencies = load_dependencies() if dependencies is None else dependencies
+    entries = [e for e in (_parse_line(line) for line in logs) if e.timestamp and e.service]
+
+    msg_services: dict[str, set] = {}
+    for e in entries:
+        if e.level != "INFO":
+            msg_services.setdefault(e.message, set()).add(e.service)
+    non_specific = {m for m, s in msg_services.items() if len(s) >= NON_SPECIFIC_MESSAGE_MIN_SERVICES}
+
+    deps_by_incident = {getattr(d, "incident_id", None): d for d in (deployments or [])}
+    selected: list[LogEvidence] = []
+    for incident in incidents:
+        services = {incident.service} | {to for (frm, to) in dependencies if frm == incident.service}
+        dep = deps_by_incident.get(incident.incident_id)
+        terms = _terms(f"{incident.title} {incident.root_cause} {getattr(dep, 'change', '') or ''}")
+        start = end = None
+        if dep is not None and dep.time:
+            start = datetime.fromisoformat(dep.time)
+            end = start + timedelta(hours=window_hours)
+        for e in entries:
+            if e.service not in services or e.level not in CORROBORATION_LEVELS:
+                continue
+            if e.message in non_specific or not (_terms(e.message) & terms):
+                continue
+            if start is not None and end is not None:
+                if not e.timestamp:
+                    continue          # cannot be placed in the deployment window
+                ts = datetime.strptime(e.timestamp, "%Y-%m-%d %H:%M:%S")
+                if not (start <= ts <= end):
+                    continue
+            selected.append(e.model_copy(update={"incident_id": incident.incident_id}))
+    selected.sort(key=lambda e: e.timestamp or "")
+    logger.info("Log corroboration: %d line(s) corroborate %d matched incident(s)",
+                len(selected), len(incidents))
+    return selected[:limit]

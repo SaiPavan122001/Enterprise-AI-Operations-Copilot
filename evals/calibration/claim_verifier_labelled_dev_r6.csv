@@ -1,0 +1,377 @@
+incident_id,label,category,statement,flag_stated,issues,flag_inferred
+INC-001,supported,title,"INC-001 recorded the problem ""Payroll generation failing"".",False,,False
+INC-001,supported,root_cause,The recorded root cause of INC-001 was database migration missing salary_amount column.,False,,False
+INC-001,supported,service,INC-001 occurred on the payroll-service.,False,,False
+INC-001,supported,severity,INC-001 was a critical-severity incident.,False,,False
+INC-001,supported,status,INC-001 has been resolved.,False,,False
+INC-001,supported,paraphrase,Payroll generation failing on the payroll-service was attributed to database migration missing salary_amount column.,False,,False
+INC-001,supported,compound_restatement,INC-001 on payroll-service was a Critical severity incident titled 'Payroll generation failing' with a recorded root cause of database migration missing salary_amount column.,False,,False
+INC-001,supported,absence_logs,No log lines on payroll-service corroborate INC-001.,False,,False
+INC-001,supported,linked_deployment,INC-001 is linked to deployment DEP-101 on the payroll-service.,False,,False
+INC-001,unsupported,cause_swap,The recorded root cause of INC-001 was jWT signing key mismatch.,True,confirmed_facts: removed claim - states INC-002's recorded root cause ('JWT signing key mismatch') for INC-001: The recorded root cause of INC-001 was jWT signing key mismatch.,True
+INC-001,unsupported,title_swap,"INC-001 recorded the problem ""Users unable to login"".",True,"confirmed_facts: removed claim - states INC-002's recorded title ('Users unable to login') for INC-001: INC-001 recorded the problem ""Users unable to login"".",True
+INC-001,unsupported,service_swap,INC-001 occurred on the auth-service.,True,confirmed_facts: removed claim - names ['auth-service'] but cites records on ['payroll-service']: INC-001 occurred on the auth-service.,True
+INC-001,unsupported,severity_swap,INC-001 was a medium-severity incident.,True,confirmed_facts: removed claim - states severity ['medium'] but the cited incidents are ['critical']: INC-001 was a medium-severity incident.,True
+INC-001,unsupported,negated_cause,The root cause of INC-001 was not database migration missing salary_amount column.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-001 was not database migration missing salary_amount column.,True
+INC-001,unsupported,invented_metric,"INC-001 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-001 affected 4,200 users for 3 hours.",False
+INC-001,unsupported,deployment_causation,INC-001 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-001 was caused by a faulty deployment.,True
+INC-001,unsupported,status_wrong,INC-001 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-001 is still unresolved.,True
+INC-001,unsupported,false_absence,No root cause was recorded for INC-001.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-001.",True
+INC-002,supported,title,"INC-002 recorded the problem ""Users unable to login"".",False,,False
+INC-002,supported,root_cause,The recorded root cause of INC-002 was jWT signing key mismatch.,False,,False
+INC-002,supported,service,INC-002 occurred on the auth-service.,False,,False
+INC-002,supported,severity,INC-002 was a high-severity incident.,False,,False
+INC-002,supported,status,INC-002 has been resolved.,False,,False
+INC-002,supported,paraphrase,Users unable to login on the auth-service was attributed to jWT signing key mismatch.,False,,False
+INC-002,supported,compound_restatement,INC-002 on auth-service was a High severity incident titled 'Users unable to login' with a recorded root cause of jWT signing key mismatch.,False,,False
+INC-002,supported,absence_logs,No log lines on auth-service corroborate INC-002.,False,,False
+INC-002,supported,linked_deployment,INC-002 is linked to deployment DEP-102 on the auth-service.,False,,False
+INC-002,unsupported,cause_swap,The recorded root cause of INC-002 was cache invalidation failure.,True,confirmed_facts: removed claim - states INC-003's recorded root cause ('Cache invalidation failure') for INC-002: The recorded root cause of INC-002 was cache invalidation failure.,True
+INC-002,unsupported,title_swap,"INC-002 recorded the problem ""Leave balances incorrect"".",True,"confirmed_facts: removed claim - states INC-003's recorded title ('Leave balances incorrect') for INC-002: INC-002 recorded the problem ""Leave balances incorrect"".",True
+INC-002,unsupported,service_swap,INC-002 occurred on the leave-service.,True,confirmed_facts: removed claim - names ['leave-service'] but cites records on ['auth-service']: INC-002 occurred on the leave-service.,True
+INC-002,unsupported,severity_swap,INC-002 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-002 was a critical-severity incident.,True
+INC-002,unsupported,negated_cause,The root cause of INC-002 was not jWT signing key mismatch.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-002 was not jWT signing key mismatch.,True
+INC-002,unsupported,invented_metric,"INC-002 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-002 affected 4,200 users for 3 hours.",False
+INC-002,unsupported,deployment_causation,INC-002 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-002 was caused by a faulty deployment.,True
+INC-002,unsupported,status_wrong,INC-002 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-002 is still unresolved.,True
+INC-002,unsupported,false_absence,No root cause was recorded for INC-002.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-002.",True
+INC-003,supported,title,"INC-003 recorded the problem ""Leave balances incorrect"".",False,,False
+INC-003,supported,root_cause,The recorded root cause of INC-003 was cache invalidation failure.,False,,False
+INC-003,supported,service,INC-003 occurred on the leave-service.,False,,False
+INC-003,supported,severity,INC-003 was a high-severity incident.,False,,False
+INC-003,supported,status,INC-003 has been resolved.,False,,False
+INC-003,supported,paraphrase,Leave balances incorrect on the leave-service was attributed to cache invalidation failure.,False,,False
+INC-003,supported,compound_restatement,INC-003 on leave-service was a High severity incident titled 'Leave balances incorrect' with a recorded root cause of cache invalidation failure.,False,,False
+INC-003,supported,absence_logs,No log lines on leave-service corroborate INC-003.,False,,False
+INC-003,supported,linked_deployment,INC-003 is linked to deployment DEP-103 on the leave-service.,False,,False
+INC-003,unsupported,cause_swap,The recorded root cause of INC-003 was sMTP rate limits exceeded.,True,confirmed_facts: removed claim - states INC-004's recorded root cause ('SMTP rate limits exceeded') for INC-003: The recorded root cause of INC-003 was sMTP rate limits exceeded.,True
+INC-003,unsupported,title_swap,"INC-003 recorded the problem ""Emails delayed"".",True,"confirmed_facts: removed claim - states INC-004's recorded title ('Emails delayed') for INC-003: INC-003 recorded the problem ""Emails delayed"".",True
+INC-003,unsupported,service_swap,INC-003 occurred on the notification-service.,True,confirmed_facts: removed claim - names ['notification-service'] but cites records on ['leave-service']: INC-003 occurred on the notification-service.,True
+INC-003,unsupported,severity_swap,INC-003 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-003 was a critical-severity incident.,True
+INC-003,unsupported,negated_cause,The root cause of INC-003 was not cache invalidation failure.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-003 was not cache invalidation failure.,True
+INC-003,unsupported,invented_metric,"INC-003 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-003 affected 4,200 users for 3 hours.",False
+INC-003,unsupported,deployment_causation,INC-003 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-003 was caused by a faulty deployment.,True
+INC-003,unsupported,status_wrong,INC-003 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-003 is still unresolved.,True
+INC-003,unsupported,false_absence,No root cause was recorded for INC-003.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-003.",True
+INC-004,supported,title,"INC-004 recorded the problem ""Emails delayed"".",False,,False
+INC-004,supported,root_cause,The recorded root cause of INC-004 was sMTP rate limits exceeded.,False,,False
+INC-004,supported,service,INC-004 occurred on the notification-service.,False,,False
+INC-004,supported,severity,INC-004 was a medium-severity incident.,False,,False
+INC-004,supported,status,INC-004 has been resolved.,False,,False
+INC-004,supported,paraphrase,Emails delayed on the notification-service was attributed to sMTP rate limits exceeded.,False,,False
+INC-004,supported,compound_restatement,INC-004 on notification-service was a Medium severity incident titled 'Emails delayed' with a recorded root cause of sMTP rate limits exceeded.,False,,False
+INC-004,supported,absence_logs,No log lines on notification-service corroborate INC-004.,False,,False
+INC-004,supported,linked_deployment,INC-004 is linked to deployment DEP-104 on the notification-service.,False,,False
+INC-004,unsupported,cause_swap,The recorded root cause of INC-004 was ingress configuration error.,True,confirmed_facts: removed claim - states INC-005's recorded root cause ('Ingress configuration error') for INC-004: The recorded root cause of INC-004 was ingress configuration error.,True
+INC-004,unsupported,title_swap,"INC-004 recorded the problem ""API gateway outage"".",True,"confirmed_facts: removed claim - states INC-005's recorded title ('API gateway outage') for INC-004: INC-004 recorded the problem ""API gateway outage"".",True
+INC-004,unsupported,service_swap,INC-004 occurred on the gateway-service.,True,confirmed_facts: removed claim - names ['gateway-service'] but cites records on ['notification-service']: INC-004 occurred on the gateway-service.,True
+INC-004,unsupported,severity_swap,INC-004 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['medium']: INC-004 was a critical-severity incident.,True
+INC-004,unsupported,negated_cause,The root cause of INC-004 was not sMTP rate limits exceeded.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-004 was not sMTP rate limits exceeded.,True
+INC-004,unsupported,invented_metric,"INC-004 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-004 affected 4,200 users for 3 hours.",False
+INC-004,unsupported,deployment_causation,INC-004 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-004 was caused by a faulty deployment.,True
+INC-004,unsupported,status_wrong,INC-004 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-004 is still unresolved.,True
+INC-004,unsupported,false_absence,No root cause was recorded for INC-004.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-004.",True
+INC-005,supported,title,"INC-005 recorded the problem ""API gateway outage"".",False,,False
+INC-005,supported,root_cause,The recorded root cause of INC-005 was ingress configuration error.,False,,False
+INC-005,supported,service,INC-005 occurred on the gateway-service.,False,,False
+INC-005,supported,severity,INC-005 was a critical-severity incident.,False,,False
+INC-005,supported,status,INC-005 has been resolved.,False,,False
+INC-005,supported,paraphrase,API gateway outage on the gateway-service was attributed to ingress configuration error.,False,,False
+INC-005,supported,compound_restatement,INC-005 on gateway-service was a Critical severity incident titled 'API gateway outage' with a recorded root cause of ingress configuration error.,False,,False
+INC-005,supported,absence_logs,No log lines on gateway-service corroborate INC-005.,False,,False
+INC-005,supported,linked_deployment,INC-005 is linked to deployment DEP-105 on the gateway-service.,False,,False
+INC-005,unsupported,cause_swap,The recorded root cause of INC-005 was elasticsearch index corruption.,True,confirmed_facts: removed claim - states INC-006's recorded root cause ('Elasticsearch index corruption') for INC-005: The recorded root cause of INC-005 was elasticsearch index corruption.,True
+INC-005,unsupported,title_swap,"INC-005 recorded the problem ""Employee search failing"".",True,"confirmed_facts: removed claim - states INC-006's recorded title ('Employee search failing') for INC-005: INC-005 recorded the problem ""Employee search failing"".",True
+INC-005,unsupported,service_swap,INC-005 occurred on the employee-service.,True,confirmed_facts: removed claim - names ['employee-service'] but cites records on ['gateway-service']: INC-005 occurred on the employee-service.,True
+INC-005,unsupported,severity_swap,INC-005 was a medium-severity incident.,True,confirmed_facts: removed claim - states severity ['medium'] but the cited incidents are ['critical']: INC-005 was a medium-severity incident.,True
+INC-005,unsupported,negated_cause,The root cause of INC-005 was not ingress configuration error.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-005 was not ingress configuration error.,True
+INC-005,unsupported,invented_metric,"INC-005 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-005 affected 4,200 users for 3 hours.",False
+INC-005,unsupported,deployment_causation,INC-005 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-005 was caused by a faulty deployment.,True
+INC-005,unsupported,status_wrong,INC-005 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-005 is still unresolved.,True
+INC-005,unsupported,false_absence,No root cause was recorded for INC-005.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-005.",True
+INC-006,supported,title,"INC-006 recorded the problem ""Employee search failing"".",False,,False
+INC-006,supported,root_cause,The recorded root cause of INC-006 was elasticsearch index corruption.,False,,False
+INC-006,supported,service,INC-006 occurred on the employee-service.,False,,False
+INC-006,supported,severity,INC-006 was a high-severity incident.,False,,False
+INC-006,supported,status,INC-006 has been resolved.,False,,False
+INC-006,supported,paraphrase,Employee search failing on the employee-service was attributed to elasticsearch index corruption.,False,,False
+INC-006,supported,compound_restatement,INC-006 on employee-service was a High severity incident titled 'Employee search failing' with a recorded root cause of elasticsearch index corruption.,False,,False
+INC-006,supported,absence_logs,No log lines on employee-service corroborate INC-006.,False,,False
+INC-006,supported,linked_deployment,INC-006 is linked to deployment DEP-106 on the employee-service.,False,,False
+INC-006,unsupported,cause_swap,The recorded root cause of INC-006 was missing database indexes.,True,confirmed_facts: removed claim - states INC-007's recorded root cause ('Missing database indexes') for INC-006: The recorded root cause of INC-006 was missing database indexes.,True
+INC-006,unsupported,title_swap,"INC-006 recorded the problem ""Reports loading slowly"".",True,"confirmed_facts: removed claim - states INC-007's recorded title ('Reports loading slowly') for INC-006: INC-006 recorded the problem ""Reports loading slowly"".",True
+INC-006,unsupported,service_swap,INC-006 occurred on the reporting-service.,True,confirmed_facts: removed claim - names ['reporting-service'] but cites records on ['employee-service']: INC-006 occurred on the reporting-service.,True
+INC-006,unsupported,severity_swap,INC-006 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-006 was a critical-severity incident.,True
+INC-006,unsupported,negated_cause,The root cause of INC-006 was not elasticsearch index corruption.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-006 was not elasticsearch index corruption.,True
+INC-006,unsupported,invented_metric,"INC-006 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-006 affected 4,200 users for 3 hours.",False
+INC-006,unsupported,deployment_causation,INC-006 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-006 was caused by a faulty deployment.,True
+INC-006,unsupported,status_wrong,INC-006 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-006 is still unresolved.,True
+INC-006,unsupported,false_absence,No root cause was recorded for INC-006.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-006.",True
+INC-007,supported,title,"INC-007 recorded the problem ""Reports loading slowly"".",False,,False
+INC-007,supported,root_cause,The recorded root cause of INC-007 was missing database indexes.,False,,False
+INC-007,supported,service,INC-007 occurred on the reporting-service.,False,,False
+INC-007,supported,severity,INC-007 was a medium-severity incident.,False,,False
+INC-007,supported,status,INC-007 has been resolved.,False,,False
+INC-007,supported,paraphrase,Reports loading slowly on the reporting-service was attributed to missing database indexes.,False,,False
+INC-007,supported,compound_restatement,INC-007 on reporting-service was a Medium severity incident titled 'Reports loading slowly' with a recorded root cause of missing database indexes.,False,,False
+INC-007,supported,absence_logs,No log lines on reporting-service corroborate INC-007.,False,,False
+INC-007,supported,linked_deployment,INC-007 is linked to deployment DEP-107 on the reporting-service.,False,,False
+INC-007,unsupported,cause_swap,The recorded root cause of INC-007 was oAuth provider certificate expired.,True,confirmed_facts: removed claim - states INC-008's recorded root cause ('OAuth provider certificate expired') for INC-007: The recorded root cause of INC-007 was oAuth provider certificate expired.,True
+INC-007,unsupported,title_swap,"INC-007 recorded the problem ""SSO authentication failure"".",True,"confirmed_facts: removed claim - states INC-008's recorded title ('SSO authentication failure') for INC-007: INC-007 recorded the problem ""SSO authentication failure"".",True
+INC-007,unsupported,service_swap,INC-007 occurred on the auth-service.,True,confirmed_facts: removed claim - names ['auth-service'] but cites records on ['reporting-service']: INC-007 occurred on the auth-service.,True
+INC-007,unsupported,severity_swap,INC-007 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['medium']: INC-007 was a critical-severity incident.,True
+INC-007,unsupported,negated_cause,The root cause of INC-007 was not missing database indexes.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-007 was not missing database indexes.,True
+INC-007,unsupported,invented_metric,"INC-007 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-007 affected 4,200 users for 3 hours.",False
+INC-007,unsupported,deployment_causation,INC-007 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-007 was caused by a faulty deployment.,True
+INC-007,unsupported,status_wrong,INC-007 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-007 is still unresolved.,True
+INC-007,unsupported,false_absence,No root cause was recorded for INC-007.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-007.",True
+INC-008,supported,title,"INC-008 recorded the problem ""SSO authentication failure"".",False,,False
+INC-008,supported,root_cause,The recorded root cause of INC-008 was oAuth provider certificate expired.,False,,False
+INC-008,supported,service,INC-008 occurred on the auth-service.,False,,False
+INC-008,supported,severity,INC-008 was a critical-severity incident.,False,,False
+INC-008,supported,status,INC-008 has been resolved.,False,,False
+INC-008,supported,paraphrase,SSO authentication failure on the auth-service was attributed to oAuth provider certificate expired.,False,,False
+INC-008,supported,compound_restatement,INC-008 on auth-service was a Critical severity incident titled 'SSO authentication failure' with a recorded root cause of oAuth provider certificate expired.,False,,False
+INC-008,supported,absence_logs,No log lines on auth-service corroborate INC-008.,False,,False
+INC-008,supported,absence_link,No verified deployment link exists for INC-008.,False,,False
+INC-008,supported,quarantine_fact,"The deployment link DEP-108 for INC-008 is quarantined because it belongs to payroll-service, not auth-service.",False,,False
+INC-008,unsupported,cause_swap,The recorded root cause of INC-008 was batch job executed twice.,True,confirmed_facts: removed claim - states INC-009's recorded root cause ('Batch job executed twice') for INC-008: The recorded root cause of INC-008 was batch job executed twice.,True
+INC-008,unsupported,title_swap,"INC-008 recorded the problem ""Duplicate payroll records"".",True,"confirmed_facts: removed claim - states INC-009's recorded title ('Duplicate payroll records') for INC-008: INC-008 recorded the problem ""Duplicate payroll records"".",True
+INC-008,unsupported,service_swap,INC-008 occurred on the payroll-service.,False,,False
+INC-008,unsupported,severity_swap,INC-008 was a medium-severity incident.,True,confirmed_facts: removed claim - states severity ['medium'] but the cited incidents are ['critical']: INC-008 was a medium-severity incident.,True
+INC-008,unsupported,negated_cause,The root cause of INC-008 was not oAuth provider certificate expired.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-008 was not oAuth provider certificate expired.,True
+INC-008,unsupported,invented_metric,"INC-008 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-008 affected 4,200 users for 3 hours.",False
+INC-008,unsupported,deployment_causation,INC-008 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-008 was caused by a faulty deployment.,True
+INC-008,unsupported,status_wrong,INC-008 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-008 is still unresolved.,True
+INC-008,unsupported,false_absence,No root cause was recorded for INC-008.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-008.",True
+INC-008,unsupported,false_verified_link,INC-008 is linked to verified deployment DEP-108.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-008 is linked to verified deployment DEP-108.,True
+INC-009,supported,title,"INC-009 recorded the problem ""Duplicate payroll records"".",False,,False
+INC-009,supported,root_cause,The recorded root cause of INC-009 was batch job executed twice.,False,,False
+INC-009,supported,service,INC-009 occurred on the payroll-service.,False,,False
+INC-009,supported,severity,INC-009 was a high-severity incident.,False,,False
+INC-009,supported,status,INC-009 has been resolved.,False,,False
+INC-009,supported,paraphrase,Duplicate payroll records on the payroll-service was attributed to batch job executed twice.,False,,False
+INC-009,supported,compound_restatement,INC-009 on payroll-service was a High severity incident titled 'Duplicate payroll records' with a recorded root cause of batch job executed twice.,False,,False
+INC-009,supported,absence_logs,No log lines on payroll-service corroborate INC-009.,False,,False
+INC-009,supported,absence_link,No verified deployment link exists for INC-009.,False,,False
+INC-009,supported,quarantine_fact,"The deployment link DEP-109 for INC-009 is quarantined because it belongs to auth-service, not payroll-service.",False,,False
+INC-009,unsupported,cause_swap,The recorded root cause of INC-009 was third-party SMS API outage.,True,confirmed_facts: removed claim - states INC-010's recorded root cause ('Third-party SMS API outage') for INC-009: The recorded root cause of INC-009 was third-party SMS API outage.,True
+INC-009,unsupported,title_swap,"INC-009 recorded the problem ""SMS notifications not sent"".",True,"confirmed_facts: removed claim - states INC-010's recorded title ('SMS notifications not sent') for INC-009: INC-009 recorded the problem ""SMS notifications not sent"".",True
+INC-009,unsupported,service_swap,INC-009 occurred on the notification-service.,True,confirmed_facts: removed claim - names ['notification-service'] but cites records on ['payroll-service']: INC-009 occurred on the notification-service.,True
+INC-009,unsupported,severity_swap,INC-009 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-009 was a critical-severity incident.,True
+INC-009,unsupported,negated_cause,The root cause of INC-009 was not batch job executed twice.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-009 was not batch job executed twice.,True
+INC-009,unsupported,invented_metric,"INC-009 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-009 affected 4,200 users for 3 hours.",False
+INC-009,unsupported,deployment_causation,INC-009 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-009 was caused by a faulty deployment.,True
+INC-009,unsupported,status_wrong,INC-009 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-009 is still unresolved.,True
+INC-009,unsupported,false_absence,No root cause was recorded for INC-009.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-009.",True
+INC-009,unsupported,false_verified_link,INC-009 is linked to verified deployment DEP-109.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-009 is linked to verified deployment DEP-109.,True
+INC-010,supported,title,"INC-010 recorded the problem ""SMS notifications not sent"".",False,,False
+INC-010,supported,root_cause,The recorded root cause of INC-010 was third-party SMS API outage.,False,,False
+INC-010,supported,service,INC-010 occurred on the notification-service.,False,,False
+INC-010,supported,severity,INC-010 was a medium-severity incident.,False,,False
+INC-010,supported,status,INC-010 has been resolved.,False,,False
+INC-010,supported,paraphrase,SMS notifications not sent on the notification-service was attributed to third-party SMS API outage.,False,,False
+INC-010,supported,compound_restatement,INC-010 on notification-service was a Medium severity incident titled 'SMS notifications not sent' with a recorded root cause of third-party SMS API outage.,False,,False
+INC-010,supported,absence_logs,No log lines on notification-service corroborate INC-010.,False,,False
+INC-010,supported,absence_link,No verified deployment link exists for INC-010.,False,,False
+INC-010,supported,quarantine_fact,"The deployment link DEP-110 for INC-010 is quarantined because it belongs to leave-service, not notification-service.",False,,False
+INC-010,unsupported,cause_swap,The recorded root cause of INC-010 was message queue backlog.,True,confirmed_facts: removed claim - states INC-011's recorded root cause ('Message queue backlog') for INC-010: The recorded root cause of INC-010 was message queue backlog.,True
+INC-010,unsupported,title_swap,"INC-010 recorded the problem ""Leave approval workflow stuck"".",True,"confirmed_facts: removed claim - states INC-011's recorded title ('Leave approval workflow stuck') for INC-010: INC-010 recorded the problem ""Leave approval workflow stuck"".",True
+INC-010,unsupported,service_swap,INC-010 occurred on the leave-service.,False,,False
+INC-010,unsupported,severity_swap,INC-010 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['medium']: INC-010 was a critical-severity incident.,True
+INC-010,unsupported,negated_cause,The root cause of INC-010 was not third-party SMS API outage.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-010 was not third-party SMS API outage.,True
+INC-010,unsupported,invented_metric,"INC-010 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-010 affected 4,200 users for 3 hours.",False
+INC-010,unsupported,deployment_causation,INC-010 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-010 was caused by a faulty deployment.,True
+INC-010,unsupported,status_wrong,INC-010 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-010 is still unresolved.,True
+INC-010,unsupported,false_absence,No root cause was recorded for INC-010.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-010.",True
+INC-010,unsupported,false_verified_link,INC-010 is linked to verified deployment DEP-110.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-010 is linked to verified deployment DEP-110.,True
+INC-011,supported,title,"INC-011 recorded the problem ""Leave approval workflow stuck"".",False,,False
+INC-011,supported,root_cause,The recorded root cause of INC-011 was message queue backlog.,False,,False
+INC-011,supported,service,INC-011 occurred on the leave-service.,False,,False
+INC-011,supported,severity,INC-011 was a high-severity incident.,False,,False
+INC-011,supported,status,INC-011 has been resolved.,False,,False
+INC-011,supported,paraphrase,Leave approval workflow stuck on the leave-service was attributed to message queue backlog.,False,,False
+INC-011,supported,compound_restatement,INC-011 on leave-service was a High severity incident titled 'Leave approval workflow stuck' with a recorded root cause of message queue backlog.,False,,False
+INC-011,supported,absence_logs,No log lines on leave-service corroborate INC-011.,False,,False
+INC-011,supported,absence_link,No verified deployment link exists for INC-011.,False,,False
+INC-011,supported,quarantine_fact,"The deployment link DEP-111 for INC-011 is quarantined because it belongs to notification-service, not leave-service.",False,,False
+INC-011,unsupported,cause_swap,The recorded root cause of INC-011 was backend service timeout.,True,confirmed_facts: removed claim - states INC-012's recorded root cause ('Backend service timeout') for INC-011: The recorded root cause of INC-011 was backend service timeout.,True
+INC-011,unsupported,title_swap,"INC-011 recorded the problem ""High API error rate"".",True,"confirmed_facts: removed claim - states INC-012's recorded title ('High API error rate') for INC-011: INC-011 recorded the problem ""High API error rate"".",True
+INC-011,unsupported,service_swap,INC-011 occurred on the gateway-service.,True,confirmed_facts: removed claim - names ['gateway-service'] but cites records on ['leave-service']: INC-011 occurred on the gateway-service.,True
+INC-011,unsupported,severity_swap,INC-011 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-011 was a critical-severity incident.,True
+INC-011,unsupported,negated_cause,The root cause of INC-011 was not message queue backlog.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-011 was not message queue backlog.,True
+INC-011,unsupported,invented_metric,"INC-011 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-011 affected 4,200 users for 3 hours.",False
+INC-011,unsupported,deployment_causation,INC-011 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-011 was caused by a faulty deployment.,True
+INC-011,unsupported,status_wrong,INC-011 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-011 is still unresolved.,True
+INC-011,unsupported,false_absence,No root cause was recorded for INC-011.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-011.",True
+INC-011,unsupported,false_verified_link,INC-011 is linked to verified deployment DEP-111.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-011 is linked to verified deployment DEP-111.,True
+INC-012,supported,title,"INC-012 recorded the problem ""High API error rate"".",False,,False
+INC-012,supported,root_cause,The recorded root cause of INC-012 was backend service timeout.,False,,False
+INC-012,supported,service,INC-012 occurred on the gateway-service.,False,,False
+INC-012,supported,severity,INC-012 was a critical-severity incident.,False,,False
+INC-012,supported,status,INC-012 has been resolved.,False,,False
+INC-012,supported,paraphrase,High API error rate on the gateway-service was attributed to backend service timeout.,False,,False
+INC-012,supported,compound_restatement,INC-012 on gateway-service was a Critical severity incident titled 'High API error rate' with a recorded root cause of backend service timeout.,False,,False
+INC-012,supported,absence_logs,No log lines on gateway-service corroborate INC-012.,False,,False
+INC-012,supported,linked_deployment,INC-012 is linked to deployment DEP-112 on the gateway-service.,False,,False
+INC-012,unsupported,cause_swap,The recorded root cause of INC-012 was database connection pool exhaustion.,True,confirmed_facts: removed claim - states INC-013's recorded root cause ('Database connection pool exhaustion') for INC-012: The recorded root cause of INC-012 was database connection pool exhaustion.,True
+INC-012,unsupported,title_swap,"INC-012 recorded the problem ""Profile updates not saving"".",True,"confirmed_facts: removed claim - states INC-013's recorded title ('Profile updates not saving') for INC-012: INC-012 recorded the problem ""Profile updates not saving"".",True
+INC-012,unsupported,service_swap,INC-012 occurred on the employee-service.,True,confirmed_facts: removed claim - names ['employee-service'] but cites records on ['gateway-service']: INC-012 occurred on the employee-service.,True
+INC-012,unsupported,severity_swap,INC-012 was a medium-severity incident.,True,confirmed_facts: removed claim - states severity ['medium'] but the cited incidents are ['critical']: INC-012 was a medium-severity incident.,True
+INC-012,unsupported,negated_cause,The root cause of INC-012 was not backend service timeout.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-012 was not backend service timeout.,True
+INC-012,unsupported,invented_metric,"INC-012 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-012 affected 4,200 users for 3 hours.",False
+INC-012,unsupported,deployment_causation,INC-012 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-012 was caused by a faulty deployment.,True
+INC-012,unsupported,status_wrong,INC-012 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-012 is still unresolved.,True
+INC-012,unsupported,false_absence,No root cause was recorded for INC-012.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-012.",True
+INC-013,supported,title,"INC-013 recorded the problem ""Profile updates not saving"".",False,,False
+INC-013,supported,root_cause,The recorded root cause of INC-013 was database connection pool exhaustion.,False,,False
+INC-013,supported,service,INC-013 occurred on the employee-service.,False,,False
+INC-013,supported,severity,INC-013 was a medium-severity incident.,False,,False
+INC-013,supported,status,INC-013 has been resolved.,False,,False
+INC-013,supported,paraphrase,Profile updates not saving on the employee-service was attributed to database connection pool exhaustion.,False,,False
+INC-013,supported,compound_restatement,INC-013 on employee-service was a Medium severity incident titled 'Profile updates not saving' with a recorded root cause of database connection pool exhaustion.,False,,False
+INC-013,supported,absence_logs,No log lines on employee-service corroborate INC-013.,False,,False
+INC-013,supported,linked_deployment,INC-013 is linked to deployment DEP-113 on the employee-service.,False,,False
+INC-013,unsupported,cause_swap,The recorded root cause of INC-013 was eTL job failure.,True,confirmed_facts: removed claim - contradicted by the cited records: The recorded root cause of INC-013 was eTL job failure.,True
+INC-013,unsupported,title_swap,"INC-013 recorded the problem ""Dashboard metrics incorrect"".",True,"confirmed_facts: removed claim - states INC-014's recorded title ('Dashboard metrics incorrect') for INC-013: INC-013 recorded the problem ""Dashboard metrics incorrect"".",True
+INC-013,unsupported,service_swap,INC-013 occurred on the reporting-service.,True,confirmed_facts: removed claim - names ['reporting-service'] but cites records on ['employee-service']: INC-013 occurred on the reporting-service.,True
+INC-013,unsupported,severity_swap,INC-013 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['medium']: INC-013 was a critical-severity incident.,True
+INC-013,unsupported,negated_cause,The root cause of INC-013 was not database connection pool exhaustion.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-013 was not database connection pool exhaustion.,True
+INC-013,unsupported,invented_metric,"INC-013 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-013 affected 4,200 users for 3 hours.",False
+INC-013,unsupported,deployment_causation,INC-013 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-013 was caused by a faulty deployment.,True
+INC-013,unsupported,status_wrong,INC-013 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-013 is still unresolved.,True
+INC-013,unsupported,false_absence,No root cause was recorded for INC-013.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-013.",True
+INC-014,supported,title,"INC-014 recorded the problem ""Dashboard metrics incorrect"".",False,,False
+INC-014,supported,root_cause,The recorded root cause of INC-014 was eTL job failure.,False,,False
+INC-014,supported,service,INC-014 occurred on the reporting-service.,False,,False
+INC-014,supported,severity,INC-014 was a high-severity incident.,False,,False
+INC-014,supported,status,INC-014 has been resolved.,False,,False
+INC-014,supported,paraphrase,Dashboard metrics incorrect on the reporting-service was attributed to eTL job failure.,False,,False
+INC-014,supported,compound_restatement,INC-014 on reporting-service was a High severity incident titled 'Dashboard metrics incorrect' with a recorded root cause of eTL job failure.,False,,False
+INC-014,supported,absence_logs,No log lines on reporting-service corroborate INC-014.,False,,False
+INC-014,supported,linked_deployment,INC-014 is linked to deployment DEP-114 on the reporting-service.,False,,False
+INC-014,unsupported,cause_swap,The recorded root cause of INC-014 was schema version mismatch.,True,confirmed_facts: removed claim - states INC-015's recorded root cause ('Schema version mismatch') for INC-014: The recorded root cause of INC-014 was schema version mismatch.,True
+INC-014,unsupported,title_swap,"INC-014 recorded the problem ""Payroll API returning 500 errors"".",True,"confirmed_facts: removed claim - states INC-015's recorded title ('Payroll API returning 500 errors') for INC-014: INC-014 recorded the problem ""Payroll API returning 500 errors"".",True
+INC-014,unsupported,service_swap,INC-014 occurred on the payroll-service.,True,confirmed_facts: removed claim - names ['payroll-service'] but cites records on ['reporting-service']: INC-014 occurred on the payroll-service.,True
+INC-014,unsupported,severity_swap,INC-014 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-014 was a critical-severity incident.,True
+INC-014,unsupported,negated_cause,The root cause of INC-014 was not eTL job failure.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-014 was not eTL job failure.,True
+INC-014,unsupported,invented_metric,"INC-014 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-014 affected 4,200 users for 3 hours.",False
+INC-014,unsupported,deployment_causation,INC-014 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-014 was caused by a faulty deployment.,True
+INC-014,unsupported,status_wrong,INC-014 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-014 is still unresolved.,True
+INC-014,unsupported,false_absence,No root cause was recorded for INC-014.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-014.",True
+INC-015,supported,title,"INC-015 recorded the problem ""Payroll API returning 500 errors"".",False,,False
+INC-015,supported,root_cause,The recorded root cause of INC-015 was schema version mismatch.,False,,False
+INC-015,supported,service,INC-015 occurred on the payroll-service.,False,,False
+INC-015,supported,severity,INC-015 was a critical-severity incident.,False,,False
+INC-015,supported,status,INC-015 has been resolved.,False,,False
+INC-015,supported,paraphrase,Payroll API returning 500 errors on the payroll-service was attributed to schema version mismatch.,False,,False
+INC-015,supported,compound_restatement,INC-015 on payroll-service was a Critical severity incident titled 'Payroll API returning 500 errors' with a recorded root cause of schema version mismatch.,False,,False
+INC-015,supported,absence_logs,No log lines on payroll-service corroborate INC-015.,False,,False
+INC-015,supported,linked_deployment,INC-015 is linked to deployment DEP-115 on the payroll-service.,False,,False
+INC-015,unsupported,cause_swap,The recorded root cause of INC-015 was misconfigured token expiry.,True,confirmed_facts: removed claim - states INC-016's recorded root cause ('Misconfigured token expiry') for INC-015: The recorded root cause of INC-015 was misconfigured token expiry.,True
+INC-015,unsupported,title_swap,"INC-015 recorded the problem ""Frequent user session expirations"".",True,"confirmed_facts: removed claim - states INC-016's recorded title ('Frequent user session expirations') for INC-015: INC-015 recorded the problem ""Frequent user session expirations"".",True
+INC-015,unsupported,service_swap,INC-015 occurred on the auth-service.,True,confirmed_facts: removed claim - names ['auth-service'] but cites records on ['payroll-service']: INC-015 occurred on the auth-service.,True
+INC-015,unsupported,severity_swap,INC-015 was a medium-severity incident.,True,confirmed_facts: removed claim - states severity ['medium'] but the cited incidents are ['critical']: INC-015 was a medium-severity incident.,True
+INC-015,unsupported,negated_cause,The root cause of INC-015 was not schema version mismatch.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-015 was not schema version mismatch.,True
+INC-015,unsupported,invented_metric,"INC-015 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-015 affected 4,200 users for 3 hours.",False
+INC-015,unsupported,deployment_causation,INC-015 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-015 was caused by a faulty deployment.,True
+INC-015,unsupported,status_wrong,INC-015 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-015 is still unresolved.,True
+INC-015,unsupported,false_absence,No root cause was recorded for INC-015.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-015.",True
+INC-016,supported,title,"INC-016 recorded the problem ""Frequent user session expirations"".",False,,False
+INC-016,supported,root_cause,The recorded root cause of INC-016 was misconfigured token expiry.,False,,False
+INC-016,supported,service,INC-016 occurred on the auth-service.,False,,False
+INC-016,supported,severity,INC-016 was a medium-severity incident.,False,,False
+INC-016,supported,status,INC-016 has been resolved.,False,,False
+INC-016,supported,paraphrase,Frequent user session expirations on the auth-service was attributed to misconfigured token expiry.,False,,False
+INC-016,supported,compound_restatement,INC-016 on auth-service was a Medium severity incident titled 'Frequent user session expirations' with a recorded root cause of misconfigured token expiry.,False,,False
+INC-016,supported,absence_logs,No log lines on auth-service corroborate INC-016.,False,,False
+INC-016,supported,linked_deployment,INC-016 is linked to deployment DEP-116 on the auth-service.,False,,False
+INC-016,unsupported,cause_swap,The recorded root cause of INC-016 was worker pod crash loop.,True,confirmed_facts: removed claim - states INC-017's recorded root cause ('Worker pod crash loop') for INC-016: The recorded root cause of INC-016 was worker pod crash loop.,True
+INC-016,unsupported,title_swap,"INC-016 recorded the problem ""Email queue growth"".",True,"confirmed_facts: removed claim - states INC-017's recorded title ('Email queue growth') for INC-016: INC-016 recorded the problem ""Email queue growth"".",True
+INC-016,unsupported,service_swap,INC-016 occurred on the notification-service.,True,confirmed_facts: removed claim - names ['notification-service'] but cites records on ['auth-service']: INC-016 occurred on the notification-service.,True
+INC-016,unsupported,severity_swap,INC-016 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['medium']: INC-016 was a critical-severity incident.,True
+INC-016,unsupported,negated_cause,The root cause of INC-016 was not misconfigured token expiry.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-016 was not misconfigured token expiry.,True
+INC-016,unsupported,invented_metric,"INC-016 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-016 affected 4,200 users for 3 hours.",False
+INC-016,unsupported,deployment_causation,INC-016 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-016 was caused by a faulty deployment.,True
+INC-016,unsupported,status_wrong,INC-016 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-016 is still unresolved.,True
+INC-016,unsupported,false_absence,No root cause was recorded for INC-016.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-016.",True
+INC-017,supported,title,"INC-017 recorded the problem ""Email queue growth"".",False,,False
+INC-017,supported,root_cause,The recorded root cause of INC-017 was worker pod crash loop.,False,,False
+INC-017,supported,service,INC-017 occurred on the notification-service.,False,,False
+INC-017,supported,severity,INC-017 was a high-severity incident.,False,,False
+INC-017,supported,status,INC-017 has been resolved.,False,,False
+INC-017,supported,paraphrase,Email queue growth on the notification-service was attributed to worker pod crash loop.,False,,False
+INC-017,supported,compound_restatement,INC-017 on notification-service was a High severity incident titled 'Email queue growth' with a recorded root cause of worker pod crash loop.,False,,False
+INC-017,supported,absence_logs,No log lines on notification-service corroborate INC-017.,False,,False
+INC-017,supported,absence_link,No verified deployment link exists for INC-017.,False,,False
+INC-017,supported,quarantine_fact,"The deployment link DEP-117 for INC-017 is quarantined because it belongs to leave-service, not notification-service.",False,,False
+INC-017,unsupported,cause_swap,The recorded root cause of INC-017 was blue-green switch failure.,True,confirmed_facts: removed claim - states INC-018's recorded root cause ('Blue-green switch failure') for INC-017: The recorded root cause of INC-017 was blue-green switch failure.,True
+INC-017,unsupported,title_swap,"INC-017 recorded the problem ""Service unavailable during deployment"".",True,"confirmed_facts: removed claim - states INC-018's recorded title ('Service unavailable during deployment') for INC-017: INC-017 recorded the problem ""Service unavailable during deployment"".",True
+INC-017,unsupported,service_swap,INC-017 occurred on the gateway-service.,True,confirmed_facts: removed claim - names ['gateway-service'] but cites records on ['notification-service']: INC-017 occurred on the gateway-service.,True
+INC-017,unsupported,severity_swap,INC-017 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-017 was a critical-severity incident.,True
+INC-017,unsupported,negated_cause,The root cause of INC-017 was not worker pod crash loop.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-017 was not worker pod crash loop.,True
+INC-017,unsupported,invented_metric,"INC-017 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-017 affected 4,200 users for 3 hours.",False
+INC-017,unsupported,deployment_causation,INC-017 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-017 was caused by a faulty deployment.,True
+INC-017,unsupported,status_wrong,INC-017 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-017 is still unresolved.,True
+INC-017,unsupported,false_absence,No root cause was recorded for INC-017.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-017.",True
+INC-017,unsupported,false_verified_link,INC-017 is linked to verified deployment DEP-117.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-017 is linked to verified deployment DEP-117.,True
+INC-018,supported,title,"INC-018 recorded the problem ""Service unavailable during deployment"".",False,,False
+INC-018,supported,root_cause,The recorded root cause of INC-018 was blue-green switch failure.,False,,False
+INC-018,supported,service,INC-018 occurred on the gateway-service.,False,,False
+INC-018,supported,severity,INC-018 was a critical-severity incident.,False,,False
+INC-018,supported,status,INC-018 has been resolved.,False,,False
+INC-018,supported,paraphrase,Service unavailable during deployment on the gateway-service was attributed to blue-green switch failure.,False,,False
+INC-018,supported,compound_restatement,INC-018 on gateway-service was a Critical severity incident titled 'Service unavailable during deployment' with a recorded root cause of blue-green switch failure.,False,,False
+INC-018,supported,absence_logs,No log lines on gateway-service corroborate INC-018.,False,,False
+INC-018,supported,absence_link,No verified deployment link exists for INC-018.,False,,False
+INC-018,supported,quarantine_fact,"The deployment link DEP-118 for INC-018 is quarantined because it belongs to notification-service, not gateway-service.",False,,False
+INC-018,unsupported,cause_swap,The recorded root cause of INC-018 was large unoptimized query.,True,confirmed_facts: removed claim - states INC-019's recorded root cause ('Large unoptimized query') for INC-018: The recorded root cause of INC-018 was large unoptimized query.,True
+INC-018,unsupported,title_swap,"INC-018 recorded the problem ""Employee export timing out"".",True,"confirmed_facts: removed claim - states INC-019's recorded title ('Employee export timing out') for INC-018: INC-018 recorded the problem ""Employee export timing out"".",True
+INC-018,unsupported,service_swap,INC-018 occurred on the employee-service.,True,confirmed_facts: removed claim - names ['employee-service'] but cites records on ['gateway-service']: INC-018 occurred on the employee-service.,True
+INC-018,unsupported,severity_swap,INC-018 was a medium-severity incident.,True,confirmed_facts: removed claim - states severity ['medium'] but the cited incidents are ['critical']: INC-018 was a medium-severity incident.,True
+INC-018,unsupported,negated_cause,The root cause of INC-018 was not blue-green switch failure.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-018 was not blue-green switch failure.,True
+INC-018,unsupported,invented_metric,"INC-018 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-018 affected 4,200 users for 3 hours.",False
+INC-018,unsupported,deployment_causation,INC-018 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-018 was caused by a faulty deployment.,True
+INC-018,unsupported,status_wrong,INC-018 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-018 is still unresolved.,True
+INC-018,unsupported,false_absence,No root cause was recorded for INC-018.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-018.",True
+INC-018,unsupported,false_verified_link,INC-018 is linked to verified deployment DEP-118.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-018 is linked to verified deployment DEP-118.,True
+INC-019,supported,title,"INC-019 recorded the problem ""Employee export timing out"".",False,,False
+INC-019,supported,root_cause,The recorded root cause of INC-019 was large unoptimized query.,False,,False
+INC-019,supported,service,INC-019 occurred on the employee-service.,False,,False
+INC-019,supported,severity,INC-019 was a medium-severity incident.,False,,False
+INC-019,supported,status,INC-019 has been resolved.,False,,False
+INC-019,supported,paraphrase,Employee export timing out on the employee-service was attributed to large unoptimized query.,False,,False
+INC-019,supported,compound_restatement,INC-019 on employee-service was a Medium severity incident titled 'Employee export timing out' with a recorded root cause of large unoptimized query.,False,,False
+INC-019,supported,absence_logs,No log lines on employee-service corroborate INC-019.,False,,False
+INC-019,supported,absence_link,No verified deployment link exists for INC-019.,False,,False
+INC-019,supported,quarantine_fact,"The deployment link DEP-119 for INC-019 is quarantined because it belongs to gateway-service, not employee-service.",False,,False
+INC-019,unsupported,cause_swap,The recorded root cause of INC-019 was cron job configuration error.,True,confirmed_facts: removed claim - states INC-020's recorded root cause ('Cron job configuration error') for INC-019: The recorded root cause of INC-019 was cron job configuration error.,True
+INC-019,unsupported,title_swap,"INC-019 recorded the problem ""Scheduled reports not generated"".",True,"confirmed_facts: removed claim - states INC-020's recorded title ('Scheduled reports not generated') for INC-019: INC-019 recorded the problem ""Scheduled reports not generated"".",True
+INC-019,unsupported,service_swap,INC-019 occurred on the reporting-service.,True,confirmed_facts: removed claim - names ['reporting-service'] but cites records on ['employee-service']: INC-019 occurred on the reporting-service.,True
+INC-019,unsupported,severity_swap,INC-019 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['medium']: INC-019 was a critical-severity incident.,True
+INC-019,unsupported,negated_cause,The root cause of INC-019 was not large unoptimized query.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-019 was not large unoptimized query.,True
+INC-019,unsupported,invented_metric,"INC-019 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-019 affected 4,200 users for 3 hours.",False
+INC-019,unsupported,deployment_causation,INC-019 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-019 was caused by a faulty deployment.,True
+INC-019,unsupported,status_wrong,INC-019 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-019 is still unresolved.,True
+INC-019,unsupported,false_absence,No root cause was recorded for INC-019.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-019.",True
+INC-019,unsupported,false_verified_link,INC-019 is linked to verified deployment DEP-119.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-019 is linked to verified deployment DEP-119.,True
+INC-020,supported,title,"INC-020 recorded the problem ""Scheduled reports not generated"".",False,,False
+INC-020,supported,root_cause,The recorded root cause of INC-020 was cron job configuration error.,False,,False
+INC-020,supported,service,INC-020 occurred on the reporting-service.,False,,False
+INC-020,supported,severity,INC-020 was a high-severity incident.,False,,False
+INC-020,supported,status,INC-020 has been resolved.,False,,False
+INC-020,supported,paraphrase,Scheduled reports not generated on the reporting-service was attributed to cron job configuration error.,False,,False
+INC-020,supported,compound_restatement,INC-020 on reporting-service was a High severity incident titled 'Scheduled reports not generated' with a recorded root cause of cron job configuration error.,False,,False
+INC-020,supported,absence_logs,No log lines on reporting-service corroborate INC-020.,False,,False
+INC-020,supported,absence_link,No verified deployment link exists for INC-020.,False,,False
+INC-020,supported,quarantine_fact,"The deployment link DEP-120 for INC-020 is quarantined because it belongs to employee-service, not reporting-service.",False,,False
+INC-020,unsupported,cause_swap,The recorded root cause of INC-020 was database migration missing salary_amount column.,True,confirmed_facts: removed claim - states INC-001's recorded root cause ('Database migration missing salary_amount column') for INC-020: The recorded root cause of INC-020 was database migration missing salary_amount column.,True
+INC-020,unsupported,title_swap,"INC-020 recorded the problem ""Payroll generation failing"".",True,"confirmed_facts: removed claim - states INC-001's recorded title ('Payroll generation failing') for INC-020: INC-020 recorded the problem ""Payroll generation failing"".",True
+INC-020,unsupported,service_swap,INC-020 occurred on the payroll-service.,True,confirmed_facts: removed claim - names ['payroll-service'] but cites records on ['reporting-service']: INC-020 occurred on the payroll-service.,True
+INC-020,unsupported,severity_swap,INC-020 was a critical-severity incident.,True,confirmed_facts: removed claim - states severity ['critical'] but the cited incidents are ['high']: INC-020 was a critical-severity incident.,True
+INC-020,unsupported,negated_cause,The root cause of INC-020 was not cron job configuration error.,True,confirmed_facts: removed claim - negates the recorded root cause: The root cause of INC-020 was not cron job configuration error.,True
+INC-020,unsupported,invented_metric,"INC-020 affected 4,200 users for 3 hours.",True,"confirmed_facts: moved to hypotheses - states figures not in the evidence (4,200, 3): INC-020 affected 4,200 users for 3 hours.",False
+INC-020,unsupported,deployment_causation,INC-020 was caused by a faulty deployment.,True,confirmed_facts: moved to hypotheses - asserts deployment causation/timing the records do not state: INC-020 was caused by a faulty deployment.,True
+INC-020,unsupported,status_wrong,INC-020 is still unresolved.,True,confirmed_facts: removed claim - says the incident is unresolved but the record's status is Resolved: INC-020 is still unresolved.,True
+INC-020,unsupported,false_absence,No root cause was recorded for INC-020.,True,"confirmed_facts: removed claim - says no root cause is recorded, but the record has one: No root cause was recorded for INC-020.",True
+INC-020,unsupported,false_verified_link,INC-020 is linked to verified deployment DEP-120.,True,confirmed_facts: removed claim - contradicted by the cited records: INC-020 is linked to verified deployment DEP-120.,True

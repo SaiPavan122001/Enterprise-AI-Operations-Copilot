@@ -1,0 +1,7 @@
+// Copy to sme_questions.jsonl (path set in evals/config.yaml) and add your own.
+// One JSON object per line. Only "question" is required.
+// expected_chunk_ids are incident IDs from backend/data/incidents.json; leave them
+// out (or []) for questions the data cannot answer - those become out_of_scope.
+// Then run:  python -m evals.testset merge-sme evals/testsets/sme_questions.jsonl
+{"question": "Payroll run failed this morning right after a release - what broke?", "reference_answer": "The payroll failure (INC-001) was caused by a database migration that is missing the salary_amount column, introduced by deployment DEP-101.", "expected_chunk_ids": ["INC-001"]}
+{"question": "Why did our Snowflake warehouse credits spike last weekend?", "expected_chunk_ids": []}

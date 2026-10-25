@@ -5,6 +5,7 @@ from vector_store.qdrant_client import client
 from qdrant_client.models import (
     Filter,
     FieldCondition,
+    MatchAny,
     MatchValue
 )
 
@@ -20,12 +21,19 @@ def search_incidents(
     severity=None,
     service=None,
     status=None,
-    limit=5
+    limit=5,
+    services=None,
 ):
-    """Semantic search over the enterprise incidents vector collection."""
+    """Semantic search over the enterprise incidents vector collection.
+
+    ``services``: when given (a principal's readable services), only points on
+    those services are searched - the filter runs inside Qdrant, so the top-k is
+    computed over authorized records only. An empty collection means no access."""
+    if services is not None and not services:
+        return []
     query_vector = model.encode(query).tolist()
 
-    conditions = []
+    conditions: list = []   # qdrant Condition objects
 
     if severity:
         conditions.append(
@@ -42,6 +50,9 @@ def search_incidents(
                 match=MatchValue(value=service)
             )
         )
+
+    if services is not None:
+        conditions.append(FieldCondition(key="service", match=MatchAny(any=sorted(services))))
 
     if status:
         conditions.append(

@@ -1,0 +1,5 @@
+excluded (inspected) questions: 0
+dev               {"n_in": 14, "n_oos": 9, "in_scope_full_recall": 0.857, "in_scope_any": 1.0, "matched_precision": 0.957, "multi_full_recall": 0.778, "oos_nothing_matched": 1.0, "errors": 0}
+held_out          {"n_in": 17, "n_oos": 6, "in_scope_full_recall": 1.0, "in_scope_any": 1.0, "matched_precision": 1.0, "multi_full_recall": 1.0, "oos_nothing_matched": 1.0, "errors": 0}
+all_not_excluded  {"n_in": 31, "n_oos": 15, "in_scope_full_recall": 0.935, "in_scope_any": 1.0, "matched_precision": 0.981, "multi_full_recall": 0.895, "oos_nothing_matched": 1.0, "errors": 0}
+all_95            {"n_in": 31, "n_oos": 15, "in_scope_full_recall": 0.935, "in_scope_any": 1.0, "matched_precision": 0.981, "multi_full_recall": 0.895, "oos_nothing_matched": 1.0, "errors": 0}

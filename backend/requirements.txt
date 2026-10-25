@@ -3,7 +3,7 @@
 
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
-pydantic==2.10.4
+pydantic==2.14.1          # raised from 2.10.4 by nemoguardrails/presidio; full suite re-run
 python-dotenv==1.0.1
 
 # RAG / vector search
@@ -13,11 +13,20 @@ sentence-transformers==3.3.1
 # Workflow orchestration
 langgraph==0.2.60
 
-# LLM
+# LLM (provider selected by LLM_PROVIDER=gemini|openai)
 google-genai==0.6.0
+openai==2.54.0
 
 # Observability
-langfuse>=3.0.0,<4
+langfuse>=5.0.4,<6
+
+# Security layer (security/): guardrails, PII redaction, local MCP
+nemoguardrails==0.24.1
+langchain-core==0.3.86     # NeMo's LLM slot is a stub; LLM checks use the project provider
+presidio-analyzer==2.2.364
+spacy==3.8.16
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+mcp==1.30.0                # local-only (stdio) MCP server; 1.12.4 breaks on pydantic 2.14
 
 # Testing
 pytest==8.3.4

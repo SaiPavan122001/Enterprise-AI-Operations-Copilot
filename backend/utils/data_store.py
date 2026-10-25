@@ -9,7 +9,6 @@ works regardless of the current working directory.
 import json
 import logging
 from functools import lru_cache
-from pathlib import Path
 
 from config import DATA_DIR, RUNBOOKS_DIR
 
@@ -28,6 +27,19 @@ def get_deployments() -> list[dict]:
         return deployments
     except (OSError, json.JSONDecodeError):
         logger.exception("Failed to load deployments from %s", path)
+        return []
+
+
+@lru_cache(maxsize=1)
+def get_incidents() -> list[dict]:
+    """Incident records (the source of the vector store), e.g. for checking that
+    an answer does not attribute one incident's recorded facts to another."""
+    path = DATA_DIR / "incidents.json"
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, json.JSONDecodeError):
+        logger.exception("Failed to load incidents from %s", path)
         return []
 
 
@@ -63,6 +75,7 @@ def get_runbooks() -> dict[str, str]:
 def refresh_data_cache() -> None:
     """Clear all caches so the next access re-reads from disk."""
     get_deployments.cache_clear()
+    get_incidents.cache_clear()
     get_logs.cache_clear()
     get_runbooks.cache_clear()
     logger.info("Enterprise data cache cleared")

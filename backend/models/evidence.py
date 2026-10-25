@@ -30,6 +30,8 @@ class DeploymentEvidence(BaseModel):
     service: Optional[str] = None
     change: Optional[str] = None
     time: Optional[str] = None
+    incident_id: Optional[str] = None      # the incident this deployment is linked to
+    link_status: Optional[str] = None      # verified | documented_dependency
 
 
 class LogEvidence(BaseModel):
@@ -38,6 +40,7 @@ class LogEvidence(BaseModel):
     service: Optional[str] = None
     message: str
     source: str = "logs.txt"
+    incident_id: Optional[str] = None      # incident this line corroborates, if any
 
 
 class RunbookEvidence(BaseModel):
@@ -62,6 +65,14 @@ class EvidenceBundle(BaseModel):
     log_evidence: list[LogEvidence] = Field(default_factory=list)
     runbook_evidence: Optional[RunbookEvidence] = None
     retrieval_metadata: RetrievalMetadata = Field(default_factory=RetrievalMetadata)
+    # Retrieved by relevance but judged NOT to describe the asked problem by
+    # the evidence match check - listed for transparency, never used as evidence.
+    related_incident_evidence: list[IncidentEvidence] = Field(default_factory=list)
+    match_assessments: list[dict] = Field(default_factory=list)
+    match_available: bool = True
+    question_scope: str = "incident_investigation"
+    # Deployment links that could not be verified (quarantined / missing).
+    link_notes: list[str] = Field(default_factory=list)
     investigation_timestamp: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
@@ -74,6 +85,8 @@ class EvidenceValidation(BaseModel):
     runbook_found: bool = False
     evidence_strength: EvidenceStrength = "INSUFFICIENT"
     notes: list[str] = Field(default_factory=list)
+    missing_evidence: list[str] = Field(default_factory=list)
+    contradictions: list[str] = Field(default_factory=list)
 
 
 class TimelineEvent(BaseModel):
@@ -102,3 +115,25 @@ class InvestigationResult(BaseModel):
     validation: EvidenceValidation
     report_markdown: Optional[str] = None  # full markdown fallback
     message: Optional[str] = None
+    # Which LLM produced the report. generation_error is set (config,
+    # quota_exhausted, rate_limit, transient, error) when the report is the
+    # evidence-only fallback, i.e. no model-generated analysis exists.
+    generation_provider: Optional[str] = None
+    generation_model: Optional[str] = None
+    generation_error: Optional[str] = None
+    # answered | partial | insufficient_evidence | out_of_scope
+    answer_status: Optional[str] = None
+    # llm = model-generated (validated); policy = deterministic evidence-policy
+    # answer (no matching incident / unsupported scope); fallback = LLM failed.
+    answer_source: Optional[str] = None
+    conclusions: list[str] = Field(default_factory=list)
+    hypotheses: list[str] = Field(default_factory=list)
+    unknowns: list[str] = Field(default_factory=list)
+    # Post-generation grounding check: claims removed or changed, and why.
+    grounding_issues: list[str] = Field(default_factory=list)
+    # Multi-incident answers only: each matched incident's own findings, and the
+    # relationship status enforced by code ("documented" | "not_established" | None).
+    per_incident_findings: list[str] = Field(default_factory=list)
+    incident_relationship: Optional[str] = None
+    # What the guardrails did on this request (input / retrieval / output rails, PII).
+    guardrail_events: list[str] = Field(default_factory=list)
