@@ -1,14 +1,7 @@
 import { useState } from "react";
+import { ThumbDownIcon, ThumbUpIcon } from "./Icons";
 
-const REASONS = [
-  "Incorrect root cause",
-  "Missing evidence",
-  "Wrong deployment",
-  "Incorrect logs",
-  "Poor recommendation",
-  "Other",
-];
-
+const REASONS = ["Incorrect root cause", "Missing evidence", "Wrong deployment", "Not what I asked", "Other"];
 const FEEDBACK_KEY = "copilot-feedback";
 
 function storeFeedback(entry) {
@@ -21,56 +14,38 @@ function storeFeedback(entry) {
   }
 }
 
-/**
- * Local feedback capture (no backend persistence). Asks for a reason only
- * when the user marks an investigation as not helpful.
- */
-export default function Feedback({ onFeedback }) {
-  const [choice, setChoice] = useState(null); // "up" | "down"
-  const [showReasons, setShowReasons] = useState(false);
+/** Thumbs up / down, kept in this browser only (no backend persistence). */
+export default function Feedback() {
+  const [choice, setChoice] = useState(null); // "up" | "down" | "sent"
 
-  const vote = (direction) => {
-    setChoice(direction);
-    if (direction === "down") {
-      setShowReasons(true);
-    } else {
-      storeFeedback({ helpful: true, ts: Date.now() });
-      onFeedback?.({ helpful: true });
-    }
-  };
-
-  const pickReason = (reason) => {
-    storeFeedback({ helpful: false, reason, ts: Date.now() });
-    onFeedback?.({ helpful: false, reason });
-    setShowReasons(false);
+  const vote = (helpful) => {
+    if (helpful) storeFeedback({ helpful: true, ts: Date.now() });
+    setChoice(helpful ? "up" : "down");
   };
 
   return (
-    <div className="feedback-card">
-      {choice === null ? (
-        <>
-          <span className="feedback-question">Was this investigation helpful?</span>
-          <div className="feedback-actions">
-            <button className="feedback-btn" onClick={() => vote("up")}>👍 Helpful</button>
-            <button className="feedback-btn" onClick={() => vote("down")}>👎 Not helpful</button>
-          </div>
-        </>
-      ) : choice === "up" ? (
-        <span className="feedback-thanks">Thanks for the feedback.</span>
-      ) : showReasons ? (
-        <>
-          <span className="feedback-question">What was wrong?</span>
-          <div className="feedback-reasons">
-            {REASONS.map((reason) => (
-              <button key={reason} className="feedback-reason" onClick={() => pickReason(reason)}>
-                {reason}
-              </button>
-            ))}
-          </div>
-        </>
-      ) : (
-        <span className="feedback-thanks">Thanks — your feedback was recorded.</span>
+    <>
+      <button className={`icon-btn small ${choice === "up" ? "on" : ""}`} onClick={() => vote(true)}
+        aria-label="Good answer" title="Good answer" disabled={choice !== null}>
+        <ThumbUpIcon size={16} />
+      </button>
+      <button className={`icon-btn small ${choice === "down" || choice === "sent" ? "on" : ""}`}
+        onClick={() => vote(false)} aria-label="Bad answer" title="Bad answer" disabled={choice !== null}>
+        <ThumbDownIcon size={16} />
+      </button>
+      {choice === "down" && (
+        <span className="reasons">
+          {REASONS.map((reason) => (
+            <button key={reason} className="chip" onClick={() => {
+              storeFeedback({ helpful: false, reason, ts: Date.now() });
+              setChoice("sent");
+            }}>
+              {reason}
+            </button>
+          ))}
+        </span>
       )}
-    </div>
+      {choice === "sent" && <span className="muted small">Thanks for the feedback.</span>}
+    </>
   );
 }
