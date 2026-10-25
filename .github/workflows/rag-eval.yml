@@ -45,6 +45,20 @@ jobs:
       LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
       LANGFUSE_HOST: ${{ secrets.LANGFUSE_HOST || 'https://jp.cloud.langfuse.com' }}
     steps:
+      # Fail in seconds, naming what is missing, instead of after the install and
+      # tests (the Langfuse sync and the evals cannot run without these secrets).
+      - name: Check required secrets
+        run: |
+          missing=""
+          [ -n "$OPENAI_API_KEY" ] || missing="$missing OPENAI_API_KEY"
+          [ -n "$LANGFUSE_PUBLIC_KEY" ] || missing="$missing LANGFUSE_PUBLIC_KEY"
+          [ -n "$LANGFUSE_SECRET_KEY" ] || missing="$missing LANGFUSE_SECRET_KEY"
+          if [ "$LLM_PROVIDER" = "gemini" ] && [ -z "$GEMINI_API_KEY" ]; then missing="$missing GEMINI_API_KEY"; fi
+          if [ -n "$missing" ]; then
+            echo "::error title=Missing repository secrets::Add$missing in Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
