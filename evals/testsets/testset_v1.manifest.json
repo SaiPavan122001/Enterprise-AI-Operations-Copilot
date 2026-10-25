@@ -1,0 +1,665 @@
+{
+  "version": "v1",
+  "created_at": "2026-10-23T08:04:31.410946+00:00",
+  "generator_model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-mini",
+  "corpus_records": 20,
+  "sampled_records": 20,
+  "candidates": 203,
+  "kept": 95,
+  "by_type": {
+    "single_chunk": 60,
+    "multi_chunk": 15,
+    "out_of_scope": 20
+  },
+  "rejected": [
+    {
+      "question": "What are the distinct root causes of the issues faced by the payroll-service and employee-service, and how might these different causes indicate varying underlying infrastructure vulnerabilities?",
+      "type": "multi_chunk",
+      "reason": "ambiguous: judge matched ['INC-006', 'INC-009', 'INC-015'], expected ['INC-006', 'INC-015']",
+      "judge": "The proposed reference answer accurately identifies the distinct root causes for the payroll-service (schema version mismatch) and employee-service (Elasticsearch index corruption) incidents, and it correctly interprets the implications of these causes regarding infrastructure vulnerabilities."
+    },
+    {
+      "question": "How did the worker pod crash loop in incident INC-017 affect the handling of SMS notifications during the third-party SMS API outage in incident INC-010?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly connects the impact of the worker pod crash loop in incident INC-017 on the handling of SMS notifications during the outage in incident INC-010. Both incidents are relevant and the proposed reference answer accurately reflects the relationship between them."
+    },
+    {
+      "question": "What were the root causes of the two incidents involving the payroll-service, specifically regarding the critical 500 errors from the Payroll API and the issue of duplicate payroll records?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question specifically asks for the root causes of two incidents involving the payroll-service, which are clearly identified in the incident database. The proposed reference answer accurately reflects the root causes as stated in the records."
+    },
+    {
+      "question": "How did the JWT signing key mismatch in incident INC-002 and the misconfigured token expiry in incident INC-016 contribute to user authentication issues in the auth-service?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly refers to specific incidents (INC-002 and INC-016) and asks about their contributions to user authentication issues, which is relevant and realistic for an engineer to investigate."
+    },
+    {
+      "question": "What underlying issues in the reporting-service contributed to both the failure of scheduled reports and the inaccuracy of dashboard metrics?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly identifies two specific incidents related to the reporting-service, and the proposed reference answer accurately reflects the root causes of those incidents as documented in the incident database."
+    },
+    {
+      "question": "What were the root causes of the performance issues affecting the employee-service during the incidents INC-019 and INC-006, and how did they potentially impact the overall service reliability?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly asks for the root causes of specific incidents affecting the employee-service, which are directly referenced in the incident database. The proposed reference answer accurately summarizes the root causes and their impact on service reliability."
+    },
+    {
+      "question": "What are the differing root causes that contributed to the performance issues experienced by the reporting-service during incidents INC-014 and INC-007, and how might they be related in terms of overall service reliability?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The proposed reference answer accurately identifies the root causes of the incidents and explains their relationship to service reliability, supported by the incident records."
+    },
+    {
+      "question": "What were the contributing factors to the email delivery issues in both the incidents where one was caused by SMTP rate limits being exceeded and the other by a worker pod crash loop?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly identifies two specific incidents related to email delivery issues and asks for the contributing factors, which are directly supported by the incident records."
+    },
+    {
+      "question": "What were the separate root causes of the delayed emails and the unsent SMS notifications for the notification-service, and how might they have impacted user communication differently?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly identifies the incidents related to delayed emails and unsent SMS notifications, and the proposed reference answer accurately reflects the root causes and their potential impact on user communication."
+    },
+    {
+      "question": "How did the issues of JWT signing key mismatch and OAuth provider certificate expiration impact user authentication in the auth-service during incidents INC-002 and INC-008?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The reference answer accurately describes the impact of the incidents on user authentication in the auth-service, clearly linking the root causes to the specific authentication failures."
+    },
+    {
+      "question": "What are the distinct root causes of incidents involving the employee-service that resulted in performance issues, specifically the timing out of employee exports and the failure to save profile updates?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly specifies the incidents involving the employee-service and focuses on performance issues related to timing out of employee exports and failure to save profile updates. The proposed reference answer accurately identifies the distinct root causes from the incident records."
+    },
+    {
+      "question": "What were the different root causes of user login issues in the auth-service and high API error rates in the gateway-service, and how might they have impacted user experience together?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly identifies specific incidents related to user login issues in the auth-service and high API error rates in the gateway-service. The proposed reference answer accurately reflects the root causes from the incident records and explains the potential impact on user experience."
+    },
+    {
+      "question": "What were the combined impacts of the ingress configuration error in the API gateway and the message queue backlog in the leave approval workflow on overall service availability during the incidents?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly identifies two specific incidents related to service availability, and the proposed reference answer accurately summarizes the impacts of both incidents based on the provided records."
+    },
+    {
+      "question": "What are the differences in root causes between the notification-service incident involving delayed emails due to SMTP rate limits and the payroll-service incident related to payroll generation failure due to a missing salary_amount column in a database migration?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The question clearly distinguishes between two specific incidents, asking for a comparison of their root causes, which is relevant and realistic for an engineer to inquire about."
+    },
+    {
+      "question": "What common factors might have contributed to the user experience issues in both incidents, particularly regarding authentication and notification delays?",
+      "type": "multi_chunk",
+      "reason": "over quota",
+      "judge": "The proposed reference answer accurately identifies the incidents related to user experience issues in authentication (INC-002) and notification delays (INC-004), clearly linking the root causes to the respective service failures."
+    },
+    {
+      "question": "What could cause delays in processing payroll calculations?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-015']",
+      "judge": "The question is clear and specific, asking about potential causes for delays in payroll calculations, which can be linked to incidents related to payroll processing."
+    },
+    {
+      "question": "What are the potential causes of data loss in the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on potential causes of data loss in the employee-service. The incidents INC-013 and INC-019 provide relevant information regarding issues that could lead to data loss."
+    },
+    {
+      "question": "Why might notifications fail to send during high traffic periods?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, focusing on the potential reasons for notification failures during high traffic periods. The incidents related to notifications (INC-010 and INC-017) provide relevant context, although they do not directly address high traffic scenarios."
+    },
+    {
+      "question": "What could cause incorrect leave balances to be displayed?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-003']",
+      "judge": "The question specifically refers to incorrect leave balances, which is directly addressed by INC-003, where the root cause is identified as a cache invalidation failure."
+    },
+    {
+      "question": "What issues may arise from a misconfiguration in the gateway-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-005', 'INC-012', 'INC-018']",
+      "judge": "The question is clear and specific, directly relating to incidents involving the gateway-service, which are documented in the incident database."
+    },
+    {
+      "question": "What could cause frequent errors in the payroll processing system?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-015']",
+      "judge": "The question is clear and specific, asking about potential causes of errors in the payroll processing system, which is directly related to incidents INC-001, INC-009, and INC-015."
+    },
+    {
+      "question": "Why might SSO authentication fail under heavy load?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-008']",
+      "judge": "The question is clear and specific, directly relating to the incident involving SSO authentication failure (INC-008). The proposed reference answer correctly identifies that the incident data does not provide sufficient evidence to determine why SSO authentication might fail under heavy load."
+    },
+    {
+      "question": "What might cause a backlog in the email notification queue?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-017']",
+      "judge": "The question is clear and specific, directly relating to the incident about email queue growth, which indicates a backlog could be a potential cause."
+    },
+    {
+      "question": "What could prevent reporting service from accessing external data sources?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-014', 'INC-020']",
+      "judge": "The question is clear and specific, as it pertains to the reporting service's ability to access external data sources. The incidents related to the reporting service (INC-014 and INC-020) provide context about issues that could potentially affect data access, such as ETL job failures and cron job configuration errors."
+    },
+    {
+      "question": "What are the possible reasons for intermittent failures in leave request approvals?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-011']",
+      "judge": "The question about intermittent failures in leave request approvals is clear and specific. The incident record INC-011 relates to a leave approval workflow being stuck, which could be a reason for intermittent failures."
+    },
+    {
+      "question": "What might cause discrepancies in the payroll data processed?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-015']",
+      "judge": "The question is clear and specific, directly relating to payroll data discrepancies, which are addressed in incidents INC-001 (Payroll generation failing), INC-009 (Duplicate payroll records), and INC-015 (Payroll API returning 500 errors). The proposed reference answer correctly states that the available incident data does not provide sufficient evidence to determine the root cause of discrepancies."
+    },
+    {
+      "question": "What could lead to inconsistent role assignments in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, focusing on potential issues related to role assignments in the auth-service. However, the incident records do not provide direct evidence regarding inconsistent role assignments, making the reference answer appropriate."
+    },
+    {
+      "question": "What could cause the employee-service to crash unexpectedly?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-013']",
+      "judge": "The question is clear and specific, referring to the employee-service. The incident data includes a relevant record (INC-013) that mentions 'Database connection pool exhaustion' as a potential cause for issues related to the employee-service, which could lead to crashes."
+    },
+    {
+      "question": "What might lead to API rate limiting issues with the gateway-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-005', 'INC-012', 'INC-018']",
+      "judge": "The question is clear and specific, focusing on potential causes of API rate limiting issues related to the gateway-service. The incidents related to the gateway-service provide context for understanding potential issues, such as configuration errors and service availability during deployments."
+    },
+    {
+      "question": "What causes delays in the generation of reports in the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-007']",
+      "judge": "The question specifically asks about delays in report generation, which directly relates to the incident INC-007 that mentions reports loading slowly due to missing database indexes."
+    },
+    {
+      "question": "What might cause the employee-service to return inaccurate information?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-006', 'INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on potential causes of inaccurate information from the employee-service. The incidents related to the employee-service provide relevant context, although they do not directly answer the question."
+    },
+    {
+      "question": "What might lead to a communication breakdown between the notification-service and the database?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-004', 'INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, focusing on potential communication issues between the notification-service and the database. The incidents related to the notification-service provide context for possible breakdowns, although they do not directly address database communication."
+    },
+    {
+      "question": "What are the potential impacts of missing scheduled maintenance on the payroll-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-015']",
+      "judge": "The question is clear and specific, focusing on the impacts of missing scheduled maintenance on the payroll-service. The incidents related to the payroll-service provide relevant context, although they do not directly address scheduled maintenance."
+    },
+    {
+      "question": "What could cause data synchronization issues in the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-006', 'INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on potential causes of data synchronization issues in the employee-service. The incidents related to the employee-service provide relevant context, even though they do not directly mention data synchronization."
+    },
+    {
+      "question": "What might lead to user account lockouts in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, asking about potential causes for user account lockouts in the auth-service. The incidents related to the auth-service provide relevant context, even if they do not directly mention account lockouts."
+    },
+    {
+      "question": "What are the common issues with third-party integrations in the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-014', 'INC-020']",
+      "judge": "The question is clear and specific, focusing on common issues related to third-party integrations in the reporting-service. However, the incidents listed do not specifically mention third-party integrations, which is why the reference answer correctly states that evidence is insufficient."
+    },
+    {
+      "question": "What could lead to delays in the processing of leave applications?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-011']",
+      "judge": "The question specifically refers to delays in processing leave applications, which is directly addressed by INC-011, where the root cause is identified as a message queue backlog."
+    },
+    {
+      "question": "What are the implications of an expired certificate in the notification-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-010']",
+      "judge": "The question specifically refers to the implications of an expired certificate, which is directly related to the incident INC-010 regarding SMS notifications not being sent due to a third-party SMS API outage. The proposed reference answer correctly states that the available incident data does not provide sufficient information to answer the question about the notification-service."
+    },
+    {
+      "question": "What could lead to inconsistent notifications being sent to users?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, asking about inconsistent notifications, which relates directly to incidents involving notification services. The proposed reference answer correctly identifies that the incident data does not provide a definitive root cause for inconsistent notifications."
+    },
+    {
+      "question": "What are the potential issues with database migrations in the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-013']",
+      "judge": "The question is clear and specific, referring to potential issues with database migrations in the employee-service. The incident INC-013 mentions a database connection pool exhaustion, which could relate to migration issues, but the reference answer correctly states that the available data does not provide sufficient evidence to directly answer the question."
+    },
+    {
+      "question": "What could lead to failures in the generation of payroll reports?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-014', 'INC-015']",
+      "judge": "The question is clear and specific, directly relating to payroll report generation, which is addressed by incidents involving the payroll service."
+    },
+    {
+      "question": "What could cause user sessions to be disrupted in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-016']",
+      "judge": "The question is clear and specific, directly relating to the incident involving frequent user session expirations in the auth-service, which is documented in INC-016."
+    },
+    {
+      "question": "What might cause a backlog in notification processing?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-017']",
+      "judge": "The question is clear and specific, and it directly relates to the incident regarding the email queue growth, which indicates a backlog in notification processing."
+    },
+    {
+      "question": "What can lead to a failure in database queries executed by the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-014', 'INC-020']",
+      "judge": "The question is clear and specific, focusing on potential failures in database queries executed by the reporting-service. The incidents related to the reporting-service (INC-014 and INC-020) provide relevant context regarding issues that could lead to such failures."
+    },
+    {
+      "question": "What are the causes of timeouts in the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-019']",
+      "judge": "The question specifically asks about timeouts in the employee-service, and INC-019 directly addresses an incident related to the employee-service with a timeout issue."
+    },
+    {
+      "question": "What could lead to failures in processing payroll adjustments?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-015']",
+      "judge": "The question is clear and specific, focusing on payroll adjustments, which relates to incidents involving the payroll service. The proposed reference answer correctly identifies that the incident data does not provide sufficient evidence for a definitive root cause."
+    },
+    {
+      "question": "What causes delivery failures for notifications sent from the notification-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-010', 'INC-017']",
+      "judge": "The question specifically asks about delivery failures for notifications from the notification-service, which is directly addressed by incidents INC-010 (SMS notifications not sent) and INC-017 (Email queue growth). The proposed reference answer correctly identifies that the available incident data does not provide a definitive root cause for delivery failures, as it does not encompass all potential issues."
+    },
+    {
+      "question": "What external factors could disrupt SSO authentication?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-008']",
+      "judge": "The question is clear and specific, and it directly relates to the incident involving SSO authentication failure (INC-008), which provides relevant context for potential external factors."
+    },
+    {
+      "question": "What are the potential issues with user session management in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-016']",
+      "judge": "The question specifically addresses user session management issues in the auth-service, which is directly related to the incident INC-016 regarding frequent user session expirations due to misconfigured token expiry."
+    },
+    {
+      "question": "What could prevent proper logging in the gateway-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-005', 'INC-012', 'INC-018']",
+      "judge": "The question is clear and specific, focusing on potential issues related to logging in the gateway-service. However, it could be slightly more specific about what aspects of logging are being considered."
+    },
+    {
+      "question": "What might lead to failure in real-time updates from the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on potential causes for failure in real-time updates from the employee-service. The incidents related to the employee-service provide relevant context, particularly regarding database connection issues and query optimization."
+    },
+    {
+      "question": "What are the common causes of data integrity issues in the payroll-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-001', 'INC-009', 'INC-015']",
+      "judge": "The question specifically asks about data integrity issues in the payroll-service, which is directly addressed by incidents INC-001 (Payroll generation failing), INC-009 (Duplicate payroll records), and INC-015 (Payroll API returning 500 errors). The proposed reference answer correctly identifies that the available incident data does not provide sufficient evidence to draw a conclusion about common causes."
+    },
+    {
+      "question": "What could lead to user authentication failures due to network issues?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008']",
+      "judge": "The question is clear and specific, focusing on user authentication failures, which relates to incidents involving the auth-service. However, it does not directly address network issues, making it slightly less specific."
+    },
+    {
+      "question": "What are typical problems with external API calls affecting the notification-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, focusing on problems with external API calls affecting the notification-service. The incidents INC-010 and INC-017 provide relevant information regarding issues related to external APIs."
+    },
+    {
+      "question": "What could cause a high load on the database used by the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, as it directly relates to potential causes of high load on the database used by the employee-service. The incidents related to the employee-service provide relevant context regarding database issues."
+    },
+    {
+      "question": "What issues could arise from a CI/CD failure impacting the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, focusing on potential issues arising from CI/CD failures related to the auth-service. The incidents related to the auth-service provide relevant context for understanding possible impacts."
+    },
+    {
+      "question": "What might cause issues with the email delivery service used in notifications?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-004', 'INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, asking about potential issues with the email delivery service used in notifications. The incidents related to the notification service provide relevant context."
+    },
+    {
+      "question": "What could lead to unauthorized access attempts in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, focusing on unauthorized access attempts in the auth-service, which is relevant to incidents related to authentication issues."
+    },
+    {
+      "question": "What external events could impact the performance of the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-007', 'INC-014', 'INC-020']",
+      "judge": "The question is clear and specific, asking about external events impacting the performance of the reporting-service. The incidents related to the reporting-service provide context for potential external influences."
+    },
+    {
+      "question": "What are the implications of a slow database response on the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-006', 'INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on the implications of slow database response on the employee-service. The incidents related to the employee-service provide context for potential issues, although they do not directly address slow database responses."
+    },
+    {
+      "question": "What could cause a delay in leave approval notifications?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-011']",
+      "judge": "The question specifically refers to leave approval notifications, which is directly related to incident INC-011 regarding the leave approval workflow being stuck due to a message queue backlog."
+    },
+    {
+      "question": "What could cause interruptions in SMS delivery for notifications?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-010']",
+      "judge": "The question specifically asks about interruptions in SMS delivery, which directly relates to the incident INC-010 regarding SMS notifications not being sent due to a third-party SMS API outage."
+    },
+    {
+      "question": "What could lead to data mismatch between the payroll-service and reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-009', 'INC-014']",
+      "judge": "The question is clear and specific, as it directly relates to potential data mismatches between the payroll-service and reporting-service, which are both referenced in incidents INC-009 and INC-014."
+    },
+    {
+      "question": "What could lead to performance degradation in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, asking about performance degradation in the auth-service, which is relevant to the incidents recorded for that service."
+    },
+    {
+      "question": "What external factors influence the scalability of the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-006', 'INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on external factors affecting scalability. However, the incident records do not provide direct evidence regarding external factors influencing scalability, making the reference answer correct."
+    },
+    {
+      "question": "What could cause user confusion regarding failed login attempts?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, directly relating to user login issues, which are addressed in incidents INC-002 (Users unable to login) and INC-008 (SSO authentication failure). The reference answer correctly states that the available incident data does not provide sufficient evidence to determine the cause of user confusion regarding failed login attempts."
+    },
+    {
+      "question": "What can cause a spike in CPU usage in the notification-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-004', 'INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, focusing on CPU usage in the notification-service. While the incidents do not directly mention CPU usage, they provide context about potential issues that could lead to increased resource consumption."
+    },
+    {
+      "question": "What might cause the failure of scheduled jobs in the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-014', 'INC-020']",
+      "judge": "The question is clear and specific, asking about potential causes for the failure of scheduled jobs in the reporting-service. The incidents INC-014 and INC-020 provide relevant information regarding job failures and scheduling issues."
+    },
+    {
+      "question": "What are potential issues with token revocation in the auth-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, focusing on potential issues with token revocation in the auth-service. The incidents related to the auth-service provide context for understanding potential problems, even if they do not directly address token revocation."
+    },
+    {
+      "question": "What could lead to mismatched leave records in the leave-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-003', 'INC-011']",
+      "judge": "The question is clear and specific, directly relating to the leave-service incidents that involve leave records. The proposed reference answer correctly identifies that the incident data does not provide a definitive root cause for mismatched leave records."
+    },
+    {
+      "question": "What could cause the gateway-service to reject valid requests?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-005', 'INC-012', 'INC-018']",
+      "judge": "The question is clear and specific, asking about potential causes for the gateway-service to reject valid requests. The incidents related to the gateway-service provide relevant context for understanding possible issues."
+    },
+    {
+      "question": "What might lead to issues with user feedback mechanisms in the employee-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-013', 'INC-019']",
+      "judge": "The question is clear and specific, focusing on potential issues with user feedback mechanisms in the employee-service. The incidents related to the employee-service (INC-013 and INC-019) provide relevant context, although they do not directly address user feedback mechanisms."
+    },
+    {
+      "question": "What external events could affect notification delivery times?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-004', 'INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, asking about external events that could affect notification delivery times, which relates directly to incidents involving notification services."
+    },
+    {
+      "question": "What are potential issues with load balancing in the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-007', 'INC-014', 'INC-020']",
+      "judge": "The question is clear and specific, focusing on potential load balancing issues in the reporting-service. However, while there are incidents related to the reporting-service, none directly address load balancing, which supports the reference answer's assertion of insufficient evidence."
+    },
+    {
+      "question": "What might cause timeouts in the leave-service approvals?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-011']",
+      "judge": "The question specifically refers to timeouts in the leave-service approvals, which is directly related to INC-011 that mentions a 'Message queue backlog' causing the leave approval workflow to be stuck."
+    },
+    {
+      "question": "What could lead to duplicate entries in the reporting-service data?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-014']",
+      "judge": "The question is clear and specific, directly relating to the reporting-service, and INC-014 addresses an issue with incorrect metrics which could be related to duplicate entries."
+    },
+    {
+      "question": "What might cause inconsistencies between the payroll and employee records?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-009', 'INC-015']",
+      "judge": "The question is clear and specific, as it directly relates to potential issues affecting payroll and employee records. The incidents related to payroll (INC-009 and INC-015) indicate problems that could lead to inconsistencies in records, such as duplicate records and API errors. However, the proposed reference answer correctly states that the available incident data does not provide a definitive root cause for the inconsistencies."
+    },
+    {
+      "question": "What might cause unexpected behavior in the notification delivery system?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-004', 'INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, focusing on unexpected behavior in the notification delivery system. The matching incident records provide relevant information about issues related to notification delivery."
+    },
+    {
+      "question": "What are potential problems with third-party integrations affecting the reporting-service?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-014']",
+      "judge": "The question specifically asks about potential problems with third-party integrations affecting the reporting-service, and INC-014 mentions an ETL job failure, which could be related to third-party data sources or integrations."
+    },
+    {
+      "question": "What are the common causes of network outages in our data center?",
+      "type": "out_of_scope",
+      "reason": "quality 2 < 4",
+      "judge": "The question is somewhat vague as it does not specify what types of network outages are being referred to, and the incident data provided does not include any incidents specifically related to network outages."
+    },
+    {
+      "question": "What could lead to increased latency in our database services?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-007', 'INC-014']",
+      "judge": "The question is clear and specific, asking about factors that could lead to increased latency in database services. The incidents related to database performance, such as missing indexes (INC-007) and ETL job failures (INC-014), provide relevant context."
+    },
+    {
+      "question": "What could lead to failures in our backup and recovery processes?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential failures in backup and recovery processes, which is a relevant concern for engineers. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What might cause issues with our DNS resolution?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes for DNS resolution issues. The proposed reference answer correctly states that there is no relevant incident data to provide a root cause."
+    },
+    {
+      "question": "What are common causes of authentication failures in web applications?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-002', 'INC-008', 'INC-016']",
+      "judge": "The question is clear and specific, asking about common causes of authentication failures, which is directly related to incidents involving authentication issues."
+    },
+    {
+      "question": "What could lead to unexpected downtimes in our hosting provider's services?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of unexpected downtimes in hosting provider services. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What are potential issues with our CI/CD pipeline?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential issues with the CI/CD pipeline. The proposed reference answer correctly states that the incident data does not provide sufficient information to identify issues related to the CI/CD pipeline."
+    },
+    {
+      "question": "What could cause performance issues in our web servers?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of performance issues in web servers. However, the incident data provided does not contain relevant information to directly answer this question."
+    },
+    {
+      "question": "What are common causes of data loss in distributed systems?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about common causes of data loss in distributed systems. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What might lead to inconsistencies in application logs?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of inconsistencies in application logs. The proposed reference answer correctly states that the incident data does not provide sufficient information to determine a root cause."
+    },
+    {
+      "question": "What could lead to a failure of our content delivery network?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential failures of the content delivery network, which is a relevant concern for engineers. The proposed reference answer correctly states that there is no incident data related to this specific issue."
+    },
+    {
+      "question": "What are potential impacts of a DDoS attack on our infrastructure?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about the potential impacts of a DDoS attack, which is a relevant concern for infrastructure. The proposed reference answer correctly states that the incident data does not provide information related to DDoS attacks, thus supporting the conclusion that evidence is insufficient."
+    },
+    {
+      "question": "What could cause failures in our API management tools?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-005', 'INC-012', 'INC-018']",
+      "judge": "The question is clear and specific, focusing on failures in API management tools. The incidents related to API gateway outages and service unavailability during deployment provide relevant context, even though they do not directly answer the question."
+    },
+    {
+      "question": "What are the common pitfalls when scaling applications?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question about common pitfalls when scaling applications is clear and specific, but the incident data does not provide relevant information to answer it. The proposed reference answer correctly identifies the lack of evidence."
+    },
+    {
+      "question": "What could lead to issues with our user data encryption practices?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential issues with user data encryption practices. However, the incident records do not provide relevant information to answer it, making the reference answer correct."
+    },
+    {
+      "question": "What are the implications of using a single point of failure in our architecture?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about the implications of a single point of failure in the architecture. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What might cause unexpected behavior in our microservices communication?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of unexpected behavior in microservices communication. The proposed reference answer correctly states that the incident data does not provide sufficient evidence to answer the question."
+    },
+    {
+      "question": "What could lead to issues in the deployment of new software versions?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-005', 'INC-012', 'INC-018']",
+      "judge": "The question is clear and specific, asking about potential issues in the deployment of new software versions. The incidents related to deployment failures (INC-005, INC-012, INC-018) provide relevant examples of issues that could arise during such processes."
+    },
+    {
+      "question": "What are the potential risks associated with third-party libraries?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential risks associated with third-party libraries. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What could cause issues with our logging and monitoring setup?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential issues with logging and monitoring, which is a relevant concern for engineers. The proposed reference answer correctly states that the incident data does not provide sufficient information to identify root causes related to logging and monitoring."
+    },
+    {
+      "question": "What might lead to configuration errors in our Kubernetes clusters?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of configuration errors in Kubernetes clusters. However, the incident data does not provide relevant information to directly answer it."
+    },
+    {
+      "question": "What could lead to outages due to hardware failures?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of outages due to hardware failures. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What are potential issues with our cloud service provider's SLAs?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential issues with the cloud service provider's SLAs, which is a relevant concern for engineers. The proposed reference answer correctly states that the incident data does not provide sufficient evidence to address the question."
+    },
+    {
+      "question": "What might cause unexpected behavior in our front-end applications?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of unexpected behavior in front-end applications. The proposed reference answer correctly states that the incident data does not provide relevant information to answer the question."
+    },
+    {
+      "question": "What are the implications of using deprecated APIs in our services?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about the implications of using deprecated APIs, which is a relevant concern for engineers. The proposed reference answer correctly states that the incident data does not provide information to answer the question."
+    },
+    {
+      "question": "What could lead to email deliverability issues for our business domain?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-004', 'INC-010', 'INC-017']",
+      "judge": "The question is clear and specific, asking about email deliverability issues, which relates directly to incidents involving email services. The proposed reference answer correctly identifies that the incident data does not provide sufficient evidence to determine root causes for email deliverability issues."
+    },
+    {
+      "question": "What are common causes of slow database performance?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-007']",
+      "judge": "The question about common causes of slow database performance is clear and specific. The incident record INC-007, which mentions 'Missing database indexes' as a root cause for slow report loading, directly relates to the question."
+    },
+    {
+      "question": "What could lead to issues with our caching strategy?",
+      "type": "out_of_scope",
+      "reason": "not out of scope: judge matched ['INC-003']",
+      "judge": "The question about issues with the caching strategy is directly related to the incident INC-003, which mentions a 'Cache invalidation failure' as the root cause."
+    },
+    {
+      "question": "What might be the causes of unexpected spikes in traffic to our services?",
+      "type": "out_of_scope",
+      "reason": "over quota",
+      "judge": "The question is clear and specific, asking about potential causes of unexpected spikes in traffic, which is a relevant concern for engineers. The proposed reference answer correctly states that the incident data does not provide sufficient evidence to determine the causes."
+    }
+  ]
+}

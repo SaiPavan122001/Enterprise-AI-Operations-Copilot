@@ -11,8 +11,14 @@ logger = logging.getLogger(__name__)
 class RateLimiter:
     """Small in-memory sliding-window rate limiter.
 
-    Protects the expensive Gemini-backed /investigate endpoint from
-    unrestricted API spend. Suitable for a single-process deployment.
+    Protects the expensive LLM-backed /investigate endpoints from
+    unrestricted API spend. Requests are counted per authenticated identity
+    (API-key name) when known, otherwise per client IP.
+
+    LIMITATION: state is in this process's memory. With several worker
+    processes or replicas each keeps its own counts (the effective limit
+    multiplies) and counts reset on restart. A multi-process deployment needs a
+    shared store (e.g. Redis) - see evals/RELIABILITY_AUDIT.md (D16).
     """
 
     def __init__(self, max_requests: int, window_seconds: int):
@@ -20,8 +26,9 @@ class RateLimiter:
         self.window_seconds = window_seconds
         self._hits: dict[str, list[float]] = {}
 
-    def check(self, request: Request) -> bool:
-        client_ip = request.client.host if request.client else "unknown"
+    def check(self, request: Request, identity: str | None = None) -> bool:
+        client_ip = (f"key:{identity}" if identity
+                     else request.client.host if request.client else "unknown")
         now = time.monotonic()
         window_start = now - self.window_seconds
 

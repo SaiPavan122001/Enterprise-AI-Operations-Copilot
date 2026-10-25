@@ -1,0 +1,5 @@
+# Retrieved content is untrusted DATA: sentences that address the model or
+# instruct the reader are replaced with a marker (records are never followed).
+
+define flow neutralize retrieved instructions
+  $user_message = execute retrieval_neutralize(text=$user_message)

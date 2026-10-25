@@ -1,0 +1,17 @@
+# Lint configuration (python -m ruff check backend evals). CI runs it in the
+# "lint-and-type" job of .github/workflows/rag-eval.yml.
+line-length = 120
+target-version = "py312"
+extend-exclude = ["backend/qdrant_data", "evals/runs", "evals/.cache", "frontend"]
+
+[lint]
+# pyflakes (F), pycodestyle errors/warnings (E, W), bugbear (B): correctness-focused.
+select = ["E", "F", "W", "B"]
+# B008: FastAPI's Depends(...) in argument defaults is the framework idiom.
+# B905: zip(strict=...) would change behaviour; not adopted blindly.
+ignore = ["B008", "B905"]
+
+[lint.per-file-ignores]
+# Tests: long literal fixtures (questions, records) are kept on one line.
+"backend/tests/*" = ["B011", "E501"]
+"evals/tests/*" = ["B011", "E501"]

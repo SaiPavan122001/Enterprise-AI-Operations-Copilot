@@ -1,0 +1,90 @@
+# Remaining Defects — register
+
+**Baseline verified on 2026-10-24** against run `…152902Z` (Langfuse experiment `69347d73e79d0162`): 153 tests pass, and every number below was re-read from `evals/runs/<run>/results.jsonl`.
+
+**Status values:** OPEN, FIXED, PARTIAL, BLOCKED-HUMAN. The status column is updated at the end of this round (see the bottom of this file).
+
+| # | Defect | Evidence (trace / file) | Likely root cause | Proposed fix | Validation criteria | Status |
+|---|---|---|---|---|---|---|
+| D1 | Out-of-scope false accept: "issues with the reporting of analytics data" → INC-014, INC-020 | `7132ec52…`; match verdict `same_problem` for "Dashboard metrics incorrect" and "Scheduled reports not generated" | a single LLM verdict compares one coarse "asked problem" with record titles; no independent second signal | decompose the question into its asked problems; add an independent, non-LLM second signal per (asked problem, record) | held-out out-of-scope rejection improves with no in-scope recall loss || PARTIAL |
+| D2 | Out-of-scope false accept: "failure in the payroll reconciliation process" → INC-001, INC-015 | `8fa27859…` | same as D1 (payroll is named, so the service gate cannot help) | same as D1 | same as D1 || PARTIAL |
+| D3 | Multi-incident: INC-009 dropped ("database structure **and** batch job execution") | matcher output `matched=[INC-001]` | one asked problem per question; INC-009 is described by its cause, not its symptom | per-requirement decomposition: each requirement is matched separately | held-out multi-incident full recall ≥ the current 0.867 || FIXED |
+| D4 | Multi-incident: "root causes of incidents in auth-service and leave-service" → nothing matched | `65398a4c…` | the question asks for incidents by service; the matcher wants one symptom | decomposition handles "incidents on service X" requirements | answered from the auth and leave incidents; not refused || FIXED |
+| D5 | Multi-incident relevancy 0.674 (baseline 0.800); 2 "false refusals" on "how did X affect Y" | `62305b4e…`, `ffb4ce64…` | the answer reduces to "no record connects them"; per-incident facts are lost from the summary | a relationship-question contract: per-incident findings + an explicit relationship status | multi-incident relevancy (rendered **and raw**) improves; no invented links || PARTIAL |
+| D6 | Raw-summary relevancy 0.643 vs rendered 0.808 | summary.json | the model hedges in the summary; the rendered score depends on caveat relocation | a direct-answer summary contract measured on raw output; presentation unchanged | raw relevancy improves; reported separately || PARTIAL |
+| D7 | No runtime claim-support validation (a valid citation proves provenance only) | `rca_structured.validate` | only ID, date and deployment-causation checks exist | deterministic claim checks + a separate local NLI verifier; uncertain claims are downgraded | verifier precision and recall on labelled adversarial examples; adversarial tests || PARTIAL |
+| D8 | 8 quarantined incident→deployment links | `backend/data/data_quality_review.json` | the source data references other services' deployments | human decision; review report; strict-mode seeding | no link changed without a reviewer decision || BLOCKED-HUMAN |
+| D9 | Logs carry no service-specific signal; incidents have no timestamps | integrity report | synthetic placeholder data (to be confirmed by the owner) | versioned regeneration *plan* (not applied); strict validation | plan reviewed by the owner || BLOCKED-HUMAN |
+| D10 | Judge not human-calibrated | `claim_labels.csv`: human column empty | needs a human | review export + label validator; agreement only on human labels | human labels supplied || BLOCKED-HUMAN |
+| D11 | 17 proposed reference corrections unreviewed | `reference_corrections_v1.1.json` | needs a human | review report + approval CSV + apply script (approved rows only) | v1 untouched; v1.1 built only from approved rows || BLOCKED-HUMAN |
+| D12 | No authentication or authorization | `api/routes.py`; the frontend sends no credentials | not built | single-tenant API-key authentication (FastAPI security, hashed keys, roles), fail-closed | negative tests: missing, invalid or forged credentials; wrong role || FIXED |
+| D13 | No request cancellation | the workflow runs to completion after a client disconnect | no cancellation propagation | cooperative cancellation token checked between stages, before LLM calls and during backoff; disconnect detection | cancellation tests at each stage || FIXED |
+| D14 | No lint or type check | no tooling | — | ruff + mypy configs, dev requirements, CI step; fix the errors found | clean lint and type check; CI step || FIXED |
+| D15 | Unstructured logs; no request or investigation IDs | `config.configure_logging` | — | JSON formatter (opt-in), request-ID middleware, context fields; no question text | log-field tests || FIXED |
+| D16 | In-process rate limiter assumes a single process; embedded Qdrant is single-process | `utils/rate_limit.py`, Qdrant lock | — | document; key the limiter by authenticated identity; startup guard against multi-worker | documented + tests || PARTIAL |
+| D17 | Gemini JSON mode unverified | real API: 503, then quota | free-tier quota | retry when quota allows; otherwise keep marked unverified | one real JSON call || OPEN |
+| D18 | GitHub Actions never run on GitHub | — | not pushed (no permission to push) | local reproduction only | — | BLOCKED-HUMAN (push permission) |
+
+## Outcome of this round (final run `…083052Z_r5-final2`, Langfuse `ba863202bc2f3e33`)
+
+| # | Status | What was done / why not closed |
+|---|---|---|
+| D1, D2 | PARTIAL | Stage A unchanged (still accepts both). A non-LLM similarity gate was measured and rejected: it cannot separate these from true matches without tuning to the two inspected questions. New deterministic constraints (service, severity, generic requirements) do not apply to these questions. Held-out out-of-scope rejection stays 15/15. |
+| D3, D4 | FIXED | Requirement decomposition (Stage B, gap-filling only). Held-out multi-incident full recall 0.737 → 0.895; dev: only D3/D4 changed. D4 now matches all 5 auth/leave incidents (the question does not say which). |
+| D5 | PARTIAL | Multi-incident contract + relationship status enforced in code: false refusals 3 → 0, raw relevancy 0.585 → 0.604, context recall 0.606 → 0.672; rendered relevancy 0.674 → 0.666 (not improved). A padded intermediate result (0.712) was discarded. |
+| D6 | PARTIAL | Raw relevancy 0.643 → 0.646; still depends on caveat relocation for the 0.80 gate. |
+| D7 | PARTIAL | Deterministic + NLI claim-support checks at runtime. Labelled-by-construction set: precision 1.00, recall 0.553, FPR 0.00 (stated claims). Version 1 rejected after real-answer false positives. Also fixed: ISO deployment dates were not recognised as evidence. |
+| D8, D9 | BLOCKED-HUMAN | Review report + decision CSV + validated apply script; strict seeding; stale-review guard; provenance marked unconfirmed; regeneration plan v2 (not applied). |
+| D10, D11 | BLOCKED-HUMAN | Blind review exports from the final run; validator, merge, agreement guard (refuses with 0 labels); v1.1 built only from approved corrections (v1 unchanged). |
+| D12 | FIXED | Single-tenant API-key auth with roles, fail-closed, 25 negative tests. Gap: a browser-held key is not secret (needs SSO/BFF). |
+| D13 | FIXED | Cooperative cancellation at every stage, before LLM attempts and during backoff; disconnect detection verified with real curl disconnects (a middleware defect that hid disconnects from `/investigate` was found and fixed); not tested from a browser. In-flight HTTP calls are not interrupted. |
+| D14 | FIXED | ruff + mypy clean (67 type errors fixed, incl. a latent `log_agent` crash); `lint.yml` CI (not run on GitHub). |
+| D15 | FIXED | Context-carrying logs (request/investigation/stage/principal), JSON option, per-stage and per-LLM-call lines, redaction, no question/prompt/answer text. |
+| D16 | PARTIAL | Rate limiter keyed by identity, documented single-process limits, startup error for `WEB_CONCURRENCY>1`. Multi-process still needs Qdrant server + shared store. |
+| D17 | OPEN | Real Gemini JSON call timed out 3× (60 s each — confirms the timeout fix). JSON mode still unverified. |
+| D18 | BLOCKED-HUMAN | CI not run on GitHub. |
+
+## Round 6 outcome (final runs `…101849Z_r6-final2`, Langfuse `7f8d5a8e45b10191`, and `…102120Z_unseen-r6b`)
+
+| # | Status | Round 6 |
+|---|---|---|
+| D1, D2 | PARTIAL | Second LLM match check tried and rejected (did not separate them; lost an in-scope match). Unseen out-of-scope rejection 0.956 (matcher) / 0.971 (end to end). Not tuned to these questions. |
+| D5 | PARTIAL | Relationship statement enforced in the summary; uncovered parts reported in notes/Unknowns. Unseen multi relevancy 0.710 → 0.732; testset_v1 0.666 → 0.662 (noise). |
+| D6 | OPEN | Raw relevancy unchanged (0.646 testset_v1, 0.643 unseen). **New finding: the relevancy gate fails on unseen questions (0.763 → 0.780).** |
+| D7 | PARTIAL | Record-contradiction rules: unseen recall 0.394 → 0.723 at precision 0.993; dev 0.989 / 1.0. Weak on reworded deployment causation (5/20) and false absence (8/20). |
+| D8–D11 | BLOCKED-HUMAN | No human input yet (0/60, 0/100, 0/17, 0/8, provenance unconfirmed). Audit trail added. See `HUMAN_INPUT_NEEDED.md`. |
+| R6-1 (new, fixed) | FIXED | First round-6 version caused 3 unseen false refusals (appended "no record describes" sentences; absence rules removing true statements about an unmatched incident). Fixed + regression tests; the 3 questions were inspected. |
+
+
+## Round 7 outcome (security capabilities)
+
+Final runs: `…144550Z_r7-final2` (Langfuse `ce9f6618fbc52701`) and `…144824Z_unseen-r7b`.
+
+| # | Status | Round 7 |
+|---|---|---|
+| G3 browser-visible key | FIXED | Server-side sessions (HttpOnly / SameSite=Strict / Secure cookie + CSRF) via same-origin `/api`; no key in the bundle. |
+| G4 resource / tenant authorization | FIXED (service granularity) | Tenant → service policy; filtering inside Qdrant; named IDs, deployments, logs, runbooks, notes, tools and actions scoped; deny by default. |
+| G1 / G2 output and record-borne injection | PARTIAL | Output and retrieval rails (NeMo), pattern-based. Of 11 developer-written attacks, 0 succeed with the LLM self-check and 1 without it. |
+| G5 matcher steering | PARTIAL | Blocked only when the LLM self-check is on. |
+| G6 rejected input logged | FIXED | Only error type and location are logged; log lines redact PII. |
+| G13 PII | PARTIAL | Presidio + regex on the question, answer, logs and audit; browser history is metadata only. Recall of person names on unusual names is unmeasured. |
+| Tool authorization / approvals | NEW, implemented | Allowlisted typed registry. Approval lifecycle with separation of duties, hash binding, expiry, single use and fresh authorization at execution; simulated only. |
+| G8 / G10 / G12 | OPEN | `/search` throttling, size limits, request deadline, public docs/health: not in this round. |
+| D6 (relevancy on unseen) | OPEN | Unchanged at 0.780 (gate 0.80). |
+| D8–D11 human review | BLOCKED-HUMAN | Unchanged: 0/60, 0/100, 0/17, 0/8. |
+| R7-1 (new, fixed) | FIXED | The input rail over-blocked 4 benign out-of-scope questions, and the eval harness counted guardrail refusals as fallbacks. |
+
+## Round 8 outcome (prompt injection; details in `PROMPT_INJECTION_AUDIT.md`)
+
+| # | Status | Round 8 |
+|---|---|---|
+| G1 / G2 output and record-borne injection | PARTIAL (improved) | Every record carrier is now neutralised, links come only from runbooks, and prompts are fenced. Held-out full-path attack success with guardrails on: 2/22 → 1/22. |
+| G5 matcher steering | PARTIAL | Matcher prompts fenced. Steering is still blocked mainly by the LLM self-check. |
+| R8-F1 action crash read as "passed" | FIXED | Actions wrapped; the input rail fails closed. |
+| R8-F2 quarantined link text in prompt and notes | FIXED | Change text omitted; scoped on both paths. |
+| R8-F4/F5/F6/F7 mode typo, self-check fail-open, no timeout, swallowed cancellation | FIXED | |
+| R8-K1 "admin override" false positive | OPEN (needs decision) | Pre-existing pattern, not loosened. |
+| R8-L1 dictated non-link tokens | OPEN | 1/22 held-out success. |
+| R8-L2 no system/user role separation | OPEN | Needs a provider-seam change and a fresh RAG evaluation. |
+| R8-L3 suite labels and red team | BLOCKED-HUMAN | Generated labels are noisy; no human red team. |
+| D6 (relevancy on unseen) | OPEN | 0.766 (gate 0.80). |

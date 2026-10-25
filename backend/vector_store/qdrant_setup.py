@@ -51,3 +51,30 @@ def ensure_collection(collection_name: str = COLLECTION_NAME) -> bool:
 
 if __name__ == "__main__":
     ensure_collection()
+
+
+def sync_points(qclient, collection_name: str, points: list) -> dict:
+    """Idempotent ingestion: upsert ``points`` and delete any point whose ID is
+    not in this batch (e.g. an incident removed from the source data), then
+    verify the stored IDs match exactly. Returns counts; raises on mismatch."""
+    expected = {str(p.id) for p in points}
+    if points:
+        qclient.upsert(collection_name=collection_name, points=points)
+    stored: dict[str, int | str] = {}   # str(id) -> original id (int or UUID string)
+    offset = None
+    while True:
+        batch, offset = qclient.scroll(collection_name=collection_name, limit=256, offset=offset,
+                                       with_payload=False, with_vectors=False)
+        stored.update({str(p.id): p.id for p in batch})
+        if offset is None:
+            break
+    stale = [stored[k] for k in sorted(set(stored) - expected)]
+    if stale:
+        from qdrant_client.models import PointIdsList
+
+        qclient.delete(collection_name=collection_name, points_selector=PointIdsList(points=stale))
+        logger.warning("Removed %d stale point(s) no longer present in the source data", len(stale))
+    final = qclient.count(collection_name=collection_name, exact=True).count
+    if final != len(expected):
+        raise RuntimeError(f"Verification failed: expected exactly {len(expected)} points, found {final}")
+    return {"upserted": len(points), "stale_removed": len(stale), "stored": final}

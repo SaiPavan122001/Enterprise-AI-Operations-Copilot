@@ -1,48 +1,18 @@
 import { STAGES } from "../services/api";
 
 /**
- * Investigation loading state.
- * When `completedStages` is provided (from the real SSE stream), each stage
- * shows its ACTUAL backend-reported status. When streaming is unavailable,
- * it falls back to an honest indeterminate state - no fake checkmarks.
+ * One-line progress indicator. With the SSE stream, the label is the stage the
+ * backend is actually working on (a stage is reached only after the previous one
+ * reported completion); without it, a neutral "Working".
  */
-
 export default function LoadingState({ completedStages = null }) {
-  const streaming = completedStages !== null;
-
+  const current = completedStages ? STAGES.find((s) => !completedStages.has(s.id)) : null;
   return (
-    <div className="message assistant loading-message" aria-live="polite" aria-busy="true">
-      <div className="loading-header">
-        <span className="spinner" aria-hidden="true" />
-        <span>Investigating incident…</span>
+    <div className="msg assistant" aria-busy="true">
+      <div className="thinking">
+        <span className="pulse" aria-hidden="true" />
+        <span className="thinking-text">{current ? `${current.label}…` : "Working…"}</span>
       </div>
-
-      <ul className="loading-stages">
-        {STAGES.map((stage) => {
-          const done = streaming && completedStages.has(stage.id);
-          const active =
-            streaming &&
-            !done &&
-            stage.id === STAGES.find((s) => !completedStages.has(s.id))?.id;
-          return (
-            <li
-              key={stage.id}
-              className={done ? "done" : active ? "active" : ""}
-            >
-              <span className="stage-icon" aria-hidden="true">
-                {done ? "✓" : active ? "●" : "○"}
-              </span>
-              {stage.label}
-            </li>
-          );
-        })}
-      </ul>
-
-      <p className="loading-note">
-        {streaming
-          ? "Live pipeline progress — stages are marked complete only after the backend finishes them."
-          : "Running the multi-agent RCA pipeline — this can take up to a minute."}
-      </p>
     </div>
   );
 }

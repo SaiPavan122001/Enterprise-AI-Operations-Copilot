@@ -1,0 +1,9 @@
+incident_id,incident_service,incident_title,current_deployment_id,current_deployment_service,same_service_deployments,decision,new_deployment_id,reviewer,source,notes
+INC-008,auth-service,SSO authentication failure,DEP-108,payroll-service,DEP-102 DEP-109 DEP-116,,,,,
+INC-009,payroll-service,Duplicate payroll records,DEP-109,auth-service,DEP-101 DEP-108 DEP-115,,,,,
+INC-010,notification-service,SMS notifications not sent,DEP-110,leave-service,DEP-104 DEP-111 DEP-118,,,,,
+INC-011,leave-service,Leave approval workflow stuck,DEP-111,notification-service,DEP-103 DEP-110 DEP-117,,,,,
+INC-017,notification-service,Email queue growth,DEP-117,leave-service,DEP-104 DEP-111 DEP-118,,,,,
+INC-018,gateway-service,Service unavailable during deployment,DEP-118,notification-service,DEP-105 DEP-112 DEP-119,,,,,
+INC-019,employee-service,Employee export timing out,DEP-119,gateway-service,DEP-106 DEP-113 DEP-120,,,,,
+INC-020,reporting-service,Scheduled reports not generated,DEP-120,employee-service,DEP-107 DEP-114,,,,,

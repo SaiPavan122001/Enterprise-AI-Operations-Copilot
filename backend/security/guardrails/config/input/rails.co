@@ -1,0 +1,26 @@
+# Input rails: the user's question is DATA. Each flow stops the request when its
+# check returns a reason; the reason is returned to the application in $guardrail_block.
+
+define flow check prompt injection
+  $verdict = execute input_injection_check(text=$user_message)
+  if $verdict
+    $guardrail_block = $verdict
+    bot refuse request
+    stop
+
+define flow check action and secret requests
+  $verdict = execute input_policy_check(text=$user_message)
+  if $verdict
+    $guardrail_block = $verdict
+    bot refuse request
+    stop
+
+define flow llm self check input
+  $verdict = execute input_llm_self_check(text=$user_message)
+  if $verdict
+    $guardrail_block = $verdict
+    bot refuse request
+    stop
+
+define bot refuse request
+  "GUARDRAIL_BLOCKED"

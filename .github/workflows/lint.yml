@@ -1,0 +1,57 @@
+# Lint (ruff) + type check (mypy) + unit tests on every PR that touches Python.
+# No secrets needed: tests mock all LLM and Langfuse calls; tests marked "nli"
+# download the local claim-verifier model from Hugging Face (cached).
+name: Lint, type check and unit tests
+
+on:
+  pull_request:
+    paths:
+      - "backend/**.py"
+      - "evals/**.py"
+      - "backend/requirements*.txt"
+      - "ruff.toml"
+      - "mypy.ini"
+      - ".github/workflows/lint.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-type:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      AUTH_MODE: api_key          # tests configure their own keys; never disabled in CI
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+            evals/requirements.txt
+
+      - name: Install dependencies (CPU-only torch)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r backend/requirements.txt -r evals/requirements.txt -r backend/requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: python -m ruff check backend evals
+
+      - name: Type check (mypy)
+        run: python -m mypy
+
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-bge-small-nli-deberta-v3-xsmall
+
+      - name: Unit and integration tests
+        run: python -m pytest backend/tests evals/tests -q

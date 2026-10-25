@@ -1,20 +1,36 @@
-﻿"""Gemini-powered RCA generation over the structured evidence layer.
+"""LLM-powered RCA generation over the structured evidence layer.
 
-Receives an :class:`~models.evidence.EvidenceBundle` plus the
-:class:`~models.evidence.EvidenceValidation` verdict, builds a grounded
-structured prompt, and parses the response into an
-:class:`~models.evidence.InvestigationResult`.
+The provider is selected by configuration (``LLM_PROVIDER=gemini|openai``);
+the module keeps its historical name so imports and patches stay stable.
 
-The evidence layer is authoritative for confidence: if validation says the
-evidence is LOW or INSUFFICIENT, Gemini cannot upgrade the reported
-confidence. Failures are logged internally; users never see raw exceptions.
+Receives an :class:`~models.evidence.EvidenceBundle` (matched incidents
+only) plus the :class:`~models.evidence.EvidenceValidation` verdict and
+produces an :class:`~models.evidence.InvestigationResult`:
+
+* no matched incident / unsupported question -> evidence-policy answer
+  (``rca_structured.policy_answer``), no cause is requested from the model;
+* otherwise the model returns evidence-cited JSON, which is validated by
+  deterministic grounding checks (``rca_structured.validate``) and rendered.
+
+The evidence layer is authoritative for confidence. Failures are logged
+internally; users never see raw exceptions.
 """
 
+import json
 import logging
 import re
+import time
+from typing import Any
 
 from google import genai
 
+from agents import rca_structured as rs
+from agents.llm_client import (
+    LLMConfigError,
+    LLMError,
+    LLMResponse,
+    call_with_retry,
+)
 from config import settings
 from models.evidence import (
     EvidenceBundle,
@@ -22,134 +38,35 @@ from models.evidence import (
     InvestigationResult,
     TimelineEvent,
 )
-from observability.langfuse_client import langfuse
 
 logger = logging.getLogger(__name__)
 
-MAX_INCIDENTS = 5
+CONFIDENCE_RANK = rs.CONFIDENCE_RANK
+MAX_INCIDENTS = 5      # used by the evidence-only fallback report
 MAX_DEPLOYMENTS = 5
-MAX_LOGS = 30
-MAX_RUNBOOK_CHARS = 3000
 
-CONFIDENCE_RANK = {"INSUFFICIENT": 0, "LOW": 1, "MEDIUM": 2, "HIGH": 3}
-
-RCA_PROMPT = """You are a Senior Site Reliability Engineer performing a root cause analysis.
-
-USER QUESTION:
-{question}
-
-EVIDENCE STRENGTH (assessed by the retrieval pipeline, independent of your analysis): {evidence_strength}
-
-OBSERVED EVIDENCE (retrieved from enterprise systems - these are FACTS):
-
-MATCHED INCIDENTS:
-{incidents}
-
-RELATED DEPLOYMENTS (correlated by deployment_id):
-{deployments}
-
-RELEVANT LOG ENTRIES (source: logs.txt):
-{logs}
-
-KNOWN TIMELINE (derived only from real timestamps in the data above):
-{timeline}
-
-RUNBOOK GUIDANCE (internal operational documentation - advisory guidance only, NOT evidence that the documented failure occurred):
-{runbook}
-
-INSTRUCTIONS:
-1. Use ONLY the evidence above. Never invent incidents, deployments, logs, metrics, or timestamps.
-2. Clearly distinguish observed facts from your own inference.
-3. If the evidence strength is LOW or INSUFFICIENT, explicitly say the RCA is inconclusive and explain what additional data is needed.
-4. Use runbooks for remediation guidance only; do not present runbook content as observed evidence.
-5. Identify the affected service and the related deployment (with ID) when known.
-6. Explain WHY the selected root cause was chosen over alternatives.
-7. In the Confidence section, state exactly one of: High, Medium, or Low, with one sentence of justification. Do not claim High if the evidence strength is LOW or INSUFFICIENT.
-
-Respond in Markdown using EXACTLY this structure:
-
-# Root Cause Analysis
-
-## Summary
-One short paragraph describing what happened and the likely cause.
-
-## Impact
-Which services and users were affected, and how.
-
-## Evidence
-Bulleted observed facts from the incidents, deployments and logs above.
-
-## Root Cause
-The most likely root cause, with the specific evidence supporting it.
-
-## Contributing Factors
-Bulleted list; one factor per line starting with "- ". Write "None identified" if none.
-
-## Recommended Remediation
-Numbered, concrete steps (use the runbook guidance where relevant).
-
-## Preventive Actions
-Numbered actions to prevent recurrence.
-
-## Confidence
-High | Medium | Low - with one sentence of justification.
-
-## Investigation Details
-Briefly list which incidents, deployments, log patterns and runbooks were used.
-"""
+# The prompt template (its hash is the prompt version recorded by evaluations).
+RCA_PROMPT = rs.STRUCTURED_PROMPT
 
 
 def _format_incidents(bundle: EvidenceBundle) -> str:
-    if not bundle.incident_evidence:
-        return "- No relevant incidents were found (retrieval threshold not met)."
-    lines = []
-    for i in bundle.incident_evidence[:MAX_INCIDENTS]:
-        lines.append(
-            f"- Incident {i.incident_id} | service={i.service} | "
-            f"severity={i.severity} | status={i.status} | "
-            f"title=\"{i.title}\" | known root cause: {i.root_cause} | "
-            f"relevance={i.relevance_score:.2f}" if i.relevance_score is not None else
-            f"- Incident {i.incident_id} | service={i.service} | severity={i.severity} | "
-            f"status={i.status} | title=\"{i.title}\" | known root cause: {i.root_cause}"
-        )
-    return "\n".join(lines)
-
+    return "\n".join(rs.format_incidents(bundle)) or "- None."
 
 
 def _format_deployments(bundle: EvidenceBundle) -> str:
-    if not bundle.deployment_evidence:
-        return "- No deployments could be correlated to the matched incidents."
-    return "\n".join(
-        f"- Deployment {d.deployment_id} | service={d.service} | "
-        f"time={d.time} | change=\"{d.change}\""
-        for d in bundle.deployment_evidence[:MAX_DEPLOYMENTS]
-    )
+    return "\n".join(rs.format_deployments(bundle)) or "- No verified deployment links."
 
 
 def _format_logs(bundle: EvidenceBundle) -> str:
-    if not bundle.log_evidence:
-        return "- No relevant log entries were found."
-    return "\n".join(
-        f"  {e.timestamp or 'ts-unknown'} {e.service or 'unknown-service'} "
-        f"{e.level or 'LOG'}: {e.message}"
-        for e in bundle.log_evidence[:MAX_LOGS]
-    )
+    return "\n".join(rs.format_logs(bundle)) or "- No log lines corroborate the matched incidents."
 
 
 def _format_timeline(timeline: list[TimelineEvent]) -> str:
-    if not timeline:
-        return "- No reliable timestamps were available; no timeline can be constructed."
-    return "\n".join(f"- {e.timestamp} - {e.event} (source: {e.source})" for e in timeline)
+    return rs.format_timeline(timeline)
 
 
 def _format_runbook(bundle: EvidenceBundle) -> str:
-    runbook = bundle.runbook_evidence
-    if not runbook:
-        return "- No runbook matched this investigation."
-    return (
-        f"Runbook: {runbook.title} (source: {runbook.name})\n"
-        f"{runbook.content[:MAX_RUNBOOK_CHARS]}"
-    )
+    return rs.format_runbook(bundle)
 
 
 def _extract_confidence(report: str) -> str:
@@ -193,42 +110,59 @@ def _final_confidence(model_confidence: str, validation: EvidenceValidation) -> 
 
 
 def _build_result(
-    question: str,
     bundle: EvidenceBundle,
     validation: EvidenceValidation,
     timeline: list[TimelineEvent],
-    report: str,
-    status: str,
-    message: str | None,
+    clean: dict,
+    source: str,
+    issues: list[str] | None = None,
+    llm: LLMResponse | None = None,
 ) -> InvestigationResult:
-    model_confidence = _extract_confidence(report)
+    """Build the API result from a validated structured answer."""
     return InvestigationResult(
-        question=question,
-        status="success" if status == "success" else "error",
-        summary=_extract_section(report, "Summary") or None,
-        impact=_extract_section(report, "Impact") or None,
-        root_cause=_extract_section(report, "Root Cause") or None,
-        confidence=_final_confidence(model_confidence, validation),
+        question=bundle.question,
+        status="success",
+        summary=clean["summary"] or None,
+        impact="\n".join(rs.claims_text(clean, "impact")) or "Not recorded in the available evidence.",
+        root_cause=rs.root_cause_text(clean),
+        confidence=clean["confidence"],
         evidence_strength=validation.evidence_strength,
-        contributing_factors=_extract_list(report, "Contributing Factors"),
-        recommended_remediation=_extract_list(report, "Recommended Remediation"),
-        preventive_actions=_extract_list(report, "Preventive Actions"),
-        observed_evidence=_extract_list(report, "Evidence"),
-        investigation_details=_extract_section(report, "Investigation Details") or None,
+        contributing_factors=rs.claims_text(clean, "contributing_factors"),
+        recommended_remediation=clean["recommended_remediation"],
+        preventive_actions=clean["preventive_actions"],
+        observed_evidence=rs.claims_text(clean, "confirmed_facts"),
+        investigation_details=rs.investigation_details(bundle, clean),
         timeline=timeline,
         evidence=bundle,
         validation=validation,
-        report_markdown=report,
-        message=message,
+        report_markdown=rs.render_markdown(clean, bundle),
+        message=None,
+        generation_provider=llm.provider if llm else None,
+        generation_model=llm.model if llm else None,
+        answer_status=clean["answer_status"],
+        answer_source=source,
+        conclusions=rs.claims_text(clean, "conclusions"),
+        hypotheses=rs.claims_text(clean, "hypotheses"),
+        unknowns=clean["unknowns"],
+        grounding_issues=issues or [],
+        per_incident_findings=rs.claims_text(clean, "per_incident"),
+        incident_relationship=rs.relationship_text(clean),
     )
+
+
+FALLBACK_MESSAGES = {
+    "config": "AI analysis is unavailable because the AI model or API key is misconfigured.",
+    "quota_exhausted": "AI analysis is unavailable because the AI provider quota is exhausted.",
+}
 
 
 def _fallback_result(
     bundle: EvidenceBundle,
     validation: EvidenceValidation,
     timeline: list[TimelineEvent],
+    error_kind: str = "error",
 ) -> InvestigationResult:
-    """Evidence-only result used when Gemini is unavailable. Contains zero
+    """Evidence-only result used when the LLM is unavailable. Contains zero
     AI inference - only retrieved facts and runbook guidance."""
     observed: list[str] = []
     for i in bundle.incident_evidence[:MAX_INCIDENTS]:
@@ -296,7 +230,7 @@ Low - generated without AI reasoning.
 
 ## Investigation Details
 Incidents: {len(bundle.incident_evidence)} | Deployments: {len(bundle.deployment_evidence)} | Log entries: {len(bundle.log_evidence)} | Runbook: {bundle.runbook_evidence.title if bundle.runbook_evidence else 'none'}
-"""
+"""  # noqa: E501
 
     return InvestigationResult(
         question=bundle.question,
@@ -319,11 +253,145 @@ Incidents: {len(bundle.incident_evidence)} | Deployments: {len(bundle.deployment
         validation=validation,
         report_markdown=markdown,
         message=(
-            "AI analysis is temporarily unavailable. The observed evidence is "
-            "included below; no AI inference was performed."
+            FALLBACK_MESSAGES.get(error_kind, "AI analysis is temporarily unavailable.")
+            + " The observed evidence is included below; no AI inference was performed."
         ),
+        generation_provider=settings.LLM_PROVIDER,
+        generation_model=settings.llm_model,
+        generation_error=error_kind,
+        answer_source="fallback",
     )
 
+
+
+# --------------------------------------------------------------------------- providers
+
+def _call_gemini(prompt: str, json_mode: bool = False, temperature: float | None = None) -> LLMResponse:
+    kwargs: dict[str, Any] = {"model": settings.GEMINI_MODEL, "contents": prompt}
+    config: dict[str, Any] = {}
+    if json_mode:
+        config["response_mime_type"] = "application/json"
+    if temperature is not None:
+        config["temperature"] = temperature
+    if config:
+        kwargs["config"] = config
+    response = client.models.generate_content(**kwargs)
+    text = response.text
+    if not text:
+        raise LLMError("Gemini returned an empty response", provider="gemini")
+    meta = getattr(response, "usage_metadata", None)
+    usage = {
+        "input": getattr(meta, "prompt_token_count", None) or 0,
+        "output": (getattr(meta, "candidates_token_count", None) or 0)
+                  + (getattr(meta, "thoughts_token_count", None) or 0),
+    }
+    return LLMResponse(text=text, provider="gemini", model=settings.GEMINI_MODEL, usage=usage)
+
+
+_openai_client = None
+
+
+def _openai():
+    global _openai_client
+    if _openai_client is None:
+        from openai import OpenAI
+
+        # max_retries=0: retries are handled (with backoff) by call_with_retry.
+        _openai_client = OpenAI(
+            api_key=settings.OPENAI_API_KEY,
+            timeout=settings.OPENAI_TIMEOUT_MS / 1000,
+            max_retries=0,
+        )
+    return _openai_client
+
+
+def _call_openai(prompt: str, json_mode: bool = False, temperature: float | None = None) -> LLMResponse:
+    kwargs: dict[str, Any] = {"model": settings.OPENAI_MODEL, "messages": [{"role": "user", "content": prompt}]}
+    if temperature is not None:
+        kwargs["temperature"] = temperature
+    if json_mode:
+        # JSON mode requires the word "JSON" in the prompt (all JSON prompts include it).
+        kwargs["response_format"] = {"type": "json_object"}
+    response = _openai().chat.completions.create(**kwargs)
+    text = response.choices[0].message.content if response.choices else None
+    if not text:
+        raise LLMError("OpenAI returned an empty response", provider="openai")
+    usage = {
+        "input": getattr(response.usage, "prompt_tokens", 0) or 0,
+        "output": getattr(response.usage, "completion_tokens", 0) or 0,
+    }
+    return LLMResponse(text=text, provider="openai",
+                       model=response.model or settings.OPENAI_MODEL, usage=usage)
+
+
+PROVIDERS = {"gemini": _call_gemini, "openai": _call_openai}
+
+
+def generate_text(prompt: str, json_mode: bool = False, purpose: str = "rca",
+                  temperature: float | None = None) -> LLMResponse:
+    """Single seam for LLM text generation (provider from configuration).
+    ``purpose`` labels the call (e.g. "incident_match", "rca") for tracing/caching."""
+    provider = settings.LLM_PROVIDER
+    if provider not in PROVIDERS:
+        raise LLMConfigError(f"Unsupported LLM_PROVIDER={provider!r}", provider=provider)
+    if not settings.llm_api_key:
+        raise LLMConfigError(f"{provider.upper()}_API_KEY is not set", provider=provider)
+    start, outcome, attempts = time.perf_counter(), "error", None
+    try:
+        response = call_with_retry(
+            lambda: PROVIDERS[provider](prompt, json_mode, temperature),
+            provider=provider,
+            max_retries=settings.llm_max_retries,
+            base=settings.LLM_BACKOFF_BASE_SECONDS,
+            cap=settings.LLM_BACKOFF_MAX_SECONDS,
+            quota_cooldown=settings.LLM_QUOTA_COOLDOWN_SECONDS,
+        )
+        outcome, attempts = "ok", response.attempts
+        return response
+    except LLMError as err:
+        outcome = err.kind
+        raise
+    except BaseException:
+        outcome = "cancelled"
+        raise
+    finally:
+        # One line per LLM call: no prompt or answer text is logged.
+        logger.info("LLM call %s %s", purpose, outcome,
+                    extra={"provider": provider, "model": settings.llm_model, "purpose": purpose,
+                           "outcome": outcome, "attempts": attempts,
+                           "duration_ms": round((time.perf_counter() - start) * 1000)})
+
+
+def _trace_generation(trace_span, *, model: str, provider: str, usage: dict | None,
+                      attempts: int | None, error: str | None) -> None:
+    """Record the LLM call on the stage span. Prompt/answer are not recorded
+    (production traces deliberately avoid storing enterprise data)."""
+    if trace_span is None:
+        return
+    try:
+        gen = trace_span.start_observation(
+            name="llm-generation", as_type="generation", model=model,
+            usage_details=usage or None,
+            metadata={"provider": provider, "attempts": attempts, "error": error},
+            level="ERROR" if error else None,
+            status_message=error,
+        )
+        gen.end()
+    except Exception:
+        logger.warning("Langfuse generation record failed (non-fatal)")
+
+
+def _generate_structured(prompt: str) -> tuple[dict, LLMResponse]:
+    """Call the model for JSON; one retry if the output is not valid JSON."""
+    last_error = None
+    for _ in range(2):
+        llm = generate_text(prompt, json_mode=True, purpose="rca", temperature=0.2)
+        try:
+            return rs.parse_json(llm.text), llm
+        except (ValueError, json.JSONDecodeError) as exc:
+            last_error = exc
+            logger.warning("RCA output was not valid JSON - retrying once")
+    raise LLMError(f"invalid structured output: {last_error}", provider=settings.LLM_PROVIDER)
 
 
 def generate_gemini_rca(
@@ -333,70 +401,121 @@ def generate_gemini_rca(
     trace_span=None,
 ) -> InvestigationResult:
     """Generate the structured RCA. Never raises - always returns an
-    ``InvestigationResult`` (status ``error`` with evidence-only content on
-    unrecoverable failure)."""
-    prompt = RCA_PROMPT.format(
-        question=bundle.question.strip(),
-        evidence_strength=validation.evidence_strength,
-        incidents=_format_incidents(bundle),
-        deployments=_format_deployments(bundle),
-        logs=_format_logs(bundle),
-        timeline=_format_timeline(timeline),
-        runbook=_format_runbook(bundle),
-    )
+    ``InvestigationResult``:
+      answer_source="policy"   no matched incident / unsupported question
+      answer_source="llm"      validated, evidence-cited model answer
+      answer_source="fallback" the LLM call failed (evidence-only report,
+                               ``generation_error`` set; never a model answer)
+    """
+    if not bundle.incident_evidence:
+        kind = "out_of_scope" if bundle.question_scope == "general" else "insufficient_evidence"
+        logger.info("Evidence policy answer (%s): no matched incident", kind)
+        return _build_result(bundle, validation, timeline, rs.policy_answer(bundle, validation, kind),
+                             source="policy")
+
+    prompt = rs.build_prompt(bundle, validation, timeline)
     logger.debug("RCA prompt built (length=%d chars)", len(prompt))
+    logger.info("Calling %s (%s)", settings.LLM_PROVIDER, settings.llm_model)
+    try:
+        data, llm = _generate_structured(prompt)
+    except LLMError as err:
+        _trace_generation(trace_span, model=settings.llm_model, provider=settings.LLM_PROVIDER,
+                          usage=None, attempts=None, error=err.kind)
+        logger.error("RCA generation failed (%s) - returning evidence-only report", err.kind)
+        return _fallback_result(bundle, validation, timeline, error_kind=err.kind)
+    except Exception:
+        logger.exception("RCA generation failed unexpectedly")
+        _trace_generation(trace_span, model=settings.llm_model, provider=settings.LLM_PROVIDER,
+                          usage=None, attempts=None, error="error")
+        return _fallback_result(bundle, validation, timeline, error_kind="error")
 
-    attempts = settings.GEMINI_MAX_RETRIES + 1
-    for attempt in range(1, attempts + 1):
-        try:
-            logger.info(
-                "Calling Gemini (%s), attempt %d/%d",
-                settings.GEMINI_MODEL, attempt, attempts,
-            )
-            try:
-                if trace_span:
-                    trace_span.event(
-                        name="gemini-call",
-                        metadata={"attempt": attempt, "model": settings.GEMINI_MODEL},
-                    )
-            except Exception:
-                logger.warning("Langfuse span event failed (non-fatal)")
+    clean, issues = rs.validate(data, bundle, validation, timeline)
+    # Output rails (NeMo) + PII redaction run AFTER citation validation, claim
+    # verification and causal guards - they add protection, they replace none.
+    clean, guard_events = protect_output(clean, bundle, validation)
+    issues = issues + guard_events
+    # Log what the checks did, not the claim text (answer content stays out of logs;
+    # the full issues are returned in the result's grounding_issues).
+    for issue in issues:
+        logger.info("Grounding check: %s", ": ".join(issue.split(" - ")[0].split(": ")[:2]))
+    _trace_generation(trace_span, model=llm.model, provider=llm.provider, usage=llm.usage,
+                      attempts=llm.attempts, error=None)
+    logger.info("RCA generated by %s:%s (%s, %d grounding issue(s))",
+                llm.provider, llm.model, clean["answer_status"], len(issues))
+    result = _build_result(bundle, validation, timeline, clean, source="llm", issues=issues, llm=llm)
+    result.guardrail_events = [e for e in guard_events]
+    return result
 
-            response = client.models.generate_content(
-                model=settings.GEMINI_MODEL,
-                contents=prompt,
-            )
-            report = response.text
 
-            try:
-                if trace_span:
-                    trace_span.end()
-                langfuse.flush()
-            except Exception:
-                logger.warning("Langfuse span close failed (non-fatal)")
+def evidence_text(bundle: EvidenceBundle, validation: EvidenceValidation) -> str:
+    """All authorized evidence text (already passed through the retrieval rail)."""
+    parts = [f"{i.incident_id} {i.service} {i.severity} {i.status} {i.title} {i.root_cause}"
+             for i in bundle.incident_evidence]
+    parts += [f"{d.deployment_id} {d.service} {d.time} {d.change}" for d in bundle.deployment_evidence]
+    parts += [f"{e.timestamp} {e.service} {e.level} {e.message}" for e in bundle.log_evidence]
+    if bundle.runbook_evidence:
+        parts.append(f"{bundle.runbook_evidence.title} {bundle.runbook_evidence.content}")
+    parts += rs.evidence_notes(validation)
+    return "\n".join(parts)
 
-            logger.info("Gemini RCA generated successfully")
-            return _build_result(
-                question=bundle.question,
-                bundle=bundle,
-                validation=validation,
-                timeline=timeline,
-                report=report,
-                status="success",
-                message=None,
-            )
 
-        except Exception:
-            # Full technical detail stays in internal logs only.
-            logger.exception(
-                "Gemini RCA generation failed (attempt %d/%d)", attempt, attempts
-            )
+def protect_output(clean: dict, bundle: EvidenceBundle, validation: EvidenceValidation) -> tuple[dict, list[str]]:
+    """PII redaction of every answer string (values that occur in the authorized
+    evidence are kept), then the output rail (unsafe advice, links, commands,
+    credential requests, exfiltration instructions). Redacting first means a
+    sentence that merely mentions personal data is kept with a placeholder instead
+    of being removed."""
+    from security import guardrails, pii
 
-    logger.error("Gemini RCA failed after %d attempts", attempts)
-    return _fallback_result(bundle, validation, timeline)
+    evidence = evidence_text(bundle, validation)
+    keep = pii.evidence_keep_set([evidence])
+    before = json.dumps(clean, default=str, sort_keys=True)
+    clean = pii.redact_payload(clean, keep)
+    events = []
+    if json.dumps(clean, default=str, sort_keys=True) != before:
+        events.append("pii: personal data or secrets redacted from the answer")
+    sections = {k: v for k, v in clean.items() if not k.startswith("_")}
+    # Links / e-mail addresses only from the runbook (records never contain any;
+    # one planted in an incident, deployment or log must not reach the user).
+    runbook = bundle.runbook_evidence.content if bundle.runbook_evidence else ""
+    sections, removed = guardrails.sanitize_output(sections, evidence, links_from=runbook)
+    clean = {**clean, **sections}
+    events += [f"output rail: {r}" for r in removed]
+    return clean, events
+
+
+GUARDRAIL_MESSAGES = {
+    "prompt_injection": "it tries to change the copilot's instructions or dictate the answer",
+    "action_request": "it asks the copilot to act on systems; consequential actions go through the approval workflow",
+    "sensitive_data_request": "it asks for credentials, secrets or personal data",
+    "guardrail_unavailable": "the safety checks could not be completed, so it was not processed (try again later)",
+}
+
+
+def guardrail_refusal(bundle: EvidenceBundle, validation: EvidenceValidation, blocked: dict) -> InvestigationResult:
+    """Answer for a request the input rails declined: no retrieval, no generation."""
+    category = str(blocked.get("category") or "policy")
+    why = GUARDRAIL_MESSAGES.get(category, "it does not comply with the copilot's usage policy")
+    clean = {
+        "answer_status": "blocked", "confirmed_facts": [], "conclusions": [], "hypotheses": [], "impact": [],
+        "contributing_factors": [], "recommended_remediation": [], "preventive_actions": [],
+        "summary": (f"This request was declined by the input guardrails because {why}. Ask a question about "
+                    "an incident, its cause, deployments, logs or runbooks."),
+        "root_cause": {"status": "not_determined", "statement": "", "refs": []},
+        "unknowns": [f"Guardrail category: {category}."],
+        "confidence": "INSUFFICIENT", "confidence_reason": "The request was declined before retrieval.",
+    }
+    return _build_result(bundle, validation, [], clean, source="guardrail")
+
+
+def gemini_http_options() -> dict:
+    # google-genai 0.6.x takes the request timeout in SECONDS (passed to
+    # requests); GEMINI_TIMEOUT_MS is milliseconds. Passing the ms value
+    # directly made the timeout 1000x too long (60000 s).
+    return {"timeout": settings.GEMINI_TIMEOUT_MS / 1000}
 
 
 client = genai.Client(
     api_key=settings.GEMINI_API_KEY or "missing-gemini-api-key",
-    http_options={"timeout": settings.GEMINI_TIMEOUT_MS},
+    http_options=gemini_http_options(),
 )

@@ -1,0 +1,7 @@
+# Unsafe advice or claims are removed: links / e-mail addresses not in the runbook,
+# destructive commands not in the evidence, credential requests, data-exfiltration
+# instructions, verbatim internal instructions. (PII is redacted before this rail,
+# in gemini_rca_agent.protect_output.)
+
+define flow sanitize answer
+  $bot_message = execute output_sanitize(text=$bot_message, evidence=$evidence_text, links=$link_text)

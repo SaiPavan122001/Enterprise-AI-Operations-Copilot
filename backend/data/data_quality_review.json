@@ -1,0 +1,313 @@
+{
+  "description": "Manual review queue for incident relationships that failed integrity checks (backend/utils/data_integrity.py). Records listed here are quarantined, not repaired: no relationship is guessed. Remove an entry only after the source data is corrected.",
+  "reviewed_on": "2026-10-23",
+  "records": [
+    {
+      "incident_id": "INC-008",
+      "incident_service": "auth-service",
+      "incident_title": "SSO authentication failure",
+      "incident_root_cause": "OAuth provider certificate expired",
+      "referenced_deployment_id": "DEP-108",
+      "referenced_deployment_service": "payroll-service",
+      "referenced_deployment_change": "Blue-green deployment",
+      "referenced_deployment_time": "2026-05-09T10:24:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-108 on payroll-service, not auth-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-102, DEP-109, DEP-116) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-009",
+      "incident_service": "payroll-service",
+      "incident_title": "Duplicate payroll records",
+      "incident_root_cause": "Batch job executed twice",
+      "referenced_deployment_id": "DEP-109",
+      "referenced_deployment_service": "auth-service",
+      "referenced_deployment_change": "Connection pool tuning",
+      "referenced_deployment_time": "2026-05-10T10:27:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-109 on auth-service, not payroll-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-101, DEP-108, DEP-115) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-010",
+      "incident_service": "notification-service",
+      "incident_title": "SMS notifications not sent",
+      "incident_root_cause": "Third-party SMS API outage",
+      "referenced_deployment_id": "DEP-110",
+      "referenced_deployment_service": "leave-service",
+      "referenced_deployment_change": "API version upgrade",
+      "referenced_deployment_time": "2026-05-11T10:30:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-110 on leave-service, not notification-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-104, DEP-111, DEP-118) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-011",
+      "incident_service": "leave-service",
+      "incident_title": "Leave approval workflow stuck",
+      "incident_root_cause": "Message queue backlog",
+      "referenced_deployment_id": "DEP-111",
+      "referenced_deployment_service": "notification-service",
+      "referenced_deployment_change": "Database schema migration",
+      "referenced_deployment_time": "2026-05-12T10:33:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-111 on notification-service, not leave-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-103, DEP-110, DEP-117) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-017",
+      "incident_service": "notification-service",
+      "incident_title": "Email queue growth",
+      "incident_root_cause": "Worker pod crash loop",
+      "referenced_deployment_id": "DEP-117",
+      "referenced_deployment_service": "leave-service",
+      "referenced_deployment_change": "ETL pipeline enhancement",
+      "referenced_deployment_time": "2026-05-18T10:51:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-117 on leave-service, not notification-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-104, DEP-111, DEP-118) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-018",
+      "incident_service": "gateway-service",
+      "incident_title": "Service unavailable during deployment",
+      "incident_root_cause": "Blue-green switch failure",
+      "referenced_deployment_id": "DEP-118",
+      "referenced_deployment_service": "notification-service",
+      "referenced_deployment_change": "Blue-green deployment",
+      "referenced_deployment_time": "2026-05-19T10:54:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-118 on notification-service, not gateway-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-105, DEP-112, DEP-119) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-019",
+      "incident_service": "employee-service",
+      "incident_title": "Employee export timing out",
+      "incident_root_cause": "Large unoptimized query",
+      "referenced_deployment_id": "DEP-119",
+      "referenced_deployment_service": "gateway-service",
+      "referenced_deployment_change": "Connection pool tuning",
+      "referenced_deployment_time": "2026-05-20T10:57:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-119 on gateway-service, not employee-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-106, DEP-113, DEP-120) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    },
+    {
+      "incident_id": "INC-020",
+      "incident_service": "reporting-service",
+      "incident_title": "Scheduled reports not generated",
+      "incident_root_cause": "Cron job configuration error",
+      "referenced_deployment_id": "DEP-120",
+      "referenced_deployment_service": "employee-service",
+      "referenced_deployment_change": "API version upgrade",
+      "referenced_deployment_time": "2026-05-21T10:00:00",
+      "status": "quarantined_pending_human_review",
+      "decision": "Deployment link not trusted; incident kept searchable; no deployment joined.",
+      "evidence": "deployments.json records DEP-120 on employee-service, not reporting-service. No log line, document or other record names the deployment for this incident (logs contain no DEP-/INC- identifiers). Same-service deployments exist (DEP-107, DEP-114) but each is already referenced by another incident, and nothing ties them to this one, so no replacement was chosen.",
+      "action_needed": "Data owner to confirm the correct deployment_id (or that there is none) and update incidents.json.",
+      "review_history": [
+        {
+          "date": "2026-10-23",
+          "reviewer": "automated integrity check + Claude Code",
+          "result": "quarantined - no evidence establishes the correct deployment"
+        },
+        {
+          "date": "2026-10-23",
+          "reviewer": "Claude Code (second review, reliability audit)",
+          "evidence_checked": [
+            "deployments.json (all 20 records)",
+            "logs.txt (550 lines: no DEP-/INC- identifiers)",
+            "README.md and technical report PDF (no service-dependency documentation)",
+            "service_dependencies.json (empty)"
+          ],
+          "result": "still quarantined - no new evidence; replacement not guessed",
+          "needs_human_input": true
+        }
+      ]
+    }
+  ],
+  "dataset_assessment": {
+    "assessed_on": "2026-10-23",
+    "trustworthy": {
+      "incident_records": "20/20 (fields present, unique IDs, valid types)",
+      "deployment_links_verified_by_service_consistency": 12,
+      "note": "Verified = same service as the incident. Nothing in the data states a deployment caused its incident."
+    },
+    "quarantined": {
+      "deployment_links": 8,
+      "ids": [
+        "INC-008",
+        "INC-009",
+        "INC-010",
+        "INC-011",
+        "INC-017",
+        "INC-018",
+        "INC-019",
+        "INC-020"
+      ]
+    },
+    "insufficient_evidence": {
+      "logs": "All 4 non-INFO messages appear on all 7 services; no incident has a matching log on its own service within 24h of its deployment. Logs cannot corroborate any incident.",
+      "incident_timestamps": "Incidents have no start/end timestamps, so no temporal relationship to a deployment can be established.",
+      "service_dependencies": "None documented."
+    },
+    "human_input_needed": [
+      "Correct deployment_id (or 'none') for the 8 quarantined incidents",
+      "Whether the logs are synthetic placeholders or should be regenerated per service",
+      "Incident start times, if available",
+      "Any real cross-service dependencies, with a source document"
+    ],
+    "provenance": {
+      "status": "unconfirmed",
+      "assessed_on": "2026-10-24",
+      "observations": [
+        "incident and deployment IDs are sequential (INC-001..INC-020, DEP-101..DEP-120); there is one deployment per day from 2026-05-02 to 2026-05-21 and each is 3 minutes later in the day than the previous one (10:03, 10:06, ... 10:57, then 10:00)",
+        "each of the 4 non-INFO log messages appears on all 7 services",
+        "incidents carry no timestamps"
+      ],
+      "interpretation": "These patterns are typical of generated placeholder data, but nothing in the repository states whether the records are synthetic or real. The application therefore treats provenance as unconfirmed: strict seeding refuses it and /health reports it.",
+      "needs_human_input": "Data owner to set status to 'synthetic' or 'real' (with a source)."
+    }
+  }
+}

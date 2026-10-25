@@ -1,94 +1,109 @@
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { LogoutIcon, PanelIcon, PenIcon, ToolIcon } from "./Icons";
 
-function formatHistoryTime(ts) {
-  try {
-    const date = new Date(ts);
-    const now = new Date();
-    const sameDay = date.toDateString() === now.toDateString();
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-    const opts = { hour: "2-digit", minute: "2-digit" };
-    if (sameDay) return `Today, ${date.toLocaleTimeString(undefined, opts)}`;
-    if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
-    return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-  } catch {
-    return "";
-  }
+function bucket(ts) {
+  const date = new Date(ts);
+  const now = new Date();
+  if (date.toDateString() === now.toDateString()) return "Today";
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+  return now - date < 7 * 864e5 ? "Previous 7 days" : "Older";
 }
 
-export default function Sidebar({ history, onSelect, onNew, open, onClose }) {
-  const [query, setQuery] = useState("");
+function AccountMenu({ identity, onOpenTools, onSignOut }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return history;
-    return history.filter((item) =>
-      `${item.question} ${item.summary || ""}`.toLowerCase().includes(q)
-    );
-  }, [history, query]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const close = (e) => {
+      if (!ref.current?.contains(e.target)) setOpen(false);
+    };
+    const esc = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [open]);
+
+  return (
+    <div className="account" ref={ref}>
+      {open && (
+        <div className="menu" role="menu">
+          <div className="menu-meta">
+            Tenant <b>{identity.tenant}</b> · {identity.services.length} services
+          </div>
+          <button role="menuitem" className="menu-item" onClick={() => { setOpen(false); onOpenTools(); }}>
+            <ToolIcon size={18} /> Tools &amp; approvals
+          </button>
+          <button role="menuitem" className="menu-item" onClick={() => { setOpen(false); onSignOut(); }}>
+            <LogoutIcon size={18} /> Sign out
+          </button>
+        </div>
+      )}
+      <button className="account-btn" onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open}>
+        <span className="avatar">{identity.user.slice(0, 1).toUpperCase()}</span>
+        <span className="account-text">
+          <span className="account-name">{identity.user}</span>
+          <span className="account-role">{identity.role}</span>
+        </span>
+      </button>
+    </div>
+  );
+}
+
+export default function Sidebar({
+  history, activeTs, onSelect, onNew, open, onClose, onCollapse, identity, onOpenTools, onSignOut,
+}) {
+  const groups = [];
+  for (const item of history) {
+    const label = bucket(item.ts);
+    const group = groups.find((g) => g.label === label);
+    if (group) group.items.push(item);
+    else groups.push({ label, items: [item] });
+  }
 
   return (
     <>
-      <div
-        className={`sidebar-backdrop ${open ? "visible" : ""}`}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      <aside className={`sidebar ${open ? "open" : ""}`} aria-label="Investigation history">
-        <div className="sidebar-brand">
-          <div className="logo" aria-hidden="true">
-            <span>AI</span>
-          </div>
-          <div>
-            <div className="brand-name">Ops Copilot</div>
-            <div className="brand-sub">Enterprise RCA Platform</div>
-          </div>
+      <div className={`scrim ${open ? "visible" : ""}`} onClick={onClose} aria-hidden="true" />
+      <aside className={`sidebar ${open ? "open" : ""}`} aria-label="Chat history">
+        <div className="sidebar-top">
+          <button className="icon-btn" onClick={onCollapse} aria-label="Close sidebar" title="Close sidebar">
+            <PanelIcon />
+          </button>
+          <button className="icon-btn" onClick={onNew} aria-label="New chat" title="New chat">
+            <PenIcon />
+          </button>
         </div>
 
-        <button className="new-investigation" onClick={onNew}>
-          <span aria-hidden="true">＋</span> New Investigation
+        <button className="new-chat" onClick={onNew}>
+          <span className="new-chat-mark" aria-hidden="true">O</span>
+          Ops Copilot
         </button>
 
-        <div className="sidebar-search">
-          <input
-            type="search"
-            placeholder="Search investigations…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Search investigation history"
-          />
-        </div>
-
-        <div className="sidebar-section">
-          <div className="sidebar-label">Recent investigations</div>
-          {filtered.length === 0 ? (
-            <div className="sidebar-empty">
-              {history.length === 0
-                ? "No investigations yet. Ask your first question below."
-                : "No matches."}
-            </div>
-          ) : (
-            <ul className="history-list">
-              {filtered.map((item, index) => (
-                <li key={`${item.ts}-${index}`}>
-                  <button
-                    className="history-item"
-                    onClick={() => onSelect(item)}
-                    title={item.question}
-                  >
-                    <span className="history-question">{item.summary || item.question}</span>
-                    <span className="history-time">{formatHistoryTime(item.ts)}</span>
-                  </button>
-                </li>
+        <nav className="history">
+          {history.length === 0 && <p className="history-empty">Your investigations will appear here.</p>}
+          {groups.map((group) => (
+            <div key={group.label} className="history-group">
+              <div className="history-label">{group.label}</div>
+              {group.items.map((item) => (
+                <button
+                  key={item.ts}
+                  className={`history-item ${item.ts === activeTs ? "active" : ""}`}
+                  onClick={() => onSelect(item)}
+                  title={item.question}
+                >
+                  {item.question}
+                </button>
               ))}
-            </ul>
-          )}
-        </div>
+            </div>
+          ))}
+        </nav>
 
-        <div className="sidebar-footer">
-          <span className="sidebar-footer-item">⚙ Settings</span>
-          <span className="sidebar-version">v1.2.0</span>
-        </div>
+        <AccountMenu identity={identity} onOpenTools={onOpenTools} onSignOut={onSignOut} />
       </aside>
     </>
   );

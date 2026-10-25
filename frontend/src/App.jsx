@@ -5,45 +5,64 @@ import Sidebar from "./components/Sidebar";
 import InvestigationInput from "./components/InvestigationInput";
 import InvestigationMessage from "./components/InvestigationMessage";
 import LoadingState from "./components/LoadingState";
-import { investigateStream, investigate } from "./services/api";
+import Login from "./components/Login";
+import ActionsPanel from "./components/ActionsPanel";
+import { investigateStream, investigate, logout, me, setUnauthorizedHandler } from "./services/api";
 import "./App.css";
 
 const THEME_KEY = "copilot-theme";
-const HISTORY_KEY = "copilot-history";
+const SIDEBAR_KEY = "copilot-sidebar";
+// History is per user and holds METADATA only (server-redacted question, time,
+// status) - answers are never written to browser storage; they stay in page memory.
+const LEGACY_HISTORY_KEY = "copilot-history";
+const historyKey = (user) => `copilot-history:${user}`;
 const MAX_HISTORY = 20;
 
-const EXAMPLES = [
-  { title: "Payroll failure", question: "Why is payroll failing?" },
-  {
-    title: "Payment service incident",
-    question: "Investigate the latest payment-service incident",
-  },
-  {
-    title: "Deployment correlation",
-    question: "Was the recent deployment responsible for the outage?",
-  },
-  { title: "Authentication failures", question: "Analyze authentication failures" },
-];
-
-function loadHistory() {
+function readStorage(key) {
   try {
-    const parsed = JSON.parse(localStorage.getItem(HISTORY_KEY));
-    return Array.isArray(parsed) ? parsed : [];
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorage(key, value) {
+  try {
+    if (value === null) localStorage.removeItem(key);
+    else localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable: keep the setting in memory */
+  }
+}
+
+function loadHistory(user) {
+  try {
+    localStorage.removeItem(LEGACY_HISTORY_KEY); // older versions stored full answers
+    const parsed = JSON.parse(localStorage.getItem(historyKey(user)));
+    return Array.isArray(parsed) ? parsed.map(({ question, ts, status }) => ({ question, ts, status })) : [];
   } catch {
     return [];
   }
 }
 
+function initialTheme() {
+  const stored = readStorage(THEME_KEY);
+  if (stored === "light" || stored === "dark") return stored;
+  return window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
 function App() {
+  const [identity, setIdentity] = useState(undefined); // undefined = checking, null = signed out
+  const [showActions, setShowActions] = useState(false);
+  const resultsRef = useRef(new Map()); // ts -> result, in memory only
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [completedStages, setCompletedStages] = useState(null); // Set of backend-confirmed stage ids
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [history, setHistory] = useState(loadHistory);
-  const [theme, setTheme] = useState(() => {
-    const stored = localStorage.getItem(THEME_KEY);
-    return stored === "light" || stored === "dark" ? stored : "dark";
-  });
+  const [mobileSidebar, setMobileSidebar] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => readStorage(SIDEBAR_KEY) === "collapsed");
+  const [history, setHistory] = useState([]);
+  const [activeTs, setActiveTs] = useState(null);
+  const [theme, setTheme] = useState(initialTheme);
 
   const bottomRef = useRef(null);
   const loadingRef = useRef(false);
@@ -53,50 +72,44 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
+    setUnauthorizedHandler(() => setIdentity(null));
+    me().then((who) => setIdentity(who || null));
+  }, []);
+
+  useEffect(() => {
+    setHistory(identity ? loadHistory(identity.user) : []);
+    resultsRef.current = new Map();
+  }, [identity]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, loading]);
 
   const pushHistory = useCallback((question, result, ts) => {
+    if (!identity) return;
+    resultsRef.current.set(ts, result);
     setHistory((prev) => {
-      const investigation = result?.investigation;
-      const entry = {
-        question,
-        ts,
-        summary: investigation?.summary || null,
-        confidence: investigation?.confidence || null,
-        result, // full result stored so history click restores it locally
-      };
+      // The server returns the question with personal data redacted; store that.
+      const safeQuestion = result?.investigation?.question || question;
+      const entry = { question: safeQuestion, ts, status: result?.investigation?.answer_status || null };
       const next = [
         entry,
-        ...prev.filter(
-          (item) => item.question.toLowerCase() !== question.toLowerCase()
-        ),
+        ...prev.filter((item) => item.question.toLowerCase() !== safeQuestion.toLowerCase()),
       ].slice(0, MAX_HISTORY);
-      try {
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
-      } catch {
-        // Storage quota exceeded: persist metadata only.
-        try {
-          localStorage.setItem(
-            HISTORY_KEY,
-            JSON.stringify(next.map(({ result: _r, ...rest }) => rest))
-          );
-        } catch {
-          /* ignore */
-        }
-      }
+      writeStorage(historyKey(identity.user), JSON.stringify(next));
       return next;
     });
-  }, []);
+  }, [identity]);
 
   const runInvestigation = useCallback(
     async (question) => {
       if (!question || loadingRef.current) return;
       loadingRef.current = true;
-      setSidebarOpen(false);
+      setMobileSidebar(false);
       setCompletedStages(new Set());
 
       const ts = Date.now();
+      setActiveTs(ts);
       setMessages((prev) => [...prev, { role: "user", content: question, ts }]);
       setLoading(true);
 
@@ -113,8 +126,8 @@ function App() {
               });
             }
           });
-        } catch (streamErr) {
-          if (!loadingRef.current) return; // superseded by New Investigation
+        } catch {
+          if (!loadingRef.current) return; // superseded by New chat
           result = await investigate(question); // graceful fallback
         }
 
@@ -126,7 +139,6 @@ function App() {
             role: "assistant",
             investigation: result.investigation || null,
             report: result.report || null,
-            confidence: result.investigation?.confidence || null,
             notice: result.message || null,
             error: false,
             ts: Date.now(),
@@ -153,95 +165,125 @@ function App() {
     [pushHistory]
   );
 
-  const startNewInvestigation = () => {
+  const startNewChat = () => {
     loadingRef.current = false;
     setMessages([]);
     setLoading(false);
     setCompletedStages(null);
-    setSidebarOpen(false);
+    setMobileSidebar(false);
+    setActiveTs(null);
   };
 
-  /** Restore a previous investigation from localStorage history. */
+  /** Restore a previous investigation (answer from page memory, else re-run). */
   const selectHistory = (item) => {
-    setSidebarOpen(false);
+    setMobileSidebar(false);
     if (loadingRef.current) return;
-    if (item.result) {
+    const result = resultsRef.current.get(item.ts);
+    if (result) {
+      setActiveTs(item.ts);
       setMessages([
         { role: "user", content: item.question, ts: item.ts },
         {
           role: "assistant",
-          investigation: item.result.investigation || null,
-          report: item.result.report || null,
-          confidence: item.result.investigation?.confidence || null,
-          notice: item.result.message || null,
+          investigation: result.investigation || null,
+          report: result.report || null,
+          notice: result.message || null,
           error: false,
           ts: item.ts,
         },
       ]);
       return;
     }
-    runInvestigation(item.question); // metadata-only entry: re-run
+    setMessages([]);
+    runInvestigation(item.question); // answers are not stored: re-run
   };
 
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    writeStorage(THEME_KEY, next);
+  };
+
+  const toggleSidebar = () => {
+    if (window.matchMedia?.("(max-width: 860px)").matches) {
+      setMobileSidebar((v) => !v);
+      return;
+    }
+    setSidebarCollapsed((v) => {
+      writeStorage(SIDEBAR_KEY, v ? null : "collapsed");
+      return !v;
+    });
+  };
+
+  const signOut = async () => {
+    try {
+      await logout();
+    } catch {
+      /* already signed out */
+    }
+    if (identity) writeStorage(historyKey(identity.user), null);
+    startNewChat();
+    setShowActions(false);
+    setIdentity(null);
+  };
+
+  if (identity === undefined) {
+    return <div className="boot-screen"><span className="spinner" aria-label="Loading" /></div>;
+  }
+  if (identity === null) {
+    return <Login onSignedIn={setIdentity} theme={theme} onToggleTheme={toggleTheme} />;
+  }
+
+  const empty = messages.length === 0 && !loading;
+
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       <Sidebar
         history={history}
+        activeTs={activeTs}
         onSelect={selectHistory}
-        onNew={startNewInvestigation}
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+        onNew={startNewChat}
+        open={mobileSidebar}
+        onClose={() => setMobileSidebar(false)}
+        onCollapse={toggleSidebar}
+        identity={identity}
+        onOpenTools={() => { setShowActions(true); setMobileSidebar(false); }}
+        onSignOut={signOut}
       />
 
-      <div className="main-area">
+      <main className="main">
         <Header
           theme={theme}
-          onToggleTheme={() => {
-            const next = theme === "dark" ? "light" : "dark";
-            setTheme(next);
-            localStorage.setItem(THEME_KEY, next);
-          }}
-          onToggleSidebar={() => setSidebarOpen((v) => !v)}
+          onToggleTheme={toggleTheme}
+          onToggleSidebar={toggleSidebar}
+          sidebarCollapsed={sidebarCollapsed}
+          onNew={startNewChat}
         />
 
-        {messages.length === 0 && !loading ? (
-          <div className="welcome">
-            <div className="welcome-inner">
-              <div className="welcome-badge">AI Operations Copilot</div>
-              <h1>Investigate incidents with grounded evidence.</h1>
-              <p>
-                Correlate incidents, deployments, logs and runbooks to generate
-                structured root-cause reports â€” with supporting evidence always
-                inspectable and confidence grounded in evidence strength.
-              </p>
-
-              <div className="example-grid">
-                {EXAMPLES.map((example) => (
-                  <button
-                    key={example.title}
-                    className="example-card"
-                    onClick={() => runInvestigation(example.question)}
-                  >
-                    <span className="example-title">{example.title}</span>
-                    <span className="example-question">{example.question}</span>
-                    <span className="example-cta">Run investigation âžœ</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+        {empty ? (
+          <div className="empty-state">
+            <h1 className="empty-title">What would you like to investigate?</h1>
+            <InvestigationInput onSubmit={runInvestigation} disabled={loading} autoFocus />
           </div>
         ) : (
-          <div className="chat-window">
-            {messages.map((message, index) => (
-              <InvestigationMessage key={index} message={message} onFeedback={() => {}} />
-            ))}
-            {loading && <LoadingState completedStages={completedStages} />}
-            <div ref={bottomRef} />
-          </div>
+          <>
+            <div className="thread" aria-live="polite">
+              <div className="thread-inner">
+                {messages.map((message, index) => (
+                  <InvestigationMessage key={`${message.ts}-${index}`} message={message} />
+                ))}
+                {loading && <LoadingState completedStages={completedStages} />}
+                <div ref={bottomRef} className="thread-end" />
+              </div>
+            </div>
+            <div className="composer-dock">
+              <InvestigationInput onSubmit={runInvestigation} disabled={loading} autoFocus />
+            </div>
+          </>
         )}
+      </main>
 
-        <InvestigationInput onSubmit={runInvestigation} disabled={loading} />
-      </div>
+      {showActions && <ActionsPanel identity={identity} onClose={() => setShowActions(false)} />}
     </div>
   );
 }

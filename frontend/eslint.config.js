@@ -10,12 +10,20 @@ export default defineConfig([
     files: ['**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
-      reactHooks.configs.flat.recommended,
+      reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
     languageOptions: {
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Components are referenced only from JSX, which core no-unused-vars cannot see.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+  {
+    files: ['vite.config.js', 'eslint.config.js'],
+    languageOptions: { globals: globals.node },
   },
 ])

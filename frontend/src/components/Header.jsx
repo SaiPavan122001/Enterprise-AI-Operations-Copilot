@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { checkHealth } from "../services/api";
+import { MoonIcon, PanelIcon, PenIcon, SunIcon } from "./Icons";
 
-export default function Header({ theme, onToggleTheme, onToggleSidebar }) {
-  const [health, setHealth] = useState({ online: null });
+export default function Header({ theme, onToggleTheme, onToggleSidebar, sidebarCollapsed, onNew }) {
+  const [online, setOnline] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     const probe = async () => {
       const result = await checkHealth();
-      if (!cancelled) setHealth(result);
+      if (!cancelled) setOnline(result.online);
     };
     probe();
     const interval = setInterval(probe, 30_000);
@@ -18,50 +19,29 @@ export default function Header({ theme, onToggleTheme, onToggleSidebar }) {
     };
   }, []);
 
-  const statusLabel =
-    health.online === null
-      ? "Checking…"
-      : health.online
-        ? "Systems operational"
-        : "Backend offline";
-
   return (
-    <header className="header">
-      <button
-        className="icon-btn sidebar-toggle"
-        onClick={onToggleSidebar}
-        aria-label="Toggle navigation"
-      >
-        ☰
-      </button>
-
-      <div className="header-title">
-        <h1>Investigations</h1>
-        <span className="header-subtitle">AI Operations Copilot</span>
-      </div>
-
-      <div className="header-actions">
-        <div
-          className={`status-pill ${health.online ? "ok" : health.online === false ? "down" : "unknown"}`}
-          title="Backend connection status"
-        >
-          <span className="status-dot" aria-hidden="true" />
-          {statusLabel}
-        </div>
-
-        <button
-          className="icon-btn"
-          onClick={onToggleTheme}
-          aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-          title={theme === "dark" ? "Light mode" : "Dark mode"}
-        >
-          {theme === "dark" ? "☀" : "🌙"}
+    <header className="topbar">
+      <div className="topbar-left">
+        <button className={`icon-btn sidebar-open ${sidebarCollapsed ? "show" : ""}`} onClick={onToggleSidebar}
+          aria-label="Open sidebar" title="Open sidebar">
+          <PanelIcon />
         </button>
-
-        <div className="avatar" aria-label="Operator" title="Operations engineer">
-          OP
-        </div>
+        {sidebarCollapsed && (
+          <button className="icon-btn hide-mobile" onClick={onNew} aria-label="New chat" title="New chat">
+            <PenIcon />
+          </button>
+        )}
+        <span className="brand">Ops Copilot</span>
+        {online === false && <span className="offline" role="status">Backend offline</span>}
       </div>
+      <button
+        className="icon-btn"
+        onClick={onToggleTheme}
+        aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+        title={theme === "dark" ? "Light mode" : "Dark mode"}
+      >
+        {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+      </button>
     </header>
   );
 }

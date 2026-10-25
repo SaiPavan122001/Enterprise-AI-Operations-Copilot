@@ -5,10 +5,20 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import app
+from utils.auth import hash_key
 from utils.rate_limit import investigate_limiter
 
+KEY = "test-investigator-key-0123456789abcdef"
+client = TestClient(app, headers={"Authorization": f"Bearer {KEY}"})
 
-client = TestClient(app)
+
+@pytest.fixture(autouse=True)
+def _api_key(monkeypatch):
+    # Authentication stays ON in these tests: requests carry a configured key.
+    from config import settings
+
+    monkeypatch.setattr(settings, "AUTH_MODE", "api_key")
+    monkeypatch.setattr(settings, "API_KEYS", f"tests:investigator:{hash_key(KEY)}")
 
 
 @pytest.fixture(autouse=True)
@@ -171,6 +181,8 @@ class TestInvestigate:
             "runbook_found": True,
             "evidence_strength": "HIGH",
             "notes": [],
+            "missing_evidence": [],
+            "contradictions": [],
         }
 
     def test_no_raw_exception_on_workflow_failure(self, monkeypatch):

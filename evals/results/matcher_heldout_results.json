@@ -1,0 +1,15 @@
+{
+  "testset": "evals/testsets/matcher_heldout_v2.jsonl",
+  "n_questions": 46,
+  "protocol": "Generated before the matcher redesign; questions never inspected; evaluated with --aggregate-only exactly once before (old matcher) and once after the design was frozen (two-stage matcher). The script's internal dev/held_out split is irrelevant here: all 46 questions are held-out.",
+  "before": {
+    "matcher": "single-problem LLM verdict + question-wide service gate",
+    "source": "console output of `python -m evals.evaluate_matcher --file evals/testsets/matcher_heldout_v2.jsonl --exclude-run none --aggregate-only`, 2026-10-24 (not saved to a file at the time; transcribed from the session log)",
+    "all": {"n_in": 31, "n_oos": 15, "in_scope_full_recall": 0.839, "in_scope_any": 0.935, "matched_precision": 1.0, "multi_full_recall": 0.737, "oos_nothing_matched": 1.0, "errors": 0}
+  },
+  "after": {
+    "matcher": "Stage A (unchanged prompt) + Stage B requirement decomposition (gap-filling only) + per-requirement service, severity and generic-requirement rules",
+    "source": "evals/results/matcher_heldout_after.txt",
+    "all": {"n_in": 31, "n_oos": 15, "in_scope_full_recall": 0.935, "in_scope_any": 1.0, "matched_precision": 0.981, "multi_full_recall": 0.895, "oos_nothing_matched": 1.0, "errors": 0}
+  }
+}

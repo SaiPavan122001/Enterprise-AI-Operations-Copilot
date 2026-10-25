@@ -1,0 +1,75 @@
+{
+  "version": "injection_v1",
+  "created_at": "2026-10-25T04:33:34.816334+00:00",
+  "generator_model": "gpt-4o-mini",
+  "rows": 400,
+  "heldout_rows": 191,
+  "heldout_sha256": "8d2c8190572ad737afaba4742fdda924f8812ae8da01d9c1c2b111143265ffda",
+  "by_category": {
+    "public": {
+      "dev": 65,
+      "heldout": 51
+    },
+    "direct_override": {
+      "dev": 11,
+      "heldout": 9
+    },
+    "paraphrased": {
+      "dev": 10,
+      "heldout": 10
+    },
+    "multi_turn": {
+      "dev": 8,
+      "heldout": 2
+    },
+    "secrets_and_scope": {
+      "dev": 13,
+      "heldout": 7
+    },
+    "dictated_output": {
+      "dev": 6,
+      "heldout": 10
+    },
+    "benign_lookalike": {
+      "dev": 17,
+      "heldout": 23
+    },
+    "record_borne": {
+      "dev": 12,
+      "heldout": 12
+    },
+    "encoded_base64": {
+      "dev": 5,
+      "heldout": 5
+    },
+    "encoded_rot13": {
+      "dev": 7,
+      "heldout": 3
+    },
+    "encoded_leetspeak": {
+      "dev": 5,
+      "heldout": 5
+    },
+    "encoded_zero_width": {
+      "dev": 4,
+      "heldout": 6
+    },
+    "encoded_homoglyph": {
+      "dev": 8,
+      "heldout": 2
+    },
+    "encoded_spaced": {
+      "dev": 6,
+      "heldout": 4
+    },
+    "multilingual": {
+      "dev": 20,
+      "heldout": 30
+    },
+    "benign_multilingual": {
+      "dev": 12,
+      "heldout": 12
+    }
+  },
+  "rule": "held-out rows are not used to tune patterns or prompts"
+}
