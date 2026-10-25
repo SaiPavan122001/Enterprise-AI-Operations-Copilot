@@ -12,7 +12,7 @@ import json
 import sys
 
 from evals.calibration import _latest_run, _load_rows
-from evals.run import NO_ANSWER_TYPES, check_gate
+from evals.run import NO_ANSWER_TYPES, check_gate, gated_thresholds
 from evals.settings import load_config, load_thresholds, repo_path
 
 RET_COLS = ["n", "hit_rate@1", "hit_rate@3", "hit_rate@5", "hit_rate@10", "recall@5", "recall@10",
@@ -102,14 +102,17 @@ def build(run_name: str | None = None) -> str:
     summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
     rows = _load_rows(run_name)
     m = summary["metrics"]
-    failed = {f.split(":")[0] for f in check_gate(m)}
+    retrieval_only = bool(summary.get("retrieval_only"))
+    failed = {f.split(":")[0] for f in check_gate(m, retrieval_only)}
+    gated = gated_thresholds(retrieval_only)
 
     lines = [f"Run: `{run_name}`  ", f"Items: {summary['n_items']}  ",
              f"Pipeline config: `{json.dumps(summary['pipeline_config'])}`", "",
              "### Scores vs thresholds", "", "| metric | value | threshold | status |", "|---|---|---|---|"]
     for name, rule in load_thresholds().items():
-        lines.append(f"| {name} | {_fmt(m.get(name))} | {rule['op']} {rule['value']} | "
-                     f"{'❌ FAIL' if name in failed else '✅ PASS'} |")
+        status = ("⏭ SKIPPED (retrieval-only run, needs LLM)" if name not in gated
+                  else "❌ FAIL" if name in failed else "✅ PASS")
+        lines.append(f"| {name} | {_fmt(m.get(name))} | {rule['op']} {rule['value']} | {status} |")
     lines += ["", "### All headline metrics", "", "| metric | value |", "|---|---|"]
     lines += [f"| {k} | {_fmt(v)} |" for k, v in sorted(m.items())]
 

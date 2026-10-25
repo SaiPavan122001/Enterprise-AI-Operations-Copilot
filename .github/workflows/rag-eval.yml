@@ -2,7 +2,9 @@
 # generation quality, and fails the check if any threshold in
 # evals/thresholds.yaml is not met.
 #
-# Required repository secrets (Settings -> Secrets and variables -> Actions):
+# Without API keys (the default: keys are not stored in GitHub) it runs a
+# retrieval-only gate - no LLM, no cost. OPTIONAL repository secrets that enable
+# the full gate (Settings -> Secrets and variables -> Actions):
 #   OPENAI_API_KEY (judge, and generation when LLM_PROVIDER=openai),
 #   GEMINI_API_KEY (only when LLM_PROVIDER=gemini),
 #   LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST (https://jp.cloud.langfuse.com).
@@ -45,18 +47,22 @@ jobs:
       LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
       LANGFUSE_HOST: ${{ secrets.LANGFUSE_HOST || 'https://jp.cloud.langfuse.com' }}
     steps:
-      # Fail in seconds, naming what is missing, instead of after the install and
-      # tests (the Langfuse sync and the evals cannot run without these secrets).
-      - name: Check required secrets
+      # API keys are NOT stored in this repository by default. Without them the
+      # gate runs in retrieval-only mode: local embeddings, no LLM, no Langfuse,
+      # no cost - gating hit_rate@5 and permission_leaks. The LLM metrics
+      # (faithfulness, relevancy, refusal, fallback) are then run locally with
+      # `python -m evals.run --gate` before merging. If the secrets are ever
+      # configured, the full gate runs here instead.
+      - name: Choose eval mode
+        id: mode
         run: |
-          missing=""
-          [ -n "$OPENAI_API_KEY" ] || missing="$missing OPENAI_API_KEY"
-          [ -n "$LANGFUSE_PUBLIC_KEY" ] || missing="$missing LANGFUSE_PUBLIC_KEY"
-          [ -n "$LANGFUSE_SECRET_KEY" ] || missing="$missing LANGFUSE_SECRET_KEY"
-          if [ "$LLM_PROVIDER" = "gemini" ] && [ -z "$GEMINI_API_KEY" ]; then missing="$missing GEMINI_API_KEY"; fi
-          if [ -n "$missing" ]; then
-            echo "::error title=Missing repository secrets::Add$missing in Settings > Secrets and variables > Actions"
-            exit 1
+          provider_key="$OPENAI_API_KEY"
+          if [ "$LLM_PROVIDER" = "gemini" ]; then provider_key="$GEMINI_API_KEY"; fi
+          if [ -n "$OPENAI_API_KEY" ] && [ -n "$provider_key" ] && [ -n "$LANGFUSE_PUBLIC_KEY" ] && [ -n "$LANGFUSE_SECRET_KEY" ]; then
+            echo "full=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "full=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Retrieval-only RAG gate::No API keys in this repository: gating retrieval metrics only. Run 'python -m evals.run --gate' locally for the LLM metrics."
           fi
 
       - uses: actions/checkout@v4
@@ -101,13 +107,19 @@ jobs:
         run: python -m scripts.seed
 
       - name: Sync test set to Langfuse dataset
+        if: steps.mode.outputs.full == 'true'
         run: python -m evals.testset upload
 
       - name: Run evals with regression gate
+        if: steps.mode.outputs.full == 'true'
         run: |
           SAMPLE_ARG=""
           if [ -n "${{ github.event.inputs.sample }}" ]; then SAMPLE_ARG="--sample ${{ github.event.inputs.sample }}"; fi
           python -m evals.run --gate --yes --label "ci-${{ github.event.pull_request.number || github.run_id }}" $SAMPLE_ARG
+
+      - name: Run retrieval-only regression gate (no API keys)
+        if: steps.mode.outputs.full != 'true'
+        run: python -m evals.run --retrieval-only --no-langfuse --gate --label "ci-retrieval-${{ github.event.pull_request.number || github.run_id }}"
 
       - name: Build report tables
         if: always()

@@ -323,10 +323,16 @@ def summarize(rows: list[dict], with_generation: bool) -> dict:
     return summary
 
 
-def check_gate(metrics: dict) -> list[str]:
+def gated_thresholds(retrieval_only: bool = False) -> dict:
+    """Thresholds this run is gated on: a retrieval-only run (no API keys) cannot
+    compute the LLM/judge metrics, so it is gated on the retrieval ones only."""
+    return {k: v for k, v in load_thresholds().items() if not (retrieval_only and v.get("requires_llm"))}
+
+
+def check_gate(metrics: dict, retrieval_only: bool = False) -> list[str]:
     failures = []
     ops = {">=": lambda a, b: a >= b, "<=": lambda a, b: a <= b, "==": lambda a, b: a == b}
-    for name, rule in load_thresholds().items():
+    for name, rule in gated_thresholds(retrieval_only).items():
         value = metrics.get(name)
         if value is None:
             failures.append(f"{name}: missing (not computed in this run)")
@@ -335,16 +341,17 @@ def check_gate(metrics: dict) -> list[str]:
     return failures
 
 
-def print_summary(summary: dict) -> None:
+def print_summary(summary: dict, retrieval_only: bool = False) -> None:
     m = summary["metrics"]
     print("\n================ EVAL SUMMARY ================")
     print(f"items: {summary['n_items']}")
     for name in sorted(m):
         print(f"  {name:32s} {m[name]}")
     print("\nThresholds:")
-    failed = {f.split(":")[0] for f in check_gate(m)}
+    failed = {f.split(":")[0] for f in check_gate(m, retrieval_only)}
+    gated = gated_thresholds(retrieval_only)
     for name, rule in load_thresholds().items():
-        status = "FAIL" if name in failed else "PASS"
+        status = "SKIP (needs LLM; not run)" if name not in gated else "FAIL" if name in failed else "PASS"
         print(f"  {status}  {name} = {m.get(name)}  (need {rule['op']} {rule['value']})")
 
 
@@ -425,6 +432,7 @@ def main(argv=None) -> int:
     summary = summarize(rows, with_generation and incomplete is None)
     summary["run_name"] = run_name
     summary["complete"] = incomplete is None
+    summary["retrieval_only"] = args.retrieval_only
     summary["incomplete_reason"] = incomplete
     summary["pipeline_config"] = pcfg
     summary["judge_usage"] = usage.by_model
@@ -451,14 +459,14 @@ def main(argv=None) -> int:
     if incomplete is None:
         (out_dir.parent / "LATEST").write_text(run_name, encoding="utf-8")
 
-    print_summary(summary)
+    print_summary(summary, args.retrieval_only)
     print(f"\nJudge cost this run: ${summary['judge_cost_usd']}  |  results: {out_dir}")
     if incomplete is not None:
         print(f"\nRUN INCOMPLETE: {incomplete}. Not judged; LATEST not updated. Re-run to resume.")
         return 3
 
     if args.gate:
-        failures = check_gate(summary["metrics"])
+        failures = check_gate(summary["metrics"], args.retrieval_only)
         if failures:
             print("\nREGRESSION GATE FAILED:\n  " + "\n  ".join(failures))
             return 1
