@@ -80,9 +80,12 @@ class TestLLMLayer:
 
         def failing():
             calls.append(1)
+            # Cancel 0.2 s AFTER the first attempt failed, i.e. during the 5 s backoff.
+            # (A timer started before retry() could fire before the first attempt on a
+            # slow CI runner, cancelling at the wrong stage.)
+            threading.Timer(0.2, token.cancel).start()
             raise TimeoutError("transient")
 
-        threading.Timer(0.2, token.cancel).start()
         bound = cancellation.bind(token)
         t0 = time.monotonic()
         try:

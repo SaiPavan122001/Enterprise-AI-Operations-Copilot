@@ -25,6 +25,7 @@ nemoguardrails==0.24.1
 langchain-core==0.3.86     # NeMo's LLM slot is a stub; LLM checks use the project provider
 presidio-analyzer==2.2.364
 spacy==3.8.16
+preshed==3.0.13            # 3.0.14 breaks spaCy model loading on Linux (OverflowError in Tokenizer._flush_specials)
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 mcp==1.30.0                # local-only (stdio) MCP server; 1.12.4 breaks on pydantic 2.14
 
